@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cultured Mornings — Member Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#FAF6EF;--clay:#C47A3A;--clay-light:#F5E8D0;--clay-pale:#FBF2E3;
+  --sage:#3A6644;--sage-light:#E3EDE6;--bark:#2C1F0F;--bark-mid:#6B4F2A;
+  --warm-line:rgba(196,122,58,0.18);--soft:#F2EDE4;--surface:#FFFDF7;
+  --auburn:#A0391A;--auburn-light:#F2DDD6;--auburn-mid:#C44A22;
+}
+body{font-family:'Bricolage Grotesque',sans-serif;background:var(--cream);color:var(--bark);-webkit-font-smoothing:antialiased;margin:0}
+.shell{display:grid;grid-template-columns:218px 1fr;min-height:100vh;transition:grid-template-columns .25s ease}
+.shell.col{grid-template-columns:50px 1fr}
+.sidebar{background:var(--bark);display:flex;flex-direction:column;overflow:hidden;width:218px;transition:width .25s ease;min-width:50px;position:sticky;top:0;height:100vh}
+.shell.col .sidebar{width:50px}
+.sb-top{display:flex;align-items:center;justify-content:space-between;padding:20px 14px 16px;border-bottom:1px solid rgba(255,255,255,0.08);min-height:64px;flex-shrink:0}
+.lw{overflow:hidden;transition:opacity .2s,width .25s;flex:1}
+.shell.col .lw{opacity:0;pointer-events:none;width:0}
+.logo{font-size:15px;font-weight:800;color:#fff;line-height:1.25;white-space:nowrap;letter-spacing:-.2px}
+.tagline{font-family:'Lora',serif;font-size:9px;color:rgba(255,255,255,0.32);margin-top:4px;font-style:italic;white-space:nowrap}
+.tog{width:28px;height:28px;border-radius:6px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s}
+.tog:hover{background:rgba(255,255,255,0.13)}
+.nsl{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:rgba(255,255,255,0.2);padding:13px 14px 4px;white-space:nowrap;font-weight:700;transition:opacity .18s;flex-shrink:0}
+.shell.col .nsl{opacity:0}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 14px;font-size:12.5px;font-weight:500;color:rgba(255,255,255,0.48);cursor:pointer;white-space:nowrap;overflow:hidden;transition:background .12s,color .12s;flex-shrink:0}
+.ni:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,.82)}
+.ni.active{background:var(--clay);color:#fff;font-weight:700}
+.npip{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;opacity:.5}
+.ni.active .npip{opacity:1}
+.nl{transition:opacity .15s;white-space:nowrap;overflow:hidden}
+.shell.col .nl{opacity:0;width:0}
+.sbf{margin-top:auto;padding:12px 14px;border-top:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:9px;overflow:hidden;flex-shrink:0}
+.sbfn{font-size:12px;color:rgba(255,255,255,.5);white-space:nowrap;font-weight:600;transition:opacity .15s}
+.shell.col .sbfn{opacity:0}
+.uav{width:28px;height:28px;border-radius:50%;background:var(--clay);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0}
+
+.main{min-width:0;overflow:hidden;background:var(--cream)}
+.screen{display:none}
+.screen.active{display:block}
+
+/* ── SHARED COMPONENTS ── */
+.card{background:var(--surface);border:0.5px solid var(--warm-line);border-radius:12px;padding:16px 18px}
+.ch{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.ct{font-size:13.5px;font-weight:800;color:var(--bark);letter-spacing:-.2px}
+.ca{font-size:11px;font-weight:700;color:var(--clay);cursor:pointer}
+.sl{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--clay);margin-bottom:10px}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.page-header{background:var(--clay-pale);border-bottom:1px solid var(--warm-line);padding:22px 26px 20px}
+.page-title{font-size:20px;font-weight:800;color:var(--bark);letter-spacing:-.35px}
+.page-sub{font-size:12.5px;color:var(--bark-mid);margin-top:4px;line-height:1.6;max-width:520px;font-weight:500}
+.body-grid{padding:20px 26px 48px;display:grid;grid-template-columns:minmax(0,1fr) 228px;gap:16px;align-items:start}
+.mc{display:flex;flex-direction:column;gap:14px}
+.sc{display:flex;flex-direction:column;gap:12px}
+.badge{font-size:9px;font-weight:800;padding:3px 9px;border-radius:20px;letter-spacing:.3px;text-transform:uppercase}
+.bh{background:var(--auburn-light);color:var(--auburn)}
+.bo{background:var(--sage-light);color:var(--sage)}
+.bs{background:var(--clay-light);color:var(--bark-mid)}
+.dark-card{background:var(--bark);border-radius:12px;padding:16px 18px}
+.clay-card{background:var(--clay-light);border:0.5px solid var(--warm-line);border-radius:12px;padding:16px 18px}
+.soft-card{background:var(--soft);border:0.5px solid var(--warm-line);border-radius:12px;padding:16px 18px}
+.parchment-card{background:var(--clay-pale);border:0.5px solid var(--warm-line);border-radius:12px;padding:16px 18px}
+.card-kicker{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--bark-mid);margin-bottom:8px}
+.lora-quote{font-family:'Lora',serif;font-size:12.5px;font-style:italic;color:var(--bark);line-height:1.75;margin-bottom:8px}
+.quote-attr{font-size:9px;font-weight:700;color:var(--bark-mid);letter-spacing:.2px;text-transform:uppercase}
+.opp-item{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--warm-line)}
+.opp-item:last-child{border-bottom:none;padding-bottom:0}
+.opp-name{font-size:12.5px;font-weight:700;color:var(--bark);letter-spacing:-.1px}
+.opp-org{font-size:11px;color:var(--bark-mid);margin-top:1px;font-weight:500}
+.mi{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--warm-line)}
+.mi:last-child{border-bottom:none;padding-bottom:0}
+.mav{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+.mn{font-size:12.5px;font-weight:700;color:var(--bark);letter-spacing:-.1px}
+.mr{font-size:11px;color:var(--bark-mid);font-weight:500;margin-top:1px}
+.msg-btn{font-size:10px;font-weight:700;padding:4px 11px;border-radius:6px;background:var(--sage-light);color:var(--sage);border:none;cursor:pointer;margin-left:auto}
+.af-item{display:flex;gap:11px;padding:10px 0;border-bottom:0.5px solid rgba(196,122,58,0.1);align-items:flex-start}
+.af-item:last-child{border-bottom:none;padding-bottom:0}
+.af-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.af-text{font-size:12.5px;color:var(--bark);line-height:1.5;font-weight:500}
+.af-time{font-size:9px;color:var(--bark-mid);margin-top:2px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.ri{display:flex;gap:10px;align-items:center;padding:9px 0;border-bottom:0.5px solid rgba(196,122,58,0.1)}
+.ri:last-child{border-bottom:none;padding-bottom:0}
+.rth{width:34px;height:34px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.rn{font-size:12.5px;font-weight:700;color:var(--bark);letter-spacing:-.1px;line-height:1.3}
+.rm{font-size:9px;color:var(--bark-mid);font-weight:700;margin-top:2px;letter-spacing:.3px;text-transform:uppercase}
+.rpb{height:3px;background:var(--soft);border-radius:2px;overflow:hidden;margin-top:5px}
+.rpf{height:100%;border-radius:2px;background:var(--clay)}
+.rbtn{font-size:10px;font-weight:700;padding:5px 11px;border-radius:6px;background:var(--clay-light);color:var(--bark-mid);border:none;cursor:pointer;margin-left:auto;white-space:nowrap}
+.prog-row{margin-bottom:9px}
+.prog-label{display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--bark-mid);margin-bottom:4px;text-transform:uppercase;letter-spacing:.2px}
+.prog-bg{height:4px;background:var(--soft);border-radius:4px;overflow:hidden}
+.prog-fill{height:100%;border-radius:4px}
+.lora-nudge{font-family:'Lora',serif;font-size:11px;color:var(--bark-mid);font-style:italic;margin-top:10px;line-height:1.65}
+.notif-item{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:0.5px solid rgba(255,255,255,0.07)}
+.notif-item:last-child{border-bottom:none;padding-bottom:0}
+.ndot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.ntext{font-size:11.5px;color:rgba(255,255,255,.72);line-height:1.5;font-weight:500}
+.ntime{font-size:9px;color:rgba(255,255,255,0.25);font-weight:700;letter-spacing:.3px;text-transform:uppercase;margin-top:2px}
+.f-btn{font-size:11px;padding:5px 13px;border-radius:20px;border:0.5px solid var(--warm-line);background:var(--surface);color:var(--bark-mid);cursor:pointer;font-family:'Bricolage Grotesque',sans-serif;font-weight:600}
+.f-btn.active{background:var(--clay);color:#fff;border-color:var(--clay)}
+
+/* ── HOME HERO ── */
+.hero{background:var(--bark);padding:0 26px}
+.hero-top{display:grid;grid-template-columns:1fr auto;gap:20px;align-items:end;padding:24px 0 0}
+.hero-kicker{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--clay);margin-bottom:7px}
+.hero-name{font-size:24px;font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.4px;margin-bottom:14px}
+.hero-verse{font-family:'Lora',serif;font-size:11px;font-style:italic;color:rgba(255,255,255,0.27);padding-top:12px;border-top:0.5px solid rgba(255,255,255,0.08);padding-bottom:22px;line-height:1.65}
+.sk{font-size:9px;font-weight:700;color:rgba(255,255,255,.26);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px}
+.srow{display:flex;gap:4px}
+.sd{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800}
+.sd-on{background:var(--clay);color:#fff}
+.sd-today{background:var(--auburn);color:#fff}
+.sd-off{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.2)}
+.snote{font-size:10px;font-weight:600;color:rgba(255,255,255,0.26);margin-top:6px}
+.stat-bar{display:grid;grid-template-columns:repeat(4,1fr);border-top:0.5px solid rgba(255,255,255,0.08)}
+.st{padding:13px 0 17px 18px;border-right:0.5px solid rgba(255,255,255,0.07)}
+.st:last-child{border-right:none}
+.stn{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.5px;line-height:1}
+.stl{font-size:9px;color:rgba(255,255,255,.28);margin-top:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.ac{border-radius:12px;padding:16px;cursor:pointer;transition:opacity .15s;display:flex;flex-direction:column;gap:8px;border:0.5px solid var(--warm-line)}
+.ac:hover{opacity:.85}
+.ac-0{background:var(--clay-light)}
+.ac-1{background:var(--sage-light)}
+.ac-2{background:var(--soft)}
+.ac-icon{width:32px;height:32px;border-radius:8px;background:rgba(44,31,15,0.09);display:flex;align-items:center;justify-content:center}
+.ac-title{font-size:12.5px;font-weight:800;color:var(--bark);line-height:1.2;letter-spacing:-.15px}
+.ac-sub{font-size:11px;color:var(--bark-mid);font-weight:500;line-height:1.4}
+.ac-arrow{font-size:11px;font-weight:700;color:var(--clay);margin-top:auto}
+.prof-n{font-size:28px;font-weight:800;color:var(--clay);letter-spacing:-.6px;line-height:1;margin-bottom:2px}
+.prof-count{font-size:11px;color:var(--bark-mid);font-weight:500;margin-bottom:13px}
+.ev-btn{font-size:11px;font-weight:700;padding:7px 15px;border-radius:7px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+
+/* ── PUBLIC PROFILE ── */
+.pub-topnav{background:var(--surface);border-bottom:0.5px solid var(--warm-line);padding:0 36px;display:flex;align-items:center;justify-content:space-between;height:50px;flex-shrink:0}
+.nav-logo{font-size:14px;font-weight:800;color:var(--bark);letter-spacing:-.2px}
+.nav-links{display:flex;gap:22px;align-items:center}
+.nav-link{font-size:12px;color:var(--bark-mid);cursor:pointer;font-weight:600}
+.nav-cta{font-size:12px;font-weight:700;padding:6px 16px;border-radius:6px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+.pub-hero{background:var(--clay-pale);border-bottom:1px solid var(--warm-line);padding:36px 36px 0}
+.pub-hero-inner{display:grid;grid-template-columns:1fr 300px;gap:36px;align-items:end;max-width:900px;margin:0 auto}
+.pub-av{width:80px;height:80px;border-radius:50%;background:var(--clay);display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;color:#fff;margin-bottom:14px;border:3px solid var(--surface)}
+.pub-name{font-size:26px;font-weight:800;color:var(--bark);line-height:1.15;letter-spacing:-.4px;margin-bottom:5px}
+.pub-role{font-size:12px;font-weight:700;color:var(--clay);letter-spacing:.2px;margin-bottom:3px}
+.pub-loc{font-size:12px;color:var(--bark-mid);margin-bottom:14px;font-weight:500}
+.pub-qfacts{display:flex;gap:20px;padding:14px 0;border-top:0.5px solid var(--warm-line);margin-top:18px}
+.qf-val{font-size:20px;font-weight:800;color:var(--bark);letter-spacing:-.4px}
+.qf-lbl{font-size:9px;color:var(--bark-mid);margin-top:2px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.pub-quote{font-family:'Lora',serif;font-size:13.5px;font-style:italic;color:var(--bark-mid);line-height:1.75;padding:14px 0 34px;border-top:1px solid var(--warm-line);max-width:460px}
+.pub-quote-attr{font-size:10px;color:var(--clay);font-style:normal;margin-top:5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.pub-actions{display:flex;flex-direction:column;gap:9px;padding-bottom:30px}
+.btn-fill{font-size:13px;font-weight:700;padding:9px 0;border-radius:8px;background:var(--auburn);color:#fff;border:none;cursor:pointer;text-align:center;width:100%;letter-spacing:-.1px}
+.btn-out{font-size:13px;font-weight:700;padding:8px 0;border-radius:8px;background:var(--auburn-light);color:var(--auburn);border:1.5px solid var(--auburn-mid);cursor:pointer;text-align:center;width:100%}
+.btn-ghost{font-size:13px;font-weight:700;padding:8px 0;border-radius:8px;background:var(--surface);color:var(--bark-mid);border:0.5px solid var(--warm-line);cursor:pointer;text-align:center;width:100%}
+.pub-reach{font-family:'Lora',serif;font-size:11px;font-style:italic;color:var(--bark-mid);text-align:center;margin-top:4px;line-height:1.55}
+.pub-body{padding:28px 36px 48px;max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 268px;gap:22px;align-items:start}
+.pub-main{display:flex;flex-direction:column;gap:20px}
+.pub-side{display:flex;flex-direction:column;gap:14px}
+.section-label{font-size:9px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--clay);margin-bottom:12px}
+.timeline-item{display:flex;gap:12px;padding-bottom:14px;position:relative}
+.timeline-item:not(:last-child)::after{content:'';position:absolute;left:13px;top:28px;bottom:0;width:1px;background:var(--warm-line)}
+.tl-dot{width:26px;height:26px;border-radius:50%;background:var(--clay-light);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px}
+.tl-title{font-size:13px;font-weight:700;color:var(--bark);letter-spacing:-.1px}
+.tl-sub{font-size:11.5px;color:var(--bark-mid);margin-top:2px;line-height:1.5;font-weight:500}
+.tl-date{font-size:9px;color:var(--clay);font-weight:700;margin-top:3px;text-transform:uppercase;letter-spacing:.3px}
+.skill-wrap{display:flex;flex-wrap:wrap;gap:7px}
+.skill{font-size:11px;padding:4px 12px;border-radius:20px;background:var(--clay-light);color:var(--bark-mid);font-weight:700}
+.skill.sage{background:var(--sage-light);color:var(--sage)}
+.connect-card{background:var(--bark);border-radius:12px;padding:18px 20px}
+.cc-title{font-size:14px;font-weight:800;color:#fff;letter-spacing:-.2px;margin-bottom:6px}
+.cc-sub{font-family:'Lora',serif;font-size:11px;color:rgba(255,255,255,.45);font-style:italic;line-height:1.6;margin-bottom:14px}
+.cc-input{width:100%;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.14);border-radius:7px;padding:9px 12px;font-size:12px;color:#fff;font-family:'Bricolage Grotesque',sans-serif;margin-bottom:7px;outline:none}
+.cc-input::placeholder{color:rgba(255,255,255,0.32)}
+.cc-btn{width:100%;background:var(--auburn);border:none;border-radius:7px;padding:9px;font-size:12px;font-weight:700;color:#fff;cursor:pointer;font-family:'Bricolage Grotesque',sans-serif}
+.stat-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--warm-line)}
+.stat-row:last-child{border-bottom:none;padding-bottom:0}
+.pub-footer{background:var(--bark);padding:22px 36px;display:flex;justify-content:space-between;align-items:center}
+.ft-logo{font-size:13px;font-weight:800;color:rgba(255,255,255,.55);letter-spacing:-.1px}
+.ft-verse{font-family:'Lora',serif;font-size:11px;color:rgba(255,255,255,.27);font-style:italic}
+
+/* ── MENTOR DIRECTORY ── */
+.feat-mentor{background:var(--bark);border-radius:14px;overflow:hidden;margin-bottom:14px;display:grid;grid-template-columns:1fr 180px}
+.fm-l{padding:22px 24px;display:flex;flex-direction:column;justify-content:space-between}
+.fm-eye{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--clay);margin-bottom:10px}
+.fm-av{width:48px;height:48px;border-radius:50%;background:var(--clay);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#fff;margin-bottom:12px;border:2px solid rgba(255,255,255,0.12)}
+.fm-name{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px;line-height:1.2;margin-bottom:3px}
+.fm-role{font-size:11px;color:var(--clay);font-weight:700;margin-bottom:10px}
+.fm-quote{font-family:'Lora',serif;font-size:11.5px;font-style:italic;color:rgba(255,255,255,.48);line-height:1.65;margin-bottom:14px}
+.fm-skills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.fm-skill{font-size:9px;padding:2px 8px;border-radius:20px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,.6);font-weight:700}
+.fm-acts{display:flex;gap:8px}
+.fm-btn{font-size:12px;font-weight:700;padding:7px 14px;border-radius:7px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+.fm-btn2{font-size:12px;font-weight:700;padding:7px 12px;border-radius:7px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,.65);border:0.5px solid rgba(255,255,255,0.14);cursor:pointer}
+.fm-r{background:var(--clay-pale);padding:22px 18px;display:flex;flex-direction:column;gap:8px}
+.fm-r-lbl{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--clay);margin-bottom:3px}
+.fm-stat{display:flex;flex-direction:column;gap:2px;padding:8px 0;border-bottom:0.5px solid var(--warm-line)}
+.fm-stat:last-child{border-bottom:none;padding-bottom:0}
+.fm-n{font-size:18px;font-weight:800;color:var(--bark);letter-spacing:-.3px}
+.fm-l-lbl{font-size:10px;color:var(--bark-mid);font-weight:500}
+.fm-avail{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--sage);background:var(--sage-light);padding:4px 9px;border-radius:20px;margin-top:3px}
+.fm-dot{width:5px;height:5px;border-radius:50%;background:var(--sage)}
+.mentor-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.mc-card{background:var(--surface);border:0.5px solid var(--warm-line);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.mc-card:hover{border-color:var(--clay)}
+.mc-top{padding:16px 16px 13px;display:flex;gap:11px;align-items:flex-start;border-bottom:0.5px solid var(--warm-line)}
+.mc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.mc-name{font-size:13.5px;font-weight:800;color:var(--bark);line-height:1.2;letter-spacing:-.15px;margin-bottom:2px}
+.mc-role{font-size:10px;color:var(--clay);font-weight:700;margin-bottom:2px}
+.mc-loc{font-size:10px;color:var(--bark-mid);font-weight:500}
+.mc-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px}
+.mc-body{padding:12px 16px 14px}
+.mc-q{font-family:'Lora',serif;font-size:11.5px;font-style:italic;color:var(--bark-mid);line-height:1.6;margin-bottom:10px}
+.mc-skills{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+.mc-skill{font-size:9px;padding:3px 8px;border-radius:20px;background:var(--clay-light);color:var(--bark-mid);font-weight:700}
+.mc-skill.sage{background:var(--sage-light);color:var(--sage)}
+.mc-foot{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:0.5px solid var(--warm-line)}
+.mc-count{font-size:10px;color:var(--bark-mid);font-weight:600}
+.req-btn{font-size:10px;font-weight:800;padding:5px 12px;border-radius:6px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+.match-item{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:0.5px solid rgba(255,255,255,0.08);cursor:pointer}
+.match-item:last-child{border-bottom:none;padding-bottom:0}
+.match-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;flex-shrink:0}
+.match-name{font-size:12px;font-weight:700;color:#fff}
+.match-why{font-size:10px;color:rgba(255,255,255,.42);font-weight:500;margin-top:1px;line-height:1.4}
+.spec-item{padding:7px 0;border-bottom:0.5px solid var(--warm-line);cursor:pointer}
+.spec-item:last-child{border-bottom:none;padding-bottom:0}
+.spec-name{font-size:12px;font-weight:700;color:var(--bark);letter-spacing:-.1px}
+.spec-count{font-size:10px;color:var(--bark-mid);font-weight:500;margin-top:1px}
+
+/* ── PROFILE EDITOR ── */
+.editor-header{background:var(--clay-pale);border-bottom:1px solid var(--warm-line);padding:18px 26px}
+.ed-acts{display:flex;gap:8px;margin-top:12px;align-items:center}
+.prev-btn{font-size:12px;font-weight:700;padding:7px 14px;border-radius:7px;background:var(--surface);color:var(--bark-mid);border:0.5px solid var(--warm-line);cursor:pointer;display:flex;align-items:center;gap:5px}
+.save-btn{font-size:12px;font-weight:700;padding:7px 16px;border-radius:7px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+.strength-pill{font-size:11px;color:var(--bark-mid);display:flex;align-items:center;gap:8px;margin-left:auto}
+.str-bar{width:80px;height:4px;background:var(--soft);border-radius:4px;overflow:hidden}
+.str-fill{width:74%;height:100%;background:var(--clay);border-radius:4px}
+.sec-card{background:var(--surface);border:0.5px solid var(--warm-line);border-radius:12px;overflow:hidden}
+.sec-head{display:flex;justify-content:space-between;align-items:center;padding:13px 17px;border-bottom:0.5px solid var(--warm-line);background:var(--soft)}
+.sec-title{font-size:13px;font-weight:800;color:var(--bark);letter-spacing:-.15px}
+.sec-status{font-size:9px;font-weight:800;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px}
+.status-done{background:var(--sage-light);color:var(--sage)}
+.status-part{background:var(--clay-light);color:var(--bark-mid)}
+.sec-body{padding:15px 17px;display:flex;flex-direction:column;gap:11px}
+.field-row{display:flex;flex-direction:column;gap:4px}
+.field-label{font-size:10px;font-weight:700;color:var(--bark-mid);letter-spacing:.2px;text-transform:uppercase}
+.field-input{width:100%;padding:8px 11px;border-radius:7px;border:0.5px solid var(--warm-line);background:var(--cream);font-size:13px;color:var(--bark);font-family:'Bricolage Grotesque',sans-serif;outline:none}
+.field-input:focus{border-color:var(--clay);background:#fff}
+.field-ta{width:100%;padding:9px 11px;border-radius:7px;border:0.5px solid var(--warm-line);background:var(--cream);font-size:13px;color:var(--bark);font-family:'Bricolage Grotesque',sans-serif;outline:none;resize:vertical;min-height:70px;line-height:1.6}
+.field-ta:focus{border-color:var(--clay);background:#fff}
+.field-hint{font-family:'Lora',serif;font-size:10.5px;color:var(--bark-mid);font-style:italic;opacity:.8;line-height:1.5}
+.two-field{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.skill-wrap-edit{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.skill-pill{display:flex;align-items:center;gap:5px;font-size:11px;padding:4px 10px;border-radius:20px;background:var(--clay-light);color:var(--bark-mid);font-weight:700}
+.skill-pill.sage{background:var(--sage-light);color:var(--sage)}
+.skill-x{cursor:pointer;font-size:13px;line-height:1;background:none;border:none;color:inherit;padding:0;opacity:.6;font-family:inherit}
+.add-skill{font-size:11px;padding:4px 10px;border-radius:20px;border:1px dashed var(--warm-line);background:transparent;color:var(--bark-mid);cursor:pointer;font-family:'Bricolage Grotesque',sans-serif;font-weight:600}
+.port-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--warm-line)}
+.port-item:last-of-type{border-bottom:none}
+.port-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.port-title{font-size:13px;font-weight:700;color:var(--bark);letter--.1px}
+.port-meta{font-size:11px;color:var(--bark-mid);margin-top:1px;font-weight:500}
+.icon-btn{font-size:10px;padding:4px 9px;border-radius:6px;border:0.5px solid var(--warm-line);background:var(--surface);color:var(--bark-mid);cursor:pointer;font-family:'Bricolage Grotesque',sans-serif;font-weight:600}
+.add-port{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--clay);cursor:pointer;font-weight:700;padding:10px 0 0;border-top:0.5px dashed var(--warm-line);margin-top:10px;background:none;border-left:none;border-right:none;border-bottom:none;font-family:'Bricolage Grotesque',sans-serif;width:100%}
+.goal-row{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:0.5px solid var(--warm-line)}
+.goal-row:last-of-type{border-bottom:none}
+.goal-dot{width:5px;height:5px;border-radius:50%;background:var(--clay);flex-shrink:0}
+.goal-input{flex:1;border:none;background:transparent;font-size:12.5px;color:var(--bark-mid);font-family:'Bricolage Grotesque',sans-serif;outline:none;padding:0;font-weight:500}
+.goal-del{font-size:13px;color:var(--bark-mid);opacity:.35;cursor:pointer;background:none;border:none;padding:0;line-height:1}
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--warm-line)}
+.check-item:last-child{border-bottom:none;padding-bottom:0}
+.check-circle{width:17px;height:17px;border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:800}
+.check-done{background:var(--sage)}
+.check-part{background:var(--clay)}
+.check-empty{background:var(--soft);border:1px solid var(--warm-line)}
+.check-lbl{font-size:12px;font-weight:700;color:var(--bark);letter-spacing:-.1px}
+.check-sub{font-size:10px;color:var(--bark-mid);margin-top:2px;font-weight:500}
+.check-act{font-size:10px;color:var(--clay);cursor:pointer;font-weight:700;margin-top:2px;display:inline-block}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid rgba(255,255,255,0.08)}
+.toggle-row:last-child{border-bottom:none;padding-bottom:0}
+.toggle-lbl{font-size:12px;color:#fff;font-weight:600}
+.toggle-sub{font-size:10px;color:rgba(255,255,255,.42);font-weight:500;margin-top:1px}
+.toggle{width:32px;height:17px;border-radius:20px;background:var(--sage);display:flex;align-items:center;padding:2px;cursor:pointer;flex-shrink:0;transition:background .2s}
+.toggle.off{background:rgba(255,255,255,0.12)}
+.toggle-knob{width:13px;height:13px;border-radius:50%;background:#fff;margin-left:auto;transition:margin .2s}
+.toggle.off .toggle-knob{margin-left:0}
+
+/* ── OPPORTUNITY BOARD ── */
+.feat-partner{background:var(--surface);border:0.5px solid var(--warm-line);border-radius:12px;overflow:hidden;margin-bottom:0}
+.fp-banner{height:100px;display:flex;align-items:flex-end;padding:14px 18px;position:relative;overflow:hidden;background:var(--bark)}
+.fp-lbl{font-size:9px;font-weight:700;color:rgba(255,255,255,0.38);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.fp-logo-row{display:flex;align-items:center;gap:9px}
+.fp-logo-av{width:38px;height:38px;border-radius:9px;background:var(--clay);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;border:2px solid rgba(255,255,255,0.12)}
+.fp-name{font-size:16px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.fp-tag{font-size:10px;color:rgba(255,255,255,.48);margin-top:2px;font-weight:500}
+.fp-body{padding:14px 18px}
+.fp-about{font-size:12px;color:var(--bark-mid);line-height:1.65;margin-bottom:12px;padding-bottom:12px;border-bottom:0.5px solid var(--warm-line);font-weight:500}
+.fp-roles-lbl{font-size:9px;font-weight:800;letter-spacing:.8px;text-transform:uppercase;color:var(--clay);margin-bottom:9px}
+.fp-role{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-radius:8px;border:0.5px solid var(--warm-line);margin-bottom:7px;background:var(--cream);transition:border-color .15s;cursor:pointer}
+.fp-role:last-of-type{margin-bottom:0}
+.fp-role:hover{border-color:var(--clay)}
+.fp-role-title{font-size:12.5px;font-weight:700;color:var(--bark);letter-spacing:-.1px}
+.fp-role-meta{font-size:10px;color:var(--bark-mid);margin-top:2px;display:flex;gap:6px;font-weight:500}
+.fp-role-tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.fp-role-acts{display:flex;gap:5px;flex-shrink:0;margin-left:10px}
+.div-lbl{display:flex;align-items:center;gap:10px;margin:4px 0 2px}
+.div-line{flex:1;height:0.5px;background:var(--warm-line)}
+.div-txt{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--bark-mid)}
+.opp-card{background:var(--surface);border:0.5px solid var(--warm-line);border-radius:12px;padding:14px 17px;transition:border-color .15s;cursor:pointer}
+.opp-card:hover{border-color:var(--clay)}
+.opp-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.opp-org-row{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.org-dot{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;flex-shrink:0}
+.org-name{font-size:11px;color:var(--bark-mid);font-weight:700}
+.opp-title{font-size:13.5px;font-weight:800;color:var(--bark);letter-spacing:-.2px;margin-bottom:5px}
+.opp-desc{font-size:12px;color:var(--bark-mid);line-height:1.6;margin-bottom:9px;font-weight:500}
+.opp-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.tag{font-size:9px;padding:3px 8px;border-radius:20px;font-weight:800;text-transform:uppercase;letter-spacing:.2px}
+.tag-type{background:var(--clay-light);color:var(--bark-mid)}
+.tag-sage{background:var(--sage-light);color:var(--sage)}
+.tag-new{background:var(--auburn-light);color:var(--auburn)}
+.tag-gray{background:var(--soft);color:var(--bark-mid)}
+.opp-footer{display:flex;justify-content:space-between;align-items:center;padding-top:9px;border-top:0.5px solid var(--warm-line)}
+.opp-meta{font-size:10px;color:var(--bark-mid);font-weight:600}
+.apply-btn{font-size:10px;font-weight:800;padding:5px 12px;border-radius:6px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+.save-opp{font-size:10px;font-weight:800;padding:5px 10px;border-radius:6px;background:var(--auburn-light);color:var(--auburn);border:0.5px solid var(--auburn-mid);cursor:pointer;margin-right:5px;transition:all .2s}
+.partner-row{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--warm-line)}
+.partner-row:last-child{border-bottom:none;padding-bottom:0}
+.partner-dot{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;flex-shrink:0}
+.partner-name{font-size:12px;font-weight:700;color:var(--bark)}
+.partner-count{font-size:10px;color:var(--bark-mid);font-weight:500}
+
+/* ── RESOURCE HUB ── */
+.feat-resource{background:var(--bark);border-radius:14px;padding:22px 24px;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:start}
+.fr-eye{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--clay);margin-bottom:9px}
+.fr-title{font-size:17px;font-weight:800;color:#fff;letter-spacing:-.3px;line-height:1.25;margin-bottom:6px}
+.fr-sub{font-size:11.5px;color:rgba(255,255,255,.45);line-height:1.65;margin-bottom:12px;font-weight:500}
+.fr-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.fr-tag{font-size:9px;padding:3px 9px;border-radius:20px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,.58);font-weight:700}
+.fr-btn{font-size:12px;font-weight:700;padding:8px 17px;border-radius:8px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+.fr-ring-lbl{font-size:9px;color:rgba(255,255,255,.35);text-align:right;margin-top:4px;font-weight:700}
+.path-card{background:var(--surface);border:0.5px solid var(--warm-line);border-radius:12px;padding:15px 17px}
+.path-step{display:flex;gap:11px;padding:9px 0;position:relative}
+.path-step:not(:last-child)::after{content:'';position:absolute;left:12px;top:30px;bottom:0;width:1px;background:var(--warm-line)}
+.ps-circle{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:800}
+.ps-done{background:var(--sage);color:#fff}
+.ps-active{background:var(--clay);color:#fff}
+.ps-next{background:var(--soft);color:var(--bark-mid);border:0.5px solid var(--warm-line)}
+.ps-title{font-size:13px;font-weight:700;color:var(--bark);letter-spacing:-.1px;line-height:1.3}
+.ps-sub{font-size:10.5px;color:var(--bark-mid);margin-top:2px;font-weight:500}
+.ps-badge{font-size:9px;font-weight:800;padding:2px 7px;border-radius:20px;margin-top:3px;display:inline-block;text-transform:uppercase;letter-spacing:.2px}
+.res-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.rc{background:var(--surface);border:0.5px solid var(--warm-line);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.rc:hover{border-color:var(--clay)}
+.rc-thumb{height:68px;display:flex;align-items:center;justify-content:center;position:relative}
+.rc-type{position:absolute;top:7px;left:7px;font-size:8px;font-weight:800;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.3px}
+.rc-body{padding:11px 13px 13px}
+.rc-title{font-size:12.5px;font-weight:800;color:var(--bark);letter-spacing:-.1px;line-height:1.3;margin-bottom:4px}
+.rc-desc{font-size:11px;color:var(--bark-mid);line-height:1.5;margin-bottom:9px;font-weight:500}
+.rc-foot{display:flex;justify-content:space-between;align-items:center;margin-top:7px}
+.rc-meta{font-size:9px;color:var(--bark-mid);font-weight:700;letter-spacing:.2px;text-transform:uppercase}
+.rc-act{font-size:10px;font-weight:800;padding:4px 11px;border-radius:6px;background:var(--auburn);color:#fff;border:none;cursor:pointer}
+.rc-pb{height:3px;background:var(--soft);border-radius:2px;overflow:hidden;margin-top:7px}
+.rc-pf{height:100%;border-radius:2px;background:var(--clay)}
+.streak-day{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800}
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+  <div class="sidebar">
+    <div class="sb-top">
+      <div class="lw">
+        <div class="logo">Cultured<br>Mornings</div>
+        <div class="tagline">"Do everything in love." — 1 Cor. 16:14</div>
+      </div>
+      <button class="tog" id="tog" aria-label="Toggle sidebar">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+          <path id="ti" d="M9 2L4 7l5 5" stroke="rgba(255,255,255,0.45)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="nsl">Your space</div>
+    <div class="ni active" data-screen="home"><div class="npip"></div><span class="nl">Home</span></div>
+    <div class="ni" data-screen="profile-editor"><div class="npip"></div><span class="nl">My profile</span></div>
+    <div class="nsl">Our community</div>
+    <div class="ni" data-screen="mentors"><div class="npip"></div><span class="nl">Mentors</span></div>
+    <div class="ni" data-screen="opportunities"><div class="npip"></div><span class="nl">Opportunities</span></div>
+    <div class="nsl">Grow</div>
+    <div class="ni" data-screen="resources"><div class="npip"></div><span class="nl">Resources</span></div>
+    <div class="ni" data-screen="public-profile"><div class="npip"></div><span class="nl">Public profile</span></div>
+    <div class="sbf">
+      <div class="uav">JT</div>
+      <span class="sbfn">Jordan Thomas</span>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- ══ HOME ══ -->
+    <div class="screen active" id="screen-home">
+      <div class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="hero-kicker">Good morning, Friday</div>
+            <div class="hero-name">Welcome back,<br>Jordan.</div>
+            <div class="hero-verse">"For I know the plans I have for you… plans to give you hope and a future." — Jeremiah 29:11</div>
+          </div>
+          <div style="padding-bottom:20px">
+            <div class="sk">This week's streak</div>
+            <div class="srow">
+              <div class="sd sd-on">M</div><div class="sd sd-on">T</div><div class="sd sd-on">W</div><div class="sd sd-on">T</div><div class="sd sd-today">F</div><div class="sd sd-off">S</div><div class="sd sd-off">S</div>
+            </div>
+            <div class="snote">5 days strong — keep going.</div>
+          </div>
+        </div>
+        <div class="stat-bar">
+          <div class="st"><div class="stn">3</div><div class="stl">Portfolio pieces</div></div>
+          <div class="st"><div class="stn">2</div><div class="stl">Active mentors</div></div>
+          <div class="st"><div class="stn">5</div><div class="stl">Opportunities</div></div>
+          <div class="st"><div class="stn">74%</div><div class="stl">Profile strength</div></div>
+        </div>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div>
+            <div class="sl">Jump back in</div>
+            <div class="action-grid">
+              <div class="ac ac-0"><div class="ac-icon"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#2C1F0F" stroke-width="1.5"/><path d="M6 9h6M6 6h4M6 12h3" stroke="#2C1F0F" stroke-width="1.4" stroke-linecap="round"/></svg></div><div class="ac-title">Continue knife skills</div><div class="ac-sub">Module 3 · 65% done</div><div class="ac-arrow">Resume lesson →</div></div>
+              <div class="ac ac-1"><div class="ac-icon"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="7" r="3.5" stroke="#2C1F0F" stroke-width="1.5"/><path d="M3 16c0-3 2.7-5 6-5s6 2 6 5" stroke="#2C1F0F" stroke-width="1.5" stroke-linecap="round"/></svg></div><div class="ac-title">Message Chef Lisa</div><div class="ac-sub">Unread message waiting</div><div class="ac-arrow">Open messages →</div></div>
+              <div class="ac ac-2"><div class="ac-icon"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2v14M3 9h12" stroke="#2C1F0F" stroke-width="1.7" stroke-linecap="round"/></svg></div><div class="ac-title">Add portfolio piece</div><div class="ac-sub">2 more unlocks workforce view</div><div class="ac-arrow">Open portfolio →</div></div>
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="card">
+              <div class="ch"><div class="ct">Opportunities</div><span class="ca nav-link-js" data-screen="opportunities">See all</span></div>
+              <div class="opp-item"><div><div class="opp-name">Catering assistant</div><div class="opp-org">Louisville Catering Co.</div></div><span class="badge bh">New</span></div>
+              <div class="opp-item"><div><div class="opp-name">Kitchen intern</div><div class="opp-org">Chef Marcus Kitchen</div></div><span class="badge bo">Open</span></div>
+              <div class="opp-item"><div><div class="opp-name">Pop-up volunteer</div><div class="opp-org">Community Table · May 18</div></div><span class="badge bs">Soon</span></div>
+            </div>
+            <div class="card">
+              <div class="ch"><div class="ct">Walking with you</div><span class="ca nav-link-js" data-screen="mentors">Browse</span></div>
+              <div class="mi"><div class="mav" style="background:var(--clay-light);color:var(--bark-mid)">CL</div><div><div class="mn">Chef Lisa Owens</div><div class="mr">Pastry & baking</div></div><button class="msg-btn">Message</button></div>
+              <div class="mi"><div class="mav" style="background:var(--sage-light);color:var(--sage)">DW</div><div><div class="mn">David Washington</div><div class="mr">Culinary educator</div></div><button class="msg-btn">Message</button></div>
+              <div class="mi" style="opacity:.42"><div class="mav" style="background:var(--soft);color:var(--bark-mid)">+</div><div><div class="mn" style="color:var(--bark-mid)">Find another guide</div><div class="mr">Business & hospitality</div></div><button class="msg-btn" style="background:var(--soft);color:var(--bark-mid)">Browse</button></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Recent activity</div><span class="ca">View all</span></div>
+            <div class="af-item"><div class="af-dot" style="background:var(--clay)"></div><div><div class="af-text">Completed <strong style="font-weight:800">Knife skills — module 2</strong></div><div class="af-time">Today · 9:14am</div></div></div>
+            <div class="af-item"><div class="af-dot" style="background:var(--sage)"></div><div><div class="af-text">Chef Lisa Owens sent you a message</div><div class="af-time">Yesterday · 4:30pm</div></div></div>
+            <div class="af-item"><div class="af-dot" style="background:var(--auburn)"></div><div><div class="af-text">New listing — <strong style="font-weight:800">Catering assistant</strong> at Louisville Catering Co.</div><div class="af-time">Yesterday · 11:00am</div></div></div>
+            <div class="af-item"><div class="af-dot" style="background:var(--clay)"></div><div><div class="af-text">Added <strong style="font-weight:800">Food safety certification</strong> to portfolio</div><div class="af-time">2 days ago</div></div></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Keep learning</div><span class="ca nav-link-js" data-screen="resources">Resource hub</span></div>
+            <div class="ri"><div class="rth" style="background:var(--clay-light)"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M4 5h10M4 9h10M4 13h6" stroke="#2C1F0F" stroke-width="1.4" stroke-linecap="round" opacity=".6"/></svg></div><div style="flex:1"><div class="rn">Knife skills — advanced cuts</div><div class="rm">Module 3 · 25 min left</div><div class="rpb"><div class="rpf" style="width:65%"></div></div></div><button class="rbtn">Resume</button></div>
+            <div class="ri"><div class="rth" style="background:var(--sage-light)"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="3" y="4" width="12" height="10" rx="1.5" stroke="#2C1F0F" stroke-width="1.4" opacity=".6"/><path d="M3 7h12" stroke="#2C1F0F" stroke-width="1.4" opacity=".4"/></svg></div><div style="flex:1"><div class="rn">Managing money on your first paycheck</div><div class="rm">Life skills · 60% done</div><div class="rpb"><div class="rpf" style="width:60%;background:var(--sage)"></div></div></div><button class="rbtn">Continue</button></div>
+            <div class="ri"><div class="rth" style="background:var(--soft)"><svg width="16" height="16" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="9" r="6" stroke="#2C1F0F" stroke-width="1.4" opacity=".5"/><path d="M7 7l4 2-4 2V7z" fill="#2C1F0F" opacity=".4"/></svg></div><div style="flex:1"><div class="rn">How to ace a kitchen interview</div><div class="rm">Career · New</div><div class="rpb"><div class="rpf" style="width:0%"></div></div></div><button class="rbtn">Start</button></div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="card">
+            <div class="ch" style="margin-bottom:5px"><div class="ct">Profile strength</div><span class="ca nav-link-js" data-screen="profile-editor">Edit</span></div>
+            <div class="prof-n">74%</div>
+            <div class="prof-count">3 sections need attention</div>
+            <div class="prog-row"><div class="prog-label"><span>Basic info</span><span style="color:var(--sage)">Done</span></div><div class="prog-bg"><div class="prog-fill" style="width:100%;background:var(--sage)"></div></div></div>
+            <div class="prog-row"><div class="prog-label"><span>Portfolio</span><span>60%</span></div><div class="prog-bg"><div class="prog-fill" style="width:60%;background:var(--clay)"></div></div></div>
+            <div class="prog-row"><div class="prog-label"><span>Photos</span><span>66%</span></div><div class="prog-bg"><div class="prog-fill" style="width:66%;background:var(--clay)"></div></div></div>
+            <div class="prog-row"><div class="prog-label"><span>Goals & story</span><span>40%</span></div><div class="prog-bg"><div class="prog-fill" style="width:40%;background:var(--clay-light);border:0.5px solid var(--warm-line)"></div></div></div>
+            <div class="prog-row" style="margin-bottom:0"><div class="prog-label"><span>Resume</span><span style="color:var(--auburn)">Missing</span></div><div class="prog-bg"><div class="prog-fill" style="width:0%"></div></div></div>
+            <div class="lora-nudge">Upload a resume to unlock full workforce visibility.</div>
+          </div>
+          <div class="dark-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:11px"><div style="font-size:13.5px;font-weight:800;color:#fff;letter-spacing:-.2px">Notifications</div><span style="font-size:9px;font-weight:800;padding:3px 8px;border-radius:20px;background:var(--auburn);color:#fff;letter-spacing:.3px;text-transform:uppercase">3 new</span></div>
+            <div class="notif-item"><div class="ndot" style="background:var(--auburn)"></div><div><div class="ntext">Chef Lisa left a note on your portfolio</div><div class="ntime">2 hours ago</div></div></div>
+            <div class="notif-item"><div class="ndot" style="background:var(--clay)"></div><div><div class="ntext">New listing: Catering assistant at Louisville Co.</div><div class="ntime">Yesterday</div></div></div>
+            <div class="notif-item"><div class="ndot" style="background:var(--sage)"></div><div><div class="ntext">Cohort IV showcase is open for submissions</div><div class="ntime">2 days ago</div></div></div>
+          </div>
+          <div class="clay-card">
+            <div class="card-kicker">From the community</div>
+            <div class="lora-quote">"I came in not knowing how to hold a knife. Now I walk into any kitchen and feel like I belong."</div>
+            <div class="quote-attr">— Alumni, Cohort III</div>
+          </div>
+          <div class="soft-card">
+            <div class="card-kicker">Upcoming event</div>
+            <div style="font-size:14px;font-weight:800;color:var(--bark);letter-spacing:-.25px;margin-bottom:3px">Community pop-up dinner</div>
+            <div style="font-size:11.5px;color:var(--bark-mid);margin-bottom:11px;line-height:1.55;font-weight:500">May 18 · Louisville Catering Co.<br>Volunteer shifts available</div>
+            <button class="ev-btn">Sign up</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PUBLIC PROFILE ══ -->
+    <div class="screen" id="screen-public-profile">
+      <div class="pub-topnav">
+        <div class="nav-logo">Cultured Mornings</div>
+        <div class="nav-links">
+          <span class="nav-link">About</span><span class="nav-link">Our community</span><span class="nav-link">Showcases</span><span class="nav-link">Support us</span>
+          <button class="nav-cta">Join the table</button>
+        </div>
+      </div>
+      <div class="pub-hero">
+        <div class="pub-hero-inner">
+          <div>
+            <div class="pub-av">JT</div>
+            <div class="pub-name">Jordan Thomas</div>
+            <div class="pub-role">Alumni · Cohort III · Emerging Culinary Talent</div>
+            <div class="pub-loc">Louisville, KY · Open to opportunities</div>
+            <div class="pub-qfacts">
+              <div><div class="qf-val">3</div><div class="qf-lbl">Credentials</div></div>
+              <div style="border-left:0.5px solid var(--warm-line);padding-left:20px"><div class="qf-val">2+</div><div class="qf-lbl">Years</div></div>
+              <div style="border-left:0.5px solid var(--warm-line);padding-left:20px"><div class="qf-val">2</div><div class="qf-lbl">Events led</div></div>
+            </div>
+            <div class="pub-quote">"Food taught me patience, precision, and how to show up for people — skills I carry everywhere I go now."<div class="pub-quote-attr" style="margin-top:6px">— Jordan Thomas, Cohort III</div></div>
+          </div>
+          <div class="pub-actions">
+            <button class="btn-fill">Express interest</button>
+            <button class="btn-out">Download resume</button>
+            <button class="btn-ghost">View full portfolio</button>
+            <div class="pub-reach">Reaching out? Jordan and the Cultured Mornings team will follow up within 3 business days.</div>
+          </div>
+        </div>
+      </div>
+      <div class="pub-body">
+        <div class="pub-main">
+          <div>
+            <div class="section-label">Jordan's story</div>
+            <p style="font-size:13.5px;color:var(--bark-mid);line-height:1.8;margin-bottom:10px;font-weight:500">Jordan joined Cultured Mornings in fall 2022 — not knowing what to expect. What started as curiosity about food became a calling. In just two years, Jordan grew from a student who had never held a chef's knife to a certified food safety professional who has led catering events and mentored younger participants.</p>
+            <p style="font-size:13.5px;color:var(--bark-mid);line-height:1.8;font-weight:500">Today, Jordan is working toward a career in hospitality and community catering — with a goal of one day opening a community kitchen right here in Louisville.</p>
+          </div>
+          <div>
+            <div class="section-label">Journey & growth</div>
+            <div class="timeline-item"><div class="tl-dot">🌱</div><div><div class="tl-title">Joined Cultured Mornings</div><div class="tl-sub">Enrolled in Cohort III, began foundational culinary training</div><div class="tl-date">Fall 2022</div></div></div>
+            <div class="timeline-item"><div class="tl-dot">🔪</div><div><div class="tl-title">Earned knife skills certification</div><div class="tl-sub">Advanced to lead station in kitchen rotations</div><div class="tl-date">Spring 2024</div></div></div>
+            <div class="timeline-item"><div class="tl-dot">🍽️</div><div><div class="tl-title">Led first catering event</div><div class="tl-sub">Coordinated front-of-house for a 60-person community dinner</div><div class="tl-date">Fall 2024</div></div></div>
+            <div class="timeline-item" style="padding-bottom:0"><div class="tl-dot">🏅</div><div><div class="tl-title">Food safety certified</div><div class="tl-sub">Earned professional credential — now workforce ready</div><div class="tl-date">2024</div></div></div>
+          </div>
+          <div>
+            <div class="section-label">Skills</div>
+            <div class="skill-wrap">
+              <span class="skill">Knife technique</span><span class="skill">Food safety</span><span class="skill sage">Event catering</span><span class="skill">Seasoning & flavor</span><span class="skill sage">Team leadership</span><span class="skill">Sanitation</span><span class="skill">Menu planning</span>
+            </div>
+          </div>
+        </div>
+        <div class="pub-side">
+          <div class="connect-card">
+            <div class="cc-title">Get in touch</div>
+            <div class="cc-sub">Interested in Jordan's work? Reach out and the Cultured Mornings team will connect you.</div>
+            <input class="cc-input" placeholder="Your name"/>
+            <input class="cc-input" placeholder="Your email or organization"/>
+            <input class="cc-input" placeholder="What's this about?"/>
+            <button class="cc-btn">Send a note</button>
+          </div>
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">At a glance</div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">Cohort</span><span style="font-size:12px;font-weight:700;color:var(--bark)">III · 2022</span></div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">Credentials</span><span style="font-size:12px;font-weight:700;color:var(--bark)">3 verified</span></div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">Events led</span><span style="font-size:12px;font-weight:700;color:var(--bark)">2</span></div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">Open to</span><span style="font-size:12px;font-weight:700;color:var(--sage)">Work & mentorship</span></div>
+          </div>
+          <div style="background:var(--surface);border:0.5px solid var(--warm-line);border-radius:10px;padding:13px 15px;display:flex;align-items:center;gap:11px">
+            <div style="width:34px;height:34px;border-radius:8px;background:var(--clay-pale);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--bark-mid);flex-shrink:0">CM</div>
+            <div><div style="font-size:13px;font-weight:800;color:var(--bark);letter-spacing:-.1px">Cultured Mornings</div><div style="font-size:10px;color:var(--bark-mid);margin-top:2px;font-weight:500">Verified member · Louisville, KY</div></div>
+          </div>
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">Goals & aspirations</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <div style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--bark-mid);line-height:1.5;font-weight:500"><div style="width:5px;height:5px;border-radius:50%;background:var(--clay);flex-shrink:0;margin-top:5px"></div>Work in a professional catering kitchen</div>
+              <div style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--bark-mid);line-height:1.5;font-weight:500"><div style="width:5px;height:5px;border-radius:50%;background:var(--clay);flex-shrink:0;margin-top:5px"></div>Earn a hospitality certificate</div>
+              <div style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--bark-mid);line-height:1.5;font-weight:500"><div style="width:5px;height:5px;border-radius:50%;background:var(--clay);flex-shrink:0;margin-top:5px"></div>Open a community kitchen in Louisville</div>
+              <div style="display:flex;gap:8px;align-items:flex-start;font-size:12.5px;color:var(--bark-mid);line-height:1.5;font-weight:500"><div style="width:5px;height:5px;border-radius:50%;background:var(--clay);flex-shrink:0;margin-top:5px"></div>Mentor the next cohort</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="pub-footer">
+        <div class="ft-logo">Cultured Mornings</div>
+        <div class="ft-verse">"Do everything in love." — 1 Corinthians 16:14</div>
+      </div>
+    </div>
+
+    <!-- ══ MENTOR DIRECTORY ══ -->
+    <div class="screen" id="screen-mentors">
+      <div class="page-header">
+        <div class="page-title">Find your guide</div>
+        <div class="page-sub">Every mentor here has been where you are and chosen to come back. Browse, connect, and find the person who speaks to where you want to go.</div>
+      </div>
+      <div style="padding:12px 26px;background:var(--surface);border-bottom:0.5px solid var(--warm-line);display:flex;gap:8px;flex-wrap:wrap">
+        <button class="f-btn active" onclick="filterMentors('all',this)">All</button>
+        <button class="f-btn" onclick="filterMentors('pastry',this)">Pastry</button>
+        <button class="f-btn" onclick="filterMentors('culinary',this)">Culinary arts</button>
+        <button class="f-btn" onclick="filterMentors('business',this)">Business</button>
+        <button class="f-btn" onclick="filterMentors('community',this)">Community</button>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div class="feat-mentor">
+            <div class="fm-l">
+              <div>
+                <div class="fm-eye">Mentor of the month</div>
+                <div class="fm-av">MJ</div>
+                <div class="fm-name">Chef Marcus Johnson</div>
+                <div class="fm-role">Executive Chef · Culinary arts & leadership</div>
+                <div class="fm-quote">"The kitchen taught me that discipline and love aren't opposites — they're the same thing dressed differently."</div>
+                <div class="fm-skills"><span class="fm-skill">Knife mastery</span><span class="fm-skill">Menu development</span><span class="fm-skill">Kitchen leadership</span><span class="fm-skill">Youth mentorship</span></div>
+              </div>
+              <div class="fm-acts"><button class="fm-btn">Request mentorship</button><button class="fm-btn2">View profile</button></div>
+            </div>
+            <div class="fm-r">
+              <div class="fm-r-lbl">At a glance</div>
+              <div class="fm-stat"><div class="fm-n">40+</div><div class="fm-l-lbl">Alumni mentored</div></div>
+              <div class="fm-stat"><div class="fm-n">6 yrs</div><div class="fm-l-lbl">With Cultured Mornings</div></div>
+              <div class="fm-stat"><div class="fm-n">2</div><div class="fm-l-lbl">Current mentees</div></div>
+              <div class="fm-avail"><div class="fm-dot"></div>Taking new mentees</div>
+            </div>
+          </div>
+          <div class="mentor-grid" id="mentor-grid">
+            <div class="mc-card" data-spec="pastry">
+              <div class="mc-top"><div class="mc-av" style="background:#8B5E2A">LO</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="mc-name">Chef Lisa Owens</div><div class="mc-role">Pastry chef & baker</div><div class="mc-loc">Louisville, KY</div></div><span class="mc-badge" style="background:var(--sage-light);color:var(--sage)">Open</span></div></div></div>
+              <div class="mc-body"><div class="mc-q">"Every dish is a love letter to someone. I teach my students to bake with intention."</div><div class="mc-skills"><span class="mc-skill">Pastry arts</span><span class="mc-skill">Bread & lamination</span><span class="mc-skill sage">Flavor pairing</span><span class="mc-skill">Plating</span></div><div class="mc-foot"><span class="mc-count">18 alumni mentored</span><button class="req-btn">Connect</button></div></div>
+            </div>
+            <div class="mc-card" data-spec="culinary">
+              <div class="mc-top"><div class="mc-av" style="background:var(--sage)">DW</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="mc-name">David Washington</div><div class="mc-role">Culinary educator</div><div class="mc-loc">Louisville, KY</div></div><span class="mc-badge" style="background:var(--sage-light);color:var(--sage)">Open</span></div></div></div>
+              <div class="mc-body"><div class="mc-q">"Food is how I learned to care for people. I want every student to feel that same shift."</div><div class="mc-skills"><span class="mc-skill">Kitchen safety</span><span class="mc-skill sage">Youth development</span><span class="mc-skill">Life skills</span><span class="mc-skill">Culinary basics</span></div><div class="mc-foot"><span class="mc-count">31 alumni mentored</span><button class="req-btn">Connect</button></div></div>
+            </div>
+            <div class="mc-card" data-spec="business">
+              <div class="mc-top"><div class="mc-av" style="background:var(--auburn)">RC</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="mc-name">Renee Carter</div><div class="mc-role">Hospitality consultant</div><div class="mc-loc">Louisville, KY</div></div><span class="mc-badge" style="background:var(--clay-light);color:var(--bark-mid)">1 spot left</span></div></div></div>
+              <div class="mc-body"><div class="mc-q">"I built my business from a folding table at a pop-up. I mentor because someone believed in me first."</div><div class="mc-skills"><span class="mc-skill">Entrepreneurship</span><span class="mc-skill sage">Branding</span><span class="mc-skill">Financial literacy</span><span class="mc-skill">Networking</span></div><div class="mc-foot"><span class="mc-count">9 alumni mentored</span><button class="req-btn">Connect</button></div></div>
+            </div>
+            <div class="mc-card" data-spec="community">
+              <div class="mc-top"><div class="mc-av" style="background:#2A4A70">PJ</div><div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="mc-name">Pastor James Hill</div><div class="mc-role">Community & life mentor</div><div class="mc-loc">Louisville, KY</div></div><span class="mc-badge" style="background:var(--sage-light);color:var(--sage)">Open</span></div></div></div>
+              <div class="mc-body"><div class="mc-q">"Your story isn't a setback. It's the testimony that someone else needs to hear."</div><div class="mc-skills"><span class="mc-skill">Faith & identity</span><span class="mc-skill sage">Community organizing</span><span class="mc-skill">Personal growth</span><span class="mc-skill">Resilience</span></div><div class="mc-foot"><span class="mc-count">22 alumni mentored</span><button class="req-btn">Connect</button></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="dark-card">
+            <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--clay);margin-bottom:9px">Suggested for you</div>
+            <div style="font-family:'Lora',serif;font-size:11px;font-style:italic;color:rgba(255,255,255,.4);margin-bottom:12px;line-height:1.6">Based on your goals, these mentors are a strong match for Jordan.</div>
+            <div class="match-item"><div class="match-av" style="background:#8B5E2A">LO</div><div><div class="match-name">Chef Lisa Owens</div><div class="match-why">Matches your pastry & plating interest</div></div></div>
+            <div class="match-item"><div class="match-av" style="background:var(--auburn)">RC</div><div><div class="match-name">Renee Carter</div><div class="match-why">Aligns with your goal to open a kitchen</div></div></div>
+            <div class="match-item" style="border-bottom:none;padding-bottom:0"><div class="match-av" style="background:#2A4A70">PJ</div><div><div class="match-name">Pastor James Hill</div><div class="match-why">Supports your community values</div></div></div>
+          </div>
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">Browse by specialty</div>
+            <div class="spec-item" onclick="filterMentors('culinary',null)"><div class="spec-name">Culinary arts</div><div class="spec-count">3 mentors available</div></div>
+            <div class="spec-item" onclick="filterMentors('pastry',null)"><div class="spec-name">Pastry & baking</div><div class="spec-count">1 mentor available</div></div>
+            <div class="spec-item" onclick="filterMentors('business',null)"><div class="spec-name">Business & entrepreneurship</div><div class="spec-count">2 mentors available</div></div>
+            <div class="spec-item" onclick="filterMentors('community',null)"><div class="spec-name">Community & life skills</div><div class="spec-count">1 mentor available</div></div>
+          </div>
+          <div style="background:var(--sage-light);border:0.5px solid rgba(58,102,68,0.18);border-radius:12px;padding:15px 17px">
+            <div style="font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Already connected</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><div style="width:26px;height:26px;border-radius:50%;background:var(--clay-light);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--bark-mid)">CL</div><div><div style="font-size:12px;font-weight:700;color:var(--bark)">Chef Lisa Owens</div><div style="font-size:10px;color:var(--sage);font-weight:600">Active mentor</div></div></div>
+            <div style="display:flex;align-items:center;gap:8px"><div style="width:26px;height:26px;border-radius:50%;background:var(--sage-light);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--sage)">DW</div><div><div style="font-size:12px;font-weight:700;color:var(--bark)">David Washington</div><div style="font-size:10px;color:var(--sage);font-weight:600">Active mentor</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE EDITOR ══ -->
+    <div class="screen" id="screen-profile-editor">
+      <div class="editor-header">
+        <div class="page-title">My profile</div>
+        <div class="page-sub">Your behind-the-scenes workspace. What you fill in here shapes how the world sees you.</div>
+        <div class="ed-acts">
+          <button class="prev-btn">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="#6B4F2A" stroke-width="1.2"/><circle cx="7" cy="7" r="2" fill="#6B4F2A"/></svg>
+            Preview public profile
+          </button>
+          <button class="save-btn" id="save-profile-btn">Save changes</button>
+          <div class="strength-pill"><span>Profile strength</span><div class="str-bar"><div class="str-fill"></div></div><span style="font-weight:800;color:var(--clay)">74%</span></div>
+        </div>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Basic info</div><span class="sec-status status-done">Complete</span></div>
+            <div class="sec-body">
+              <div class="two-field">
+                <div class="field-row"><div class="field-label">First name</div><input class="field-input" value="Jordan"/></div>
+                <div class="field-row"><div class="field-label">Last name</div><input class="field-input" value="Thomas"/></div>
+              </div>
+              <div class="field-row"><div class="field-label">Role / tagline</div><input class="field-input" value="Emerging culinary talent · Cohort III Alumni"/><div class="field-hint">This shows under your name on your public profile.</div></div>
+              <div class="two-field">
+                <div class="field-row"><div class="field-label">City</div><input class="field-input" value="Louisville, KY"/></div>
+                <div class="field-row"><div class="field-label">Open to</div><input class="field-input" value="Work & mentorship"/></div>
+              </div>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Your story & quote</div><span class="sec-status status-done">Complete</span></div>
+            <div class="sec-body">
+              <div class="field-row"><div class="field-label">Featured quote</div><input class="field-input" value="Food taught me patience, precision, and how to show up for people."/><div class="field-hint">One sentence in your own voice. Appears at the top of your profile.</div></div>
+              <div class="field-row"><div class="field-label">Your story</div><textarea class="field-ta">Jordan joined Cultured Mornings in fall 2022, not knowing what to expect. What started as curiosity about food became a calling. Through three cohorts, Jordan grew from a student who couldn't hold a knife to a certified food safety professional who has led catering events and mentored younger participants.</textarea><div class="field-hint">Written in third person so visitors and employers can read it naturally.</div></div>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Skills</div><span class="sec-status status-done">Complete</span></div>
+            <div class="sec-body">
+              <div class="field-hint" style="margin-bottom:4px">Click × to remove a skill, or add new ones below.</div>
+              <div class="skill-wrap-edit" id="skill-wrap">
+                <span class="skill-pill">Knife technique <button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill">Food safety <button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill sage">Event catering <button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill">Seasoning & flavor <button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill sage">Team leadership <button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill">Sanitation <button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <button class="add-skill" onclick="addSkill()">+ Add skill</button>
+              </div>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Portfolio pieces</div><span class="sec-status status-part">In progress</span></div>
+            <div class="sec-body">
+              <div class="port-item"><div class="port-icon" style="background:var(--clay-light)">🔪</div><div style="flex:1"><div class="port-title">Knife skills workshop</div><div class="port-meta">Certified · Spring 2024 · Verified</div></div><div style="display:flex;gap:5px"><button class="icon-btn">Edit</button><button class="icon-btn">Remove</button></div></div>
+              <div class="port-item"><div class="port-icon" style="background:#EAF0F5">📋</div><div style="flex:1"><div class="port-title">Catering event lead</div><div class="port-meta">Experience · Fall 2024 · Shared</div></div><div style="display:flex;gap:5px"><button class="icon-btn">Edit</button><button class="icon-btn">Remove</button></div></div>
+              <div class="port-item"><div class="port-icon" style="background:#F0EAF5">🏅</div><div style="flex:1"><div class="port-title">Food safety certification</div><div class="port-meta">Credential · 2024 · Verified</div></div><div style="display:flex;gap:5px"><button class="icon-btn">Edit</button><button class="icon-btn">Remove</button></div></div>
+              <button class="add-port"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M7 2v10M2 7h10" stroke="#C47A3A" stroke-width="1.5" stroke-linecap="round"/></svg>Add a portfolio piece</button>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Goals & aspirations</div><span class="sec-status status-part">In progress</span></div>
+            <div class="sec-body">
+              <div class="field-hint" style="margin-bottom:6px">Share what you're working toward. This helps mentors and partners understand your path.</div>
+              <div id="goals-list">
+                <div class="goal-row"><div class="goal-dot"></div><input class="goal-input" value="Work in a professional catering kitchen"/><button class="goal-del" onclick="this.closest('.goal-row').remove()">×</button></div>
+                <div class="goal-row"><div class="goal-dot"></div><input class="goal-input" value="Earn a hospitality certificate"/><button class="goal-del" onclick="this.closest('.goal-row').remove()">×</button></div>
+                <div class="goal-row"><div class="goal-dot"></div><input class="goal-input" value="Open a community kitchen in Louisville"/><button class="goal-del" onclick="this.closest('.goal-row').remove()">×</button></div>
+                <div class="goal-row"><div class="goal-dot"></div><input class="goal-input" value="Mentor the next cohort"/><button class="goal-del" onclick="this.closest('.goal-row').remove()">×</button></div>
+              </div>
+              <button onclick="addGoal()" style="font-size:11px;color:var(--clay);background:none;border:none;cursor:pointer;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;margin-top:8px;padding:0">+ Add a goal</button>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">Profile checklist</div>
+            <div class="check-item"><div class="check-circle check-done">✓</div><div><div class="check-lbl">Basic info</div><div class="check-sub">Name, role, location added</div></div></div>
+            <div class="check-item"><div class="check-circle check-done">✓</div><div><div class="check-lbl">Your story</div><div class="check-sub">Quote and bio written</div></div></div>
+            <div class="check-item"><div class="check-circle check-done">✓</div><div><div class="check-lbl">Skills</div><div class="check-sub">6 skills added</div></div></div>
+            <div class="check-item"><div class="check-circle check-part">~</div><div><div class="check-lbl">Portfolio</div><div class="check-sub">3 of 5 recommended pieces</div><span class="check-act">+ Add a piece</span></div></div>
+            <div class="check-item"><div class="check-circle check-part">~</div><div><div class="check-lbl">Photos</div><div class="check-sub">4 of 6 recommended</div><span class="check-act">+ Upload photo</span></div></div>
+            <div class="check-item"><div class="check-circle check-empty"></div><div><div class="check-lbl">Resume</div><div class="check-sub">No resume uploaded yet</div><span class="check-act">Upload resume</span></div></div>
+            <div class="check-item"><div class="check-circle check-empty"></div><div><div class="check-lbl">Video intro</div><div class="check-sub">Optional — introduce yourself</div><span class="check-act">Record a clip</span></div></div>
+          </div>
+          <div class="dark-card">
+            <div style="font-size:13.5px;font-weight:800;color:#fff;letter-spacing:-.2px;margin-bottom:6px">Visibility settings</div>
+            <div style="font-family:'Lora',serif;font-size:11px;color:rgba(255,255,255,.38);font-style:italic;margin-bottom:13px;line-height:1.6">Control who can see each part of your profile.</div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Public profile</div><div class="toggle-sub">Visible to everyone</div></div><div class="toggle" onclick="this.classList.toggle('off')"><div class="toggle-knob"></div></div></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Workforce visibility</div><div class="toggle-sub">Employers can find you</div></div><div class="toggle" onclick="this.classList.toggle('off')"><div class="toggle-knob"></div></div></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Mentor matching</div><div class="toggle-sub">Open to being matched</div></div><div class="toggle" onclick="this.classList.toggle('off')"><div class="toggle-knob"></div></div></div>
+            <div class="toggle-row" style="border-bottom:none"><div><div class="toggle-lbl">Contact form</div><div class="toggle-sub">Allow direct messages</div></div><div class="toggle off" onclick="this.classList.toggle('off')"><div class="toggle-knob"></div></div></div>
+          </div>
+          <div style="background:var(--sage-light);border:0.5px solid rgba(58,102,68,0.2);border-radius:12px;padding:15px 17px">
+            <div style="font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">A note from the team</div>
+            <div class="lora-quote" style="color:var(--sage)">"Your story matters. The more honestly you fill this in, the better chance you have of connecting with the right people."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ OPPORTUNITY BOARD ══ -->
+    <div class="screen" id="screen-opportunities">
+      <div class="page-header">
+        <div class="page-title">Opportunities at the table</div>
+        <div class="page-sub">Jobs, gigs, internships, and catering roles posted by our partners — all here for you. Every listing is a door worth trying.</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);border-bottom:0.5px solid var(--warm-line);background:var(--surface)">
+        <div style="padding:12px 0 14px 20px;border-right:0.5px solid var(--warm-line)"><div style="font-size:22px;font-weight:800;color:var(--bark);letter-spacing:-.4px">14</div><div style="font-size:9px;color:rgba(44,31,15,.35);margin-top:3px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Open listings</div></div>
+        <div style="padding:12px 0 14px 20px;border-right:0.5px solid var(--warm-line)"><div style="font-size:22px;font-weight:800;color:var(--bark);letter-spacing:-.4px">3</div><div style="font-size:9px;color:rgba(44,31,15,.35);margin-top:3px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">New this week</div></div>
+        <div style="padding:12px 0 14px 20px;border-right:0.5px solid var(--warm-line)"><div style="font-size:22px;font-weight:800;color:var(--bark);letter-spacing:-.4px">6</div><div style="font-size:9px;color:rgba(44,31,15,.35);margin-top:3px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Partner orgs</div></div>
+        <div style="padding:12px 0 14px 20px"><div style="font-size:22px;font-weight:800;color:var(--bark);letter-spacing:-.4px">2</div><div style="font-size:9px;color:rgba(44,31,15,.35);margin-top:3px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">Saved by you</div></div>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div style="display:flex;gap:6px;flex-wrap:wrap" id="opp-filters">
+            <button class="f-btn active" onclick="filterOpps('all',this)">All</button>
+            <button class="f-btn" onclick="filterOpps('catering',this)">Catering</button>
+            <button class="f-btn" onclick="filterOpps('internship',this)">Internships</button>
+            <button class="f-btn" onclick="filterOpps('volunteer',this)">Volunteer</button>
+            <button class="f-btn" onclick="filterOpps('gig',this)">Gigs</button>
+            <button class="f-btn" onclick="filterOpps('job',this)">Jobs</button>
+          </div>
+          <div class="feat-partner" id="feat-partner">
+            <div class="fp-banner">
+              <div><div class="fp-lbl">Partner spotlight</div><div class="fp-logo-row"><div class="fp-logo-av">LC</div><div><div class="fp-name">Louisville Catering Co.</div><div class="fp-tag">Community-first catering · Est. 2011</div></div></div></div>
+            </div>
+            <div class="fp-body">
+              <div class="fp-about">Louisville Catering Co. has been a Cultured Mornings partner since 2022. They believe in hiring for character first — and they've brought on three of our alumni in the past year.</div>
+              <div class="fp-roles-lbl">Open roles — 3 listings</div>
+              <div class="fp-role" data-cat="catering"><div style="flex:1"><div class="fp-role-title">Catering assistant — events team</div><div class="fp-role-meta"><span>Part-time</span><span>·</span><span>$15–18/hr</span><span>·</span><span>Weekends</span></div><div class="fp-role-tags"><span class="tag tag-type">Catering</span><span class="tag tag-new">New</span><span class="tag tag-gray">Closes May 20</span></div></div><div class="fp-role-acts"><button class="save-opp">Save</button><button class="apply-btn">Apply</button></div></div>
+              <div class="fp-role" data-cat="catering"><div style="flex:1"><div class="fp-role-title">Kitchen prep lead — morning shift</div><div class="fp-role-meta"><span>Full-time</span><span>·</span><span>$17–20/hr</span><span>·</span><span>Mon–Fri</span></div><div class="fp-role-tags"><span class="tag tag-type">Catering</span><span class="tag tag-sage">Full-time</span><span class="tag tag-gray">Closes June 1</span></div></div><div class="fp-role-acts"><button class="save-opp">Save</button><button class="apply-btn">Apply</button></div></div>
+              <div class="fp-role" data-cat="volunteer"><div style="flex:1"><div class="fp-role-title">Community pop-up volunteer — May 25</div><div class="fp-role-meta"><span>One-time</span><span>·</span><span>Volunteer</span><span>·</span><span>2–8pm</span></div><div class="fp-role-tags"><span class="tag tag-type">Volunteer</span><span class="tag tag-gray">May 25</span></div></div><div class="fp-role-acts"><button class="save-opp">Save</button><button class="apply-btn">Join</button></div></div>
+            </div>
+          </div>
+          <div class="div-lbl"><div class="div-line"></div><div class="div-txt">More opportunities</div><div class="div-line"></div></div>
+          <div class="opp-card" data-cat="internship"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:var(--sage-light);color:var(--sage)">CMK</div><span class="org-name">Chef Marcus Kitchen</span></div><div class="opp-title">Summer kitchen intern</div></div><span class="tag tag-new">New</span></div><div class="opp-desc">A 10-week paid internship rotating through prep, line, and service alongside Chef Marcus. Rare hands-on experience for emerging talent.</div><div class="opp-tags"><span class="tag tag-type">Internship</span><span class="tag tag-sage">Paid · $13/hr</span><span class="tag tag-gray">June–Aug 2025</span></div><div class="opp-footer"><span class="opp-meta">Posted 4 days ago · Closes May 30</span><div style="display:flex;gap:5px"><button class="save-opp">Save</button><button class="apply-btn">Apply</button></div></div></div>
+          <div class="opp-card" data-cat="volunteer"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:#EAF0F5;color:#2A4A70">CT</div><span class="org-name">Community Table Louisville</span></div><div class="opp-title">Pop-up dinner volunteer — May 18</div></div></div><div class="opp-desc">Kitchen prep 2–5pm and front-of-house 5–8pm. Serve a free community meal to 80+ neighbors.</div><div class="opp-tags"><span class="tag tag-type">Volunteer</span><span class="tag tag-gray">One-time · May 18</span></div><div class="opp-footer"><span class="opp-meta">Posted 1 week ago · Closes May 17</span><div style="display:flex;gap:5px"><button class="save-opp">Save</button><button class="apply-btn">Join us</button></div></div></div>
+          <div class="opp-card" data-cat="gig"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:#F0EAF5;color:#5A2880">SK</div><span class="org-name">Spice & Kitchen Collective</span></div><div class="opp-title">Weekend prep cook — recurring gig</div></div></div><div class="opp-desc">Saturday morning prep at a collaborative food hall. Work with rotating vendors across multiple cuisines.</div><div class="opp-tags"><span class="tag tag-type">Gig</span><span class="tag tag-sage">Recurring</span><span class="tag tag-gray">$14/hr · Sat mornings</span></div><div class="opp-footer"><span class="opp-meta">Posted 2 weeks ago · Open rolling</span><div style="display:flex;gap:5px"><button class="save-opp">Save</button><button class="apply-btn">Express interest</button></div></div></div>
+          <div class="opp-card" data-cat="job"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:var(--clay-light);color:var(--bark-mid)">HH</div><span class="org-name">Harvest House Restaurant</span></div><div class="opp-title">Line cook — entry level</div></div></div><div class="opp-desc">Entry-level line cook at a farm-to-table restaurant in NuLu. Character and hunger to learn valued over experience.</div><div class="opp-tags"><span class="tag tag-type">Job</span><span class="tag tag-sage">Full-time</span><span class="tag tag-gray">$16–20/hr · NuLu</span></div><div class="opp-footer"><span class="opp-meta">Posted 3 weeks ago · Open until filled</span><div style="display:flex;gap:5px"><button class="save-opp">Save</button><button class="apply-btn">Apply</button></div></div></div>
+        </div>
+        <div class="sc">
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">Saved opportunities</div>
+            <div class="opp-item"><div><div class="opp-name">Kitchen intern</div><div class="opp-org">Chef Marcus Kitchen</div></div><div style="width:6px;height:6px;border-radius:50%;background:var(--clay)"></div></div>
+            <div class="opp-item"><div><div class="opp-name">Pop-up volunteer</div><div class="opp-org">Community Table</div></div><div style="width:6px;height:6px;border-radius:50%;background:var(--clay)"></div></div>
+          </div>
+          <div class="dark-card">
+            <div style="font-family:'Lora',serif;font-size:13px;font-weight:400;color:#fff;margin-bottom:6px">A word of encouragement</div>
+            <div style="font-family:'Lora',serif;font-size:11.5px;font-style:italic;color:rgba(255,255,255,.48);line-height:1.7">"Every opportunity you apply to is an act of belief in yourself. The table is already set — you just have to pull up a chair."</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.25);margin-top:8px;font-weight:700;text-transform:uppercase;letter-spacing:.3px">— Cultured Mornings team</div>
+          </div>
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">Partner organizations</div>
+            <div class="partner-row"><div class="partner-dot" style="background:var(--bark);color:#fff">LC</div><div><div class="partner-name">Louisville Catering Co.</div><div class="partner-count" style="color:var(--clay)">Spotlight · 3 open</div></div></div>
+            <div class="partner-row"><div class="partner-dot" style="background:var(--sage-light);color:var(--sage)">CMK</div><div><div class="partner-name">Chef Marcus Kitchen</div><div class="partner-count">2 open listings</div></div></div>
+            <div class="partner-row"><div class="partner-dot" style="background:#EAF0F5;color:#2A4A70">CT</div><div><div class="partner-name">Community Table</div><div class="partner-count">1 open listing</div></div></div>
+            <div class="partner-row"><div class="partner-dot" style="background:#F0EAF5;color:#5A2880">SK</div><div><div class="partner-name">Spice & Kitchen</div><div class="partner-count">1 open listing</div></div></div>
+          </div>
+          <div style="background:var(--sage-light);border:0.5px solid rgba(58,102,68,0.18);border-radius:12px;padding:15px 17px">
+            <div style="font-size:10px;font-weight:700;color:var(--sage);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">Your profile</div>
+            <div style="font-size:12.5px;color:var(--sage);line-height:1.6;font-weight:500">Complete your profile to unlock workforce visibility — so partners can find and reach out to you directly.</div>
+            <div style="margin-top:9px;font-size:11px;font-weight:700;color:var(--sage);cursor:pointer;text-decoration:underline;text-underline-offset:2px" class="nav-link-js" data-screen="profile-editor">Finish my profile →</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ RESOURCE HUB ══ -->
+    <div class="screen" id="screen-resources">
+      <div class="page-header">
+        <div class="page-title">Resource hub</div>
+        <div class="page-sub">Everything you need to keep growing — culinary skills, career tools, and life wisdom — all in one place, all yours.</div>
+      </div>
+      <div style="padding:11px 26px;background:var(--surface);border-bottom:0.5px solid var(--warm-line);display:flex;gap:7px;flex-wrap:wrap" id="res-filters">
+        <button class="f-btn active" onclick="filterRes('all',this)">All</button>
+        <button class="f-btn" onclick="filterRes('culinary',this)">Culinary</button>
+        <button class="f-btn" onclick="filterRes('career',this)">Career</button>
+        <button class="f-btn" onclick="filterRes('life',this)">Life skills</button>
+        <button class="f-btn" onclick="filterRes('video',this)">Videos</button>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div class="feat-resource">
+            <div>
+              <div class="fr-eye">Continue where you left off</div>
+              <div class="fr-title">Knife skills mastery — module 3 of 5</div>
+              <div class="fr-sub">Julienne, chiffonade, and brunoise cuts. Chef Marcus walks you through each technique step by step.</div>
+              <div class="fr-tags"><span class="fr-tag">Culinary</span><span class="fr-tag">Video series</span><span class="fr-tag">Intermediate</span><span class="fr-tag">25 min</span></div>
+              <button class="fr-btn">Resume lesson</button>
+            </div>
+            <div>
+              <svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="5"/><circle cx="32" cy="32" r="26" fill="none" stroke="#C47A3A" stroke-width="5" stroke-dasharray="163" stroke-dashoffset="57" stroke-linecap="round" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" font-family="Bricolage Grotesque,sans-serif" font-size="13" font-weight="800" fill="white">65%</text></svg>
+              <div class="fr-ring-lbl">complete</div>
+            </div>
+          </div>
+          <div>
+            <div class="sl">Your learning path — culinary foundations</div>
+            <div class="path-card">
+              <div class="path-step"><div class="ps-circle ps-done">✓</div><div><div class="ps-title">Kitchen safety & sanitation</div><div class="ps-sub">Completed · 45 min</div><span class="ps-badge" style="background:var(--sage-light);color:var(--sage)">Done</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-done">✓</div><div><div class="ps-title">Knife skills — foundations</div><div class="ps-sub">Completed · 30 min</div><span class="ps-badge" style="background:var(--sage-light);color:var(--sage)">Done</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-active">3</div><div><div class="ps-title">Knife skills — advanced cuts</div><div class="ps-sub">In progress · 25 min remaining</div><span class="ps-badge" style="background:var(--clay-light);color:var(--bark-mid)">65% done</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-next">4</div><div><div class="ps-title">Stocks, sauces & flavor building</div><div class="ps-sub">Up next · 40 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+              <div class="path-step" style="padding-bottom:0"><div class="ps-circle ps-next">5</div><div><div class="ps-title">Your first complete meal</div><div class="ps-sub">Final module · 60 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="sl">Explore all resources</div>
+            <div class="res-grid" id="res-grid">
+              <div class="rc" data-rcat="culinary"><div class="rc-thumb" style="background:#D4C5B0"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><path d="M10 8h12M8 13h16M10 18h12M12 23h8" stroke="#4A2E0A" stroke-width="1.5" stroke-linecap="round" opacity=".6"/></svg><span class="rc-type" style="background:var(--clay-light);color:var(--bark-mid)">Guide</span></div><div class="rc-body"><div class="rc-title">Seasoning & spice guide</div><div class="rc-desc">Layer flavor at every stage — not just at the end.</div><div class="rc-pb"><div class="rc-pf" style="width:35%"></div></div><div class="rc-foot"><span class="rc-meta">15 min · 35%</span><button class="rc-act">Continue</button></div></div></div>
+              <div class="rc" data-rcat="video"><div class="rc-thumb" style="background:#B8CEBC"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="#1A3D24" stroke-width="1.2" opacity=".5"/><path d="M13 11.5l8 4.5-8 4.5V11.5z" fill="#1A3D24" opacity=".6"/></svg><span class="rc-type" style="background:var(--sage-light);color:var(--sage)">Video</span></div><div class="rc-body"><div class="rc-title">Plating like a pro</div><div class="rc-desc">Make every dish look as good as it tastes.</div><div class="rc-pb"><div class="rc-pf" style="width:0%"></div></div><div class="rc-foot"><span class="rc-meta">18 min · New</span><button class="rc-act">Watch</button></div></div></div>
+              <div class="rc" data-rcat="career"><div class="rc-thumb" style="background:#E0D5BE"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="8" y="6" width="16" height="20" rx="2" stroke="#4A2E0A" stroke-width="1.2" opacity=".5"/><path d="M12 12h8M12 16h8M12 20h5" stroke="#4A2E0A" stroke-width="1.2" stroke-linecap="round" opacity=".6"/></svg><span class="rc-type" style="background:var(--clay-light);color:var(--bark-mid)">Guide</span></div><div class="rc-body"><div class="rc-title">Writing your first resume</div><div class="rc-desc">Turn your program experience into professional assets.</div><div class="rc-pb"><div class="rc-pf" style="width:100%;background:var(--sage)"></div></div><div class="rc-foot"><span class="rc-meta">20 min · Done</span><button class="rc-act" style="background:var(--sage)">Review</button></div></div></div>
+              <div class="rc" data-rcat="career"><div class="rc-thumb" style="background:#CCB99E"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="11" r="5" stroke="#4A2E0A" stroke-width="1.2" opacity=".5"/><path d="M7 26c0-5 4-8 9-8s9 3 9 8" stroke="#4A2E0A" stroke-width="1.2" stroke-linecap="round" opacity=".5"/></svg><span class="rc-type" style="background:var(--auburn-light);color:var(--auburn)">New</span></div><div class="rc-body"><div class="rc-title">How to ace a kitchen interview</div><div class="rc-desc">Walk in prepared, confident, and ready to shine.</div><div class="rc-pb"><div class="rc-pf" style="width:0%"></div></div><div class="rc-foot"><span class="rc-meta">12 min · Not started</span><button class="rc-act">Start</button></div></div></div>
+              <div class="rc" data-rcat="life"><div class="rc-thumb" style="background:#BDD0C4"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect x="6" y="10" width="20" height="14" rx="2" stroke="#1A3D24" stroke-width="1.2" opacity=".5"/><circle cx="16" cy="17" r="3" stroke="#1A3D24" stroke-width="1.2" opacity=".6"/><path d="M6 14h20" stroke="#1A3D24" stroke-width="1.2" opacity=".4"/></svg><span class="rc-type" style="background:var(--sage-light);color:var(--sage)">Life skills</span></div><div class="rc-body"><div class="rc-title">Managing money on your first paycheck</div><div class="rc-desc">Build stability from day one with simple habits.</div><div class="rc-pb"><div class="rc-pf" style="width:60%"></div></div><div class="rc-foot"><span class="rc-meta">18 min · 60%</span><button class="rc-act">Continue</button></div></div></div>
+              <div class="rc" data-rcat="video"><div class="rc-thumb" style="background:#E8DDD0"><svg width="28" height="28" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="10" stroke="#4A2E0A" stroke-width="1.2" opacity=".5"/><path d="M13 11.5l8 4.5-8 4.5V11.5z" fill="#4A2E0A" opacity=".5"/></svg><span class="rc-type" style="background:var(--auburn-light);color:var(--auburn)">New</span></div><div class="rc-body"><div class="rc-title">A day in the life — catering chef</div><div class="rc-desc">A real look at what a catering career feels like.</div><div class="rc-pb"><div class="rc-pf" style="width:0%"></div></div><div class="rc-foot"><span class="rc-meta">22 min · New</span><button class="rc-act">Watch</button></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="card">
+            <div class="ct" style="margin-bottom:10px">Learning streak</div>
+            <div style="font-size:10px;color:var(--bark-mid);margin-bottom:7px;font-weight:600;text-transform:uppercase;letter-spacing:.3px">This week</div>
+            <div style="display:flex;gap:4px;margin-bottom:10px">
+              <div class="streak-day" style="background:var(--clay);color:#fff">M</div><div class="streak-day" style="background:var(--clay);color:#fff">T</div><div class="streak-day" style="background:var(--clay);color:#fff">W</div><div class="streak-day" style="background:var(--clay);color:#fff">T</div><div class="streak-day" style="background:var(--auburn);color:#fff">F</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">S</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">S</div>
+            </div>
+            <div style="font-size:22px;font-weight:800;color:var(--clay);letter-spacing:-.4px;margin-bottom:2px">5 days</div>
+            <div style="font-family:'Lora',serif;font-size:11px;color:var(--bark-mid);font-style:italic">Keep it going, Jordan.</div>
+          </div>
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">Your progress</div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">Resources started</span><span style="font-size:12px;font-weight:800;color:var(--bark)">8</span></div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">Completed</span><span style="font-size:12px;font-weight:800;color:var(--sage)">3</span></div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">In progress</span><span style="font-size:12px;font-weight:800;color:var(--clay)">4</span></div>
+            <div class="stat-row"><span style="font-size:12px;color:var(--bark-mid);font-weight:500">Time this week</span><span style="font-size:12px;font-weight:800;color:var(--bark)">1h 42m</span></div>
+          </div>
+          <div class="card">
+            <div class="ct" style="margin-bottom:12px">Saved for later</div>
+            <div class="opp-item"><div><div class="opp-name">Stocks & sauces deep dive</div><div class="opp-org">Culinary · 35 min</div></div><div style="width:7px;height:7px;border-radius:2px;background:var(--clay)"></div></div>
+            <div class="opp-item"><div><div class="opp-name">Communicating at work</div><div class="opp-org">Life skills · 14 min</div></div><div style="width:7px;height:7px;border-radius:2px;background:var(--sage)"></div></div>
+            <div class="opp-item"><div><div class="opp-name">Building your network</div><div class="opp-org">Career · 16 min</div></div><div style="width:7px;height:7px;border-radius:2px;background:var(--auburn)"></div></div>
+          </div>
+          <div class="dark-card">
+            <div style="font-size:10px;font-weight:700;color:var(--clay);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px">A note for the journey</div>
+            <div style="font-family:'Lora',serif;font-size:11.5px;color:rgba(255,255,255,.48);line-height:1.75;font-style:italic">"Growth is not a straight line. Every lesson you open, every skill you practice — it compounds. Stay with it."</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.22);margin-top:8px;font-weight:700;text-transform:uppercase;letter-spacing:.3px">— Cultured Mornings team</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const shell=document.getElementById('shell'),tog=document.getElementById('tog'),ti=document.getElementById('ti');
+let col=false;
+tog.addEventListener('click',()=>{col=!col;shell.classList.toggle('col',col);ti.setAttribute('d',col?'M5 2l5 5-5 5':'M9 2L4 7l5 5');});
+
+function navigate(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const screen=document.getElementById('screen-'+id);
+  if(screen){screen.classList.add('active');screen.scrollIntoView({block:'start'});}
+  const navItem=document.querySelector('.ni[data-screen="'+id+'"]');
+  if(navItem)navItem.classList.add('active');
+}
+
+document.querySelectorAll('.ni[data-screen]').forEach(ni=>{
+  ni.addEventListener('click',()=>navigate(ni.dataset.screen));
+});
+document.querySelectorAll('.nav-link-js[data-screen]').forEach(el=>{
+  el.addEventListener('click',()=>navigate(el.dataset.screen));
+});
+
+function filterMentors(spec,btn){
+  if(btn){document.querySelectorAll('#screen-mentors .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  document.querySelectorAll('.mc-card').forEach(c=>{c.style.display=(spec==='all'||c.dataset.spec===spec)?'':'none';});
+}
+function filterOpps(cat,btn){
+  if(btn){document.querySelectorAll('#opp-filters .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  const fp=document.getElementById('feat-partner');
+  if(cat==='all'||cat==='catering'||cat==='volunteer'){
+    fp.style.display='';
+    document.querySelectorAll('.fp-role').forEach(r=>{r.style.display=(cat==='all'||r.dataset.cat===cat)?'':'none';});
+    const vis=[...document.querySelectorAll('.fp-role')].some(r=>r.style.display!=='none');
+    if(!vis)fp.style.display='none';
+  } else {fp.style.display='none';}
+  document.querySelectorAll('.opp-card').forEach(c=>{c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none';});
+}
+function filterRes(cat,btn){
+  if(btn){document.querySelectorAll('#res-filters .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  document.querySelectorAll('.rc').forEach(c=>{c.style.display=(cat==='all'||c.dataset.rcat===cat)?'':'none';});
+}
+
+document.querySelectorAll('.save-opp').forEach(btn=>{
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    const saved=this.textContent.includes('Saved');
+    this.textContent=saved?'Save':'Saved ✓';
+    this.style.background=saved?'var(--auburn-light)':'var(--sage-light)';
+    this.style.color=saved?'var(--auburn)':'var(--sage)';
+    this.style.borderColor=saved?'var(--auburn-mid)':'rgba(58,102,68,0.3)';
+  });
+});
+
+function removeSkill(btn){btn.closest('.skill-pill').remove();}
+function addSkill(){const s=prompt('Add a skill:');if(!s)return;const wrap=document.getElementById('skill-wrap');const addBtn=wrap.querySelector('.add-skill');const pill=document.createElement('span');pill.className='skill-pill';pill.innerHTML=s+' <button class="skill-x" onclick="removeSkill(this)">×</button>';wrap.insertBefore(pill,addBtn);}
+function addGoal(){const list=document.getElementById('goals-list');const row=document.createElement('div');row.className='goal-row';row.innerHTML='<div class="goal-dot"></div><input class="goal-input" placeholder="Add a goal..."/><button class="goal-del" onclick="this.closest(\'.goal-row\').remove()">×</button>';list.appendChild(row);row.querySelector('input').focus();}
+
+document.getElementById('save-profile-btn').addEventListener('click',function(){const orig=this.textContent;this.textContent='Saved!';this.style.background='var(--sage)';setTimeout(()=>{this.textContent=orig;this.style.background='var(--auburn)';},2000);});
+
+document.querySelectorAll('.toggle').forEach(t=>{t.addEventListener('click',function(){this.classList.toggle('off');});});
+</script>
+</body>
+</html>

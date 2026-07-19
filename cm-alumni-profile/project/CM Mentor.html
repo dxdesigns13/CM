@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cultured Mornings — Mentor portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+body{margin:0;background:var(--cream);font-family:'Bricolage Grotesque',sans-serif;color:var(--bark)}
+a{color:var(--clay)}a:hover{color:var(--auburn)}
+.mn{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+.mn-side{background:var(--bark);color:#fff;padding:22px 14px;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column}
+.mn-logo{display:flex;align-items:center;gap:9px;padding:0 8px 20px}
+.mn-logo-mark{width:30px;height:30px;border-radius:50%;background:var(--clay);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#fff}
+.mn-logo-t{font-weight:800;font-size:13px}
+.mn-logo-s{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.mn-nl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:14px 10px 6px}
+.mn-ni{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);cursor:pointer;text-decoration:none}
+.mn-ni:hover{background:rgba(255,255,255,.07);color:#fff}
+.mn-ni.on{background:var(--clay);color:#fff}
+.mn-me{margin-top:auto;display:flex;gap:9px;align-items:center;padding:12px 10px;border-top:1px solid rgba(255,255,255,.12)}
+.mn-me-av{width:30px;height:30px;border-radius:50%;background:#8B5E2A;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.mn-main{padding:34px 40px;max-width:960px}
+.mn-screen{display:none}
+.mn-screen.on{display:block}
+.pg-kick{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--clay);margin-bottom:6px}
+.pg-h{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+.pg-sub{font-family:'Lora',Georgia,serif;font-style:italic;font-size:13.5px;color:var(--bark-mid);margin:0 0 26px;line-height:1.6;max-width:620px;text-wrap:pretty}
+.mcard{background:var(--surface);border:1px solid var(--warm-line);border-radius:12px;padding:20px 22px;margin-bottom:18px}
+.mcard-t{font-size:14px;font-weight:800;letter-spacing:-.01em;margin-bottom:2px}
+.mcard-s{font-size:12px;color:var(--bark-mid);line-height:1.55;margin-bottom:14px}
+.two-col{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:start}
+.sess{display:flex;gap:14px;align-items:center;padding:13px 0;border-top:1px solid var(--warm-line)}
+.sess-date{width:52px;text-align:center;flex-shrink:0;background:var(--clay-pale);border-radius:10px;padding:8px 0}
+.sess-date .d{font-size:18px;font-weight:800;line-height:1}
+.sess-date .m{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--clay)}
+.sess-t{font-size:13.5px;font-weight:700}
+.sess-s{font-size:12px;color:var(--bark-mid);margin-top:2px}
+.badge{font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.b-sage{background:var(--sage-light);color:var(--sage)}
+.b-clay{background:var(--clay-pale);color:#7A4316}
+.b-soft{background:var(--soft);color:var(--bark-mid)}
+.btn{font-size:12px;font-weight:700;padding:8px 14px;border-radius:7px;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px;text-decoration:none}
+.btn-primary{background:var(--auburn);color:#fff}.btn-primary:hover{background:#7d2510;color:#fff}
+.btn-ghost{background:var(--surface);color:var(--bark-mid);border:1px solid var(--warm-line-strong)}.btn-ghost:hover{background:var(--clay-pale);color:var(--bark)}
+.mentee{border:1px solid var(--warm-line);border-radius:12px;padding:16px 18px;margin-bottom:14px;background:var(--surface)}
+.mentee-head{display:flex;gap:12px;align-items:center;margin-bottom:12px}
+.mentee-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.mentee-n{font-size:14.5px;font-weight:800}
+.mentee-m{font-size:11.5px;color:var(--bark-soft);font-weight:600;margin-top:1px}
+.intake-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 18px;background:var(--cream);border-radius:10px;padding:13px 15px;margin-bottom:12px}
+.ik{font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft)}
+.iv{font-size:12.5px;font-weight:600;color:var(--bark);margin-top:2px;line-height:1.45}
+.note-box{display:flex;gap:10px;background:var(--sage-light);border-radius:10px;padding:12px 15px;font-size:12.5px;line-height:1.55;color:var(--bark);margin-bottom:14px}
+.note-box .tick{color:var(--sage);font-weight:800}
+.vet-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-top:1px solid var(--warm-line);font-size:13px}
+.vet-row .k{font-weight:700}
+.vet-row .v{font-size:11.5px;color:var(--bark-soft)}
+.dir-prev{border:1.5px dashed var(--warm-line-strong);border-radius:12px;padding:18px;text-align:center;margin-bottom:14px}
+.f-lbl{display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft);margin-bottom:6px}
+.f-in{width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid var(--warm-line-strong);border-radius:8px;background:var(--surface);font-family:inherit;font-size:13px;color:var(--bark)}
+.f-ta{width:100%;box-sizing:border-box;min-height:90px;padding:10px 12px;border:1.5px solid var(--warm-line-strong);border-radius:8px;background:var(--surface);font-family:'Lora',Georgia,serif;font-size:13px;color:var(--bark);resize:vertical}
+.mnp-tabs{display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:10px;margin-bottom:22px;max-width:340px}
+.mnp-tab{flex:1;padding:9px 12px;border:none;border-radius:7px;background:transparent;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--bark-mid);cursor:pointer}
+.mnp-tab.on{background:var(--surface);color:var(--bark);box-shadow:0 1px 4px rgba(35,23,8,.08)}
+.mnpv{display:none}.mnpv.on{display:block}
+.pv-hero{background:var(--bark);border-radius:14px;padding:28px;display:flex;gap:20px;align-items:center;color:#fff;margin-bottom:14px}
+.pv-av{width:72px;height:72px;border-radius:50%;background:#8B5E2A;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;flex-shrink:0}
+.pv-name{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.pv-role{font-size:13px;color:rgba(255,255,255,.7);margin-top:4px}
+.pv-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.45);margin-top:8px}
+.pv-band{display:flex;gap:12px;align-items:center;background:var(--sage-light);border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:12px;line-height:1.5;color:var(--bark)}
+.pv-band .ic{width:24px;height:24px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.pv-sec{background:var(--surface);border:1px solid var(--warm-line);border-radius:12px;padding:20px 22px;margin-bottom:14px}
+.pv-eye{font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--clay);margin-bottom:6px}
+.pv-h{font-size:17px;font-weight:800;letter-spacing:-.015em;margin:0 0 10px}
+.pv-p{font-family:'Lora',Georgia,serif;font-size:13.5px;color:var(--bark-mid);line-height:1.7;margin:0 0 10px;text-wrap:pretty}
+.pv-how{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pv-how-num{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;color:var(--bark-soft)}
+.pv-how-n{font-size:13px;font-weight:800;margin-top:3px}
+.pv-how-d{font-size:12px;color:var(--bark-mid);line-height:1.55;margin-top:3px}
+.pv-skill{display:flex;gap:9px;align-items:center;font-size:13px;font-weight:600;padding:6px 0}
+.pv-dot{width:7px;height:7px;border-radius:50%;background:var(--clay);flex-shrink:0}
+.pv-quote{background:var(--cream);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.pv-quote .q{font-family:'Lora',Georgia,serif;font-style:italic;font-size:13px;color:var(--bark);line-height:1.65}
+.pv-quote .a{font-size:11px;font-weight:700;color:var(--bark-soft);margin-top:8px}
+@media(max-width:900px){.mn{grid-template-columns:1fr}.mn-side{position:static;height:auto}.two-col,.intake-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="mn">
+  <aside class="mn-side">
+    <div class="mn-logo"><div class="mn-logo-mark">CM</div><div><div class="mn-logo-t">Cultured Mornings</div><div class="mn-logo-s">Mentor portal</div></div></div>
+    <div class="mn-nl">Mentoring</div>
+    <div class="mn-ni on" data-mn="home">Home</div>
+    <div class="mn-ni" data-mn="mentees">My mentees</div>
+    <div class="mn-ni" data-mn="profile">My directory profile</div>
+    <div class="mn-nl">Account</div>
+    <a class="mn-ni" href="CM Sign In.html">Sign out</a>
+    <div class="mn-me"><div class="mn-me-av">LO</div><div><div style="font-size:12px;font-weight:700">Chef Lisa Owens</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Mentor · vetted ✓</div></div></div>
+  </aside>
+  <main class="mn-main">
+
+    <!-- HOME -->
+    <section class="mn-screen on" id="mn-home" data-screen-label="Mentor home">
+      <div class="pg-kick">Saturday, July 19</div>
+      <h1 class="pg-h">Good morning, Chef Lisa.</h1>
+      <p class="pg-sub">Two mentees, one session this week. Everything here happens at the CM kitchen, scheduled by the team — you never need to arrange anything directly.</p>
+      <div class="two-col">
+        <div>
+          <div class="mcard">
+            <div class="mcard-t">Upcoming sessions</div>
+            <div class="mcard-s">Scheduled by the CM team around your availability. Staff are always present.</div>
+            <div class="sess"><div class="sess-date"><div class="d">22</div><div class="m">Jul</div></div><div style="flex:1"><div class="sess-t">Jordan Thomas — pricing a small menu</div><div class="sess-s">CM kitchen · 4:00–5:30pm · Coordinator: Aaliyah</div></div><span class="badge b-sage">Confirmed</span></div>
+            <div class="sess"><div class="sess-date"><div class="d">29</div><div class="m">Jul</div></div><div style="flex:1"><div class="sess-t">Amara Wilson — lamination basics</div><div class="sess-s">CM kitchen · 4:00–5:30pm · Coordinator: Aaliyah</div></div><span class="badge b-clay">Guardian pending</span></div>
+            <div style="margin-top:12px;font-size:11.5px;color:var(--bark-soft)">Need to move a session? <a href="#" onclick="mnGo('mentees');return false">Tell your coordinator</a> — never reschedule directly with a mentee.</div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-t">Waiting on you</div>
+            <div class="sess"><div class="mentee-av" style="width:34px;height:34px;background:var(--clay)">JT</div><div style="flex:1"><div class="sess-t">Session notes for July 8 — Jordan</div><div class="sess-s">A few lines for the team: what you covered, what to build on.</div></div><button class="btn btn-primary" onclick="mnGo('mentees')">Write notes</button></div>
+            <div class="sess"><div class="mentee-av" style="width:34px;height:34px;background:var(--sage)">AW</div><div style="flex:1"><div class="sess-t">New mentee recommendation — Amara Wilson</div><div class="sess-s">The team shortlisted you from her intake. Accept to begin working with her at the next scheduled session.</div></div><button class="btn btn-primary" onclick="mnGo('mentees')">Review recommendation</button></div>
+          </div>
+        </div>
+        <div>
+          <div class="mcard">
+            <div class="mcard-t">Your standing</div>
+            <div class="vet-row"><span class="k">Vetting</span><span class="badge b-sage">Complete</span></div>
+            <div class="vet-row"><span class="k">Background check</span><span class="v">Renews June 2027</span></div>
+            <div class="vet-row"><span class="k">Code of Care</span><span class="v">Signed Jul 2026</span></div>
+            <div class="vet-row"><span class="k">Directory profile</span><span class="badge b-sage">Live</span></div>
+          </div>
+          <div class="mcard" style="background:var(--bark);border-color:var(--bark);color:#fff">
+            <div class="mcard-t" style="color:#fff">Need a hand?</div>
+            <div class="mcard-s" style="color:rgba(255,255,255,.6);margin-bottom:12px">Anything uncomfortable, unclear, or off — bring it to the team, not the mentee or their family.</div>
+            <button class="btn btn-ghost" style="width:100%;justify-content:center" onclick="this.textContent='Aaliyah will reach out today ✓';this.disabled=true">Contact your coordinator</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENTEES -->
+    <section class="mn-screen" id="mn-mentees" data-screen-label="Mentor mentees">
+      <div class="pg-kick">My mentees</div>
+      <h1 class="pg-h">Two young people, on purpose.</h1>
+      <p class="pg-sub">Each mentee's intake answers are here so every session starts from what they actually want. Notes go to the CM team — they keep guardians in the loop.</p>
+      <div class="mentee">
+        <div class="mentee-head">
+          <div class="mentee-av" style="background:var(--clay)">JT</div>
+          <div style="flex:1"><div class="mentee-n">Jordan Thomas · 17</div><div class="mentee-m">Cohort VI · paired by CM · June 2026 · 3 sessions so far</div></div>
+          <span class="badge b-sage">Active</span>
+        </div>
+        <div class="intake-grid">
+          <div><div class="ik">Direction</div><div class="iv">My own food business</div></div>
+          <div><div class="ik">Wants from you</div><div class="iv">Business guidance</div></div>
+          <div><div class="ik">Learns best</div><div class="iv">Jumping in hands-first</div></div>
+          <div><div class="ik">In their words</div><div class="iv">"Cooking with my grandmother got me started — I want to run something of my own one day."</div></div>
+        </div>
+        <div style="margin-bottom:12px"><label class="f-lbl">Session notes — July 8 (goes to the CM team)</label><textarea class="f-ta" placeholder="What you covered, what clicked, what to build on next…"></textarea></div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-primary" onclick="this.textContent='Sent to the team ✓';this.disabled=true;this.style.background='var(--sage)'">Send notes</button>
+          <button class="btn btn-ghost" onclick="this.textContent='Coordinator notified ✓';this.disabled=true">Pause mentorship</button>
+          <span style="font-size:11px;color:var(--bark-soft)">Pausing stops sessions immediately — the team follows up with both sides.</span>
+        </div>
+      </div>
+      <div class="mentee">
+        <div class="mentee-head">
+          <div class="mentee-av" style="background:var(--sage)">AW</div>
+          <div style="flex:1"><div class="mentee-n">Amara Wilson · 16</div><div class="mentee-m">Cohort VI · recommended by the team from her intake</div></div>
+          <span class="badge b-clay">Recommendation</span>
+        </div>
+        <div class="intake-grid">
+          <div><div class="ik">Direction</div><div class="iv">Baking &amp; pastry</div></div>
+          <div><div class="ik">Wants from you</div><div class="iv">Hands-on technique</div></div>
+          <div><div class="ik">Learns best</div><div class="iv">Watching, then trying</div></div>
+          <div><div class="ik">Available</div><div class="iv">Weekday afternoons</div></div>
+        </div>
+        <div class="note-box"><span class="tick">✓</span><span>If you accept, Amara and her guardian confirm on their side too — the pairing is only confirmed once both sides agree. First session is scheduled by the team at the kitchen.</span></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="this.textContent='Accepted — team will confirm ✓';this.disabled=true;this.style.background='var(--sage)'">Accept recommendation</button>
+          <button class="btn btn-ghost" onclick="this.textContent='Declined — no explanation needed ✓';this.disabled=true">Decline</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFILE -->
+    <section class="mn-screen" id="mn-profile" data-screen-label="Mentor directory profile">
+      <div class="pg-kick">My directory profile</div>
+      <h1 class="pg-h">What members see.</h1>
+      <p class="pg-sub">This is the profile students open from the mentor directory. You own the words; the CM team reviews every change before it goes live — usually same-day. Testimonials and your vetted badge are managed by CM.</p>
+      <div class="mnp-tabs">
+        <button class="mnp-tab on" id="mnp-tab-pub" onclick="mnpTab('pub')">Public view</button>
+        <button class="mnp-tab" id="mnp-tab-edit" onclick="mnpTab('edit')">Edit profile</button>
+      </div>
+      <div class="mnpv on" id="mnpv-pub">
+        <div class="pv-hero">
+          <div class="pv-av">LO</div>
+          <div style="flex:1">
+            <div class="pv-name">Chef Lisa Owens</div>
+            <div class="pv-role"><strong style="color:#fff">Pastry chef &amp; baker</strong> · Owner, Owens Bread Co. · Louisville, KY</div>
+            <div class="pv-meta">Active mentor · 18 alumni mentored · in the program since 2019</div>
+          </div>
+          <a class="btn btn-ghost" style="align-self:flex-start" href="CM Alumni Profile.html#mentor=lisa">Open in student portal →</a>
+        </div>
+        <div class="pv-band"><div class="ic">✓</div><span><strong>Vetted by the Cultured Mornings team</strong> — background-checked · references · reviewed annually · Code of Care signed · no contact outside program settings. Students always see this band; it isn't editable.</span></div>
+        <div class="pv-sec">
+          <div class="pv-eye">Why she mentors</div>
+          <h2 class="pv-h">“Every dish is a love letter to someone.”</h2>
+          <p class="pv-p">I came through Cultured Mornings in 2019, after years of trying to make a kitchen feel like home and failing. What I learned here wasn't just technique — it was that the people who pour into you become the people you pour back into.</p>
+          <p class="pv-p" style="margin-bottom:0">I mentor because I remember exactly what it felt like to need someone to believe in me before I could believe in myself.</p>
+        </div>
+        <div class="pv-sec">
+          <div class="pv-eye">What mentorship with Lisa looks like</div>
+          <div class="pv-how">
+            <div><div class="pv-how-num">01 / FORMAT</div><div class="pv-how-n">90-minute kitchen sessions</div><div class="pv-how-d">In person at the CM kitchen, hands-on, side-by-side.</div></div>
+            <div><div class="pv-how-num">02 / CADENCE</div><div class="pv-how-n">Twice a month, for 3 months</div><div class="pv-how-d">Six sessions to start, then both sides decide.</div></div>
+            <div><div class="pv-how-num">03 / WHERE</div><div class="pv-how-n">Always on CM premises</div><div class="pv-how-d">Program hours, staff present — never anywhere else.</div></div>
+            <div><div class="pv-how-num">04 / MESSAGING</div><div class="pv-how-n">CM platform only</div><div class="pv-how-d">No personal numbers or DMs; coordinators can see every conversation.</div></div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="pv-sec" style="margin-bottom:0">
+            <div class="pv-eye">Things she'll help you with</div>
+            <div class="pv-skill"><div class="pv-dot"></div>Pastry arts &amp; viennoiserie</div>
+            <div class="pv-skill"><div class="pv-dot"></div>Bread &amp; lamination</div>
+            <div class="pv-skill"><div class="pv-dot" style="background:var(--sage)"></div>Flavor pairing &amp; menu design</div>
+            <div class="pv-skill"><div class="pv-dot" style="background:var(--sage)"></div>Starting a small kitchen business</div>
+            <div class="pv-skill"><div class="pv-dot"></div>Working through self-doubt as a cook</div>
+          </div>
+          <div class="pv-sec" style="margin-bottom:0">
+            <div class="pv-eye">From past mentees — managed by CM</div>
+            <div class="pv-quote"><div class="q">“She told me on day one that she wasn't here to fix me — she was here to walk with me.”</div><div class="a">Maya Anderson · Cohort V</div></div>
+            <div class="pv-quote" style="margin-bottom:0"><div class="q">“Lisa is honest. She'll tell you when your croissants are dense. She'll also tell you when you've grown.”</div><div class="a">Terrence Jones · Cohort IV</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="mnpv" id="mnpv-edit">
+      <div class="two-col">
+        <div>
+          <div class="mcard">
+            <div class="mcard-t">The basics</div>
+            <div class="mcard-s">Shown on your directory card and profile header.</div>
+            <div style="display:grid;gap:12px">
+              <div><label class="f-lbl">Display name</label><input class="f-in" value="Chef Lisa Owens"></div>
+              <div><label class="f-lbl">Specialty line</label><input class="f-in" value="Pastry chef &amp; baker · ran her own bakery for 9 years"></div>
+              <div><label class="f-lbl">Headline quote — why you mentor</label><input class="f-in" value="Every dish is a love letter to someone."></div>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-t">Your story</div>
+            <div class="mcard-s">Appears under “Why she mentors” on your profile.</div>
+            <textarea class="f-ta" style="min-height:110px">I grew up two blocks from the CM kitchen. Nobody handed me a bench or a recipe — I want these kids to have both. Nine years running my own bakery taught me the parts of this work culinary school never mentions.</textarea>
+          </div>
+          <div class="mcard">
+            <div class="mcard-t">What mentorship with you looks like</div>
+            <div class="mcard-s">Students read this before requesting an intro — be concrete about a typical session.</div>
+            <textarea class="f-ta" style="min-height:90px">We meet at the CM kitchen, staff around, aprons on. I show a technique once, then it's your bench — expect flour everywhere and honest feedback. Bring questions; the best sessions start with yours.</textarea>
+          </div>
+          <div class="mcard">
+            <div class="mcard-t">Specialties — things you'll help with</div>
+            <div class="mcard-s">Click × to remove, or add your own.</div>
+            <div id="mn-specs" style="display:flex;flex-wrap:wrap;gap:8px">
+              <span class="badge b-soft" style="font-size:11px;padding:6px 12px;text-transform:none;letter-spacing:0">Laminated doughs <b style="cursor:pointer" onclick="this.parentNode.remove()">×</b></span>
+              <span class="badge b-soft" style="font-size:11px;padding:6px 12px;text-transform:none;letter-spacing:0">Bread &amp; fermentation <b style="cursor:pointer" onclick="this.parentNode.remove()">×</b></span>
+              <span class="badge b-soft" style="font-size:11px;padding:6px 12px;text-transform:none;letter-spacing:0">Pricing &amp; selling bakes <b style="cursor:pointer" onclick="this.parentNode.remove()">×</b></span>
+              <span class="badge b-soft" style="font-size:11px;padding:6px 12px;text-transform:none;letter-spacing:0">Running a small bakery <b style="cursor:pointer" onclick="this.parentNode.remove()">×</b></span>
+              <button class="btn btn-ghost" style="border-radius:999px;padding:6px 12px;font-size:11px" onclick="mnAddSpec()">+ Add</button>
+            </div>
+          </div>
+          <div class="mcard">
+            <div class="mcard-t">Availability for sessions</div>
+            <div class="mcard-s">The team schedules around this — it isn't shown publicly.</div>
+            <input class="f-in" value="Tuesday &amp; Thursday afternoons">
+          </div>
+          <button class="btn btn-primary" style="margin-bottom:18px" onclick="this.textContent='Submitted for CM review ✓ — live after approval';this.disabled=true;this.style.background='var(--sage)'">Submit changes for review</button>
+        </div>
+        <div>
+          <div class="mcard">
+            <div class="mcard-t">Shown on your public profile</div>
+            <div class="vet-row"><span class="k">Vetted badge</span><span class="badge b-sage">✓ CM vetted</span></div>
+            <div class="vet-row"><span class="k">Story, style &amp; specialties</span><span class="v">From this page, after review</span></div>
+            <div class="vet-row"><span class="k">Mentee testimonials</span><span class="v">Collected &amp; approved by CM</span></div>
+            <div class="vet-row"><span class="k">Session location</span><span class="v">Always the CM kitchen</span></div>
+            <div class="vet-row"><span class="k">Contact details</span><span class="v" style="color:var(--auburn);font-weight:700">Never shown</span></div>
+          </div>
+          <div class="dir-prev">
+            <div style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--bark-soft);margin-bottom:8px">Directory card preview</div>
+            <div class="mentee-av" style="background:#8B5E2A;margin:0 auto 8px">LO</div>
+            <div style="font-weight:800;font-size:14px">Chef Lisa Owens <span class="badge b-sage">✓ Vetted</span></div>
+            <div style="font-size:11.5px;color:var(--bark-mid);margin-top:3px">Pastry chef &amp; baker</div>
+            <div class="lora" style="font-size:11.5px;font-style:italic;color:var(--bark-mid);margin-top:6px">“Every dish is a love letter to someone.”</div>
+            <a href="CM Alumni Profile.html#mentor=lisa" style="font-size:11.5px;font-weight:700;display:inline-block;margin-top:8px">View as a student sees it →</a>
+          </div>
+          <div class="mcard">
+            <div class="mcard-t">Pending review</div>
+            <div class="mcard-s" style="margin-bottom:0">No changes waiting. Edits you submit appear here until the team approves them.</div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script>
+function mnGo(k){
+  document.querySelectorAll('.mn-ni[data-mn]').forEach(n=>n.classList.toggle('on',n.dataset.mn===k));
+  document.querySelectorAll('.mn-screen').forEach(s=>s.classList.toggle('on',s.id==='mn-'+k));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.mn-ni[data-mn]').forEach(n=>n.addEventListener('click',()=>mnGo(n.dataset.mn)));
+function mnpTab(t){
+  document.getElementById('mnp-tab-pub').classList.toggle('on',t==='pub');
+  document.getElementById('mnp-tab-edit').classList.toggle('on',t==='edit');
+  document.getElementById('mnpv-pub').classList.toggle('on',t==='pub');
+  document.getElementById('mnpv-edit').classList.toggle('on',t==='edit');
+}
+function mnAddSpec(){
+  const s=prompt('New specialty (e.g. "Wedding cakes")');if(!s)return;
+  const el=document.createElement('span');el.className='badge b-soft';el.style.cssText='font-size:11px;padding:6px 12px;text-transform:none;letter-spacing:0';
+  el.textContent=s+' ';const x=document.createElement('b');x.style.cursor='pointer';x.textContent='×';x.onclick=()=>el.remove();el.appendChild(x);
+  document.getElementById('mn-specs').insertBefore(el,document.getElementById('mn-specs').lastElementChild);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cultured Mornings — Admin console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+body{margin:0;background:var(--cream);font-family:'Bricolage Grotesque',sans-serif;color:var(--bark)}
+a{color:var(--clay)}a:hover{color:var(--auburn)}
+.adm{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+.adm-side{background:var(--bark);color:#fff;padding:22px 14px;position:sticky;top:0;height:100vh;box-sizing:border-box;display:flex;flex-direction:column}
+.adm-logo{display:flex;align-items:center;gap:9px;padding:0 8px 20px}
+.adm-logo-mark{width:30px;height:30px;border-radius:50%;background:var(--clay);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#fff}
+.adm-logo-t{font-weight:800;font-size:13px}
+.adm-logo-s{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.adm-nl{font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:.13em;text-transform:uppercase;color:rgba(255,255,255,.35);padding:14px 10px 6px}
+.adm-ni{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);cursor:pointer}
+.adm-ni:hover{background:rgba(255,255,255,.07);color:#fff}
+.adm-ni.on{background:var(--clay);color:#fff}
+.adm-ni .cnt{margin-left:auto;font-size:10px;font-weight:800;background:var(--auburn);color:#fff;border-radius:999px;padding:2px 7px}
+.adm-ni.on .cnt{background:rgba(255,255,255,.25)}
+.adm-me{margin-top:auto;display:flex;gap:9px;align-items:center;padding:12px 10px;border-top:1px solid rgba(255,255,255,.12)}
+.adm-me-av{width:30px;height:30px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800}
+.adm-main{padding:34px 40px;max-width:1000px}
+.adm-screen{display:none}
+.adm-screen.on{display:block}
+.pg-kick{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;color:var(--clay);margin-bottom:6px}
+.pg-h{font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+.pg-sub{font-family:'Lora',Georgia,serif;font-style:italic;font-size:13.5px;color:var(--bark-mid);margin:0 0 26px;line-height:1.6;max-width:640px;text-wrap:pretty}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px}
+.kpi{background:var(--surface);border:1px solid var(--warm-line);border-radius:12px;padding:16px 18px}
+.kpi-n{font-size:26px;font-weight:800;letter-spacing:-.03em}
+.kpi-l{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--bark-soft);margin-top:3px}
+.kpi.hot .kpi-n{color:var(--auburn)}
+.acard{background:var(--surface);border:1px solid var(--warm-line);border-radius:12px;padding:20px 22px;margin-bottom:18px}
+.acard-t{font-size:14px;font-weight:800;letter-spacing:-.01em;margin-bottom:2px}
+.acard-s{font-size:12px;color:var(--bark-mid);line-height:1.55;margin-bottom:14px}
+.q-item{display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-top:1px solid var(--warm-line)}
+.q-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.q-body{flex:1;min-width:0}
+.q-t{font-size:13.5px;font-weight:700}
+.q-t .who{color:var(--clay)}
+.q-s{font-size:12px;color:var(--bark-mid);line-height:1.55;margin-top:3px}
+.q-quote{font-family:'Lora',Georgia,serif;font-style:italic;font-size:12.5px;color:var(--bark);background:var(--cream);border-radius:8px;padding:10px 13px;margin-top:8px;line-height:1.6}
+.q-meta{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--bark-soft);margin-top:6px}
+.q-acts{display:flex;gap:8px;flex-basis:100%;justify-content:flex-end;margin-top:10px;padding-left:48px;box-sizing:border-box}
+.q-item{flex-wrap:wrap}
+.q-item>.badge,.q-item>.btn{align-self:center}
+.badge{font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.b-sage{background:var(--sage-light);color:var(--sage)}
+.b-clay{background:var(--clay-pale);color:#7A4316}
+.b-red{background:var(--auburn-light);color:var(--auburn)}
+.b-soft{background:var(--soft);color:var(--bark-mid)}
+.btn{font-size:12px;font-weight:700;padding:8px 14px;border-radius:7px;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:5px}
+.btn-ok{background:var(--sage);color:#fff}.btn-ok:hover{background:#264c2f}
+.btn-no{background:var(--surface);color:var(--bark-mid);border:1px solid var(--warm-line-strong)}.btn-no:hover{border-color:var(--auburn);color:var(--auburn)}
+.btn-primary{background:var(--auburn);color:#fff}.btn-primary:hover{background:#7d2510}
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.tbl th{text-align:left;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft);padding:8px 10px;border-bottom:1.5px solid var(--warm-line-strong)}
+.tbl td{padding:11px 10px;border-bottom:1px solid var(--warm-line);vertical-align:middle}
+.tbl .nm{font-weight:700}
+.flow{display:grid;gap:0;margin-top:8px}
+.flow-step{display:flex;gap:14px;position:relative;padding-bottom:20px}
+.flow-step::before{content:'';position:absolute;left:13px;top:30px;bottom:0;width:2px;background:var(--warm-line-strong)}
+.flow-step:last-child::before{display:none}
+.flow-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;background:var(--soft);color:var(--bark-mid)}
+.flow-dot.cm{background:var(--sage);color:#fff}
+.flow-t{font-size:13px;font-weight:700;padding-top:4px}
+.flow-t .cm-tag{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;background:var(--sage-light);color:var(--sage);border-radius:999px;padding:2px 8px;margin-left:7px;vertical-align:middle}
+.flow-s{font-size:12px;color:var(--bark-mid);line-height:1.55;margin-top:2px;max-width:560px}
+.match-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.mchip{padding:6px 12px;border:1.5px solid var(--warm-line-strong);border-radius:999px;background:var(--surface);font-family:inherit;font-size:11.5px;font-weight:700;color:var(--bark);cursor:pointer}
+.mchip:hover{border-color:var(--sage)}
+.mchip.sel{background:var(--sage);border-color:var(--sage);color:#fff}
+.two-col{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:start}
+@media(max-width:900px){.adm{grid-template-columns:1fr}.adm-side{position:static;height:auto}.kpis{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="adm">
+  <aside class="adm-side">
+    <div class="adm-logo"><div class="adm-logo-mark">CM</div><div><div class="adm-logo-t">Cultured Mornings</div><div class="adm-logo-s">Admin console</div></div></div>
+    <div class="adm-nl">Today</div>
+    <div class="adm-ni on" data-adm="overview">Overview</div>
+    <div class="adm-ni" data-adm="queue">Review queue <span class="cnt">6</span></div>
+    <div class="adm-nl">Programs</div>
+    <div class="adm-ni" data-adm="intake">Intake &amp; pairing <span class="cnt">3</span></div>
+    <div class="adm-ni" data-adm="mentors">Mentor vetting</div>
+    <div class="adm-ni" data-adm="opps">Opportunity vetting</div>
+    <div class="adm-nl">People</div>
+    <div class="adm-ni" data-adm="invites">Invites</div>
+    <div class="adm-ni" data-adm="flows">How it flows</div>
+    <div class="adm-me"><div class="adm-me-av">AB</div><div><div style="font-size:12px;font-weight:700">Aaliyah Brooks</div><div style="font-size:10px;color:rgba(255,255,255,.45)">Coordinator · <a href="CM Sign In.html" style="color:rgba(255,255,255,.6)">Sign out</a></div></div></div>
+  </aside>
+  <main class="adm-main">
+
+    <!-- OVERVIEW -->
+    <section class="adm-screen on" id="adm-overview" data-screen-label="Admin overview">
+      <div class="pg-kick">Saturday, July 19</div>
+      <h1 class="pg-h">Good morning, Aaliyah.</h1>
+      <p class="pg-sub">Cohort VI orientation is in September; the cohort starts in November. Everything the community submits waits here for a human yes.</p>
+      <div class="kpis">
+        <div class="kpi hot"><div class="kpi-n">6</div><div class="kpi-l">Awaiting review</div></div>
+        <div class="kpi"><div class="kpi-n">3</div><div class="kpi-l">Intakes to assign</div></div>
+        <div class="kpi"><div class="kpi-n">14 / 20</div><div class="kpi-l">Invites accepted</div></div>
+        <div class="kpi"><div class="kpi-n">1</div><div class="kpi-l">Mentor in vetting</div></div>
+      </div>
+      <div class="two-col">
+        <div class="acard">
+          <div class="acard-t">Needs you first</div>
+          <div class="acard-s">Oldest items across every queue.</div>
+          <div class="q-item"><div class="q-av" style="background:var(--clay)">JT</div><div class="q-body"><div class="q-t"><span class="who">Jordan Thomas</span> submitted intake answers</div><div class="q-s">Direction: My own food business · wants business guidance</div><div class="q-meta">2 days ago · Intake &amp; pairing</div></div><button class="btn btn-primary" onclick="admGo('intake')">Assign →</button></div>
+          <div class="q-item"><div class="q-av" style="background:#5A2880">DR</div><div class="q-body"><div class="q-t"><span class="who">Danielle Reyes</span> (Louisville Catering Co.) expressed interest in an alumni</div><div class="q-s">Wants Jordan for a paid weekend catering role.</div><div class="q-meta">1 day ago · Review queue</div></div><button class="btn btn-primary" onclick="admGo('queue')">Review →</button></div>
+          <div class="q-item"><div class="q-av" style="background:#8B5E2A">MW</div><div class="q-body"><div class="q-t"><span class="who">Marcus Webb</span> — mentor application in vetting</div><div class="q-s">Background check cleared; one reference still out.</div><div class="q-meta">4 days ago · Mentor vetting</div></div><button class="btn btn-primary" onclick="admGo('mentors')">Open →</button></div>
+        </div>
+        <div>
+          <div class="acard">
+            <div class="acard-t">Cohort VI timeline</div>
+            <div class="flow" style="margin-top:14px">
+              <div class="flow-step"><div class="flow-dot cm">✓</div><div><div class="flow-t">Applications reviewed</div><div class="flow-s">20 students accepted · June</div></div></div>
+              <div class="flow-step"><div class="flow-dot cm">…</div><div><div class="flow-t">Invites &amp; account setup</div><div class="flow-s">14 of 20 activated · now</div></div></div>
+              <div class="flow-step"><div class="flow-dot">S</div><div><div class="flow-t">Orientation</div><div class="flow-s">September · guardians welcome</div></div></div>
+              <div class="flow-step"><div class="flow-dot">N</div><div><div class="flow-t">Cohort begins</div><div class="flow-s">November · mentor assignments in place by then</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- REVIEW QUEUE -->
+    <section class="adm-screen" id="adm-queue" data-screen-label="Admin review queue">
+      <div class="pg-kick">Review queue</div>
+      <h1 class="pg-h">Nothing goes public without a yes.</h1>
+      <p class="pg-sub">Milestones, endorsements, photos, and partner requests all pause here. Approving publishes it; declining sends a kind note back.</p>
+      <div class="acard">
+        <div class="acard-t">Partner &amp; employer requests</div>
+        <div class="acard-s">From "Express interest" on alumni profiles. Contact details are never shared until you approve.</div>
+        <div class="q-item"><div class="q-av" style="background:#5A2880">DR</div><div class="q-body"><div class="q-t"><span class="who">Danielle Reyes</span> · Louisville Catering Co. → Jordan Thomas</div><div class="q-quote">"We'd love Jordan for paid weekend catering support this fall — supervised shifts, 8-hour max."</div><div class="q-meta">1 day ago · employer verified · youth policy on file ✓</div></div><div class="q-acts"><button class="btn btn-ok" onclick="decide(this,'Approved — intro email sent to Jordan & guardian')">Approve intro</button><button class="btn btn-no" onclick="decide(this,'Declined — polite note sent')">Decline</button></div></div>
+        <div class="q-item"><div class="q-av" style="background:var(--bark)">TK</div><div class="q-body"><div class="q-t"><span class="who">"T. King"</span> → Jordan Thomas</div><div class="q-quote">"Want to feature this kid on my channel, DM me his number."</div><div class="q-meta">3 hours ago · unverified sender · no organization ⚠</div></div><div class="q-acts"><button class="btn btn-no" onclick="decide(this,'Blocked & flagged')">Block &amp; flag</button></div></div>
+      </div>
+      <div class="acard">
+        <div class="acard-t">Milestone suggestions</div>
+        <div class="acard-s">Members can suggest; only CM-confirmed milestones appear on the public timeline.</div>
+        <div class="q-item"><div class="q-av" style="background:var(--clay)">JT</div><div class="q-body"><div class="q-t"><span class="who">Jordan Thomas</span> suggested a milestone</div><div class="q-quote">"Catered a 40-person church luncheon — June 2026"</div><div class="q-meta">2 days ago · staff log confirms the event ✓</div></div><div class="q-acts"><button class="btn btn-ok" onclick="decide(this,'Verified & published to timeline')">Verify &amp; publish</button><button class="btn btn-no" onclick="decide(this,'Sent back with a question')">Ask about it</button></div></div>
+      </div>
+      <div class="acard">
+        <div class="acard-t">Endorsements</div>
+        <div class="acard-s">References from mentors and partners, shown on member profiles once approved.</div>
+        <div class="q-item"><div class="q-av" style="background:#8B5E2A">LO</div><div class="q-body"><div class="q-t"><span class="who">Chef Lisa Owens</span> endorsed Jordan Thomas</div><div class="q-quote">"Jordan shows up early, asks the right questions, and treats the kitchen with respect."</div><div class="q-meta">5 days ago · active mentor ✓</div></div><div class="q-acts"><button class="btn btn-ok" onclick="decide(this,'Published to profile')">Approve</button><button class="btn btn-no" onclick="decide(this,'Declined')">Decline</button></div></div>
+      </div>
+      <div class="acard">
+        <div class="acard-t">Photos — Moments from the kitchen</div>
+        <div class="acard-s">Member-submitted photos need a staff check before the public gallery.</div>
+        <div class="q-item"><div class="q-av" style="background:var(--sage)">AW</div><div class="q-body"><div class="q-t"><span class="who">Amara Wilson</span> uploaded 2 photos</div><div class="q-s">From Thursday's baking session. Check faces of other minors before publishing.</div><div class="q-meta">6 hours ago</div></div><div class="q-acts"><button class="btn btn-ok" onclick="decide(this,'Approved & published')">Approve</button><button class="btn btn-no" onclick="decide(this,'Returned to member')">Return</button></div></div>
+      </div>
+    </section>
+
+    <!-- INTAKE & PAIRING -->
+    <section class="adm-screen" id="adm-intake" data-screen-label="Admin intake and matching">
+      <div class="pg-kick">Intake &amp; pairing</div>
+      <h1 class="pg-h">Read, then assign — by hand.</h1>
+      <p class="pg-sub">Every intake is read by a person. Answers stay between the team and the assigned mentor — never on public profiles. Pick 2–3 mentors whose background fits the student's direction.</p>
+      <div class="acard">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+          <div><div class="acard-t">Jordan Thomas · 17 · Cohort VI</div><div class="acard-s">Submitted 2 days ago · guardian consent on file ✓</div></div>
+          <span class="badge b-clay">Awaiting assignment</span>
+        </div>
+        <table class="tbl">
+          <tr><td style="width:220px;color:var(--bark-soft);font-weight:700">Direction</td><td class="nm">My own food business</td></tr>
+          <tr><td style="color:var(--bark-soft);font-weight:700">What draws them to food</td><td>"Cooking with my grandmother got me started — I want to run something of my own one day."</td></tr>
+          <tr><td style="color:var(--bark-soft);font-weight:700">Wants from a mentor</td><td>Business guidance</td></tr>
+          <tr><td style="color:var(--bark-soft);font-weight:700">Learns best</td><td>Jumping in hands-first</td></tr>
+          <tr><td style="color:var(--bark-soft);font-weight:700">Available</td><td>Weekday afternoons · Saturdays</td></tr>
+        </table>
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft);margin-top:16px">Shortlist mentors — background fits the student's direction</div>
+        <div class="match-chips">
+          <button class="mchip" onclick="this.classList.toggle('sel')">David Washington · restaurateur, owns 2 spots</button>
+          <button class="mchip" onclick="this.classList.toggle('sel')">Chef Lisa Owens · pastry, ran her own bakery</button>
+          <button class="mchip" onclick="this.classList.toggle('sel')">Renee Carter · food-truck founder</button>
+          <button class="mchip" onclick="this.classList.toggle('sel')">Sam Okafor · food scientist</button>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:16px;align-items:center">
+          <button class="btn btn-primary" onclick="decide(this,'Recommendation sent to Jordan & guardian')">Send mentor recommendation →</button>
+          <span style="font-size:11.5px;color:var(--bark-soft)">Student and guardian see the shortlist and pick; nothing is forced.</span>
+        </div>
+      </div>
+      <div class="acard">
+        <div class="acard-t">Also waiting</div>
+        <div class="q-item"><div class="q-av" style="background:var(--sage)">AW</div><div class="q-body"><div class="q-t"><span class="who">Amara Wilson</span> · 16 · direction: Baking &amp; pastry</div><div class="q-meta">1 day ago</div></div><span class="badge b-clay">Awaiting assignment</span></div>
+        <div class="q-item"><div class="q-av" style="background:#8B5E2A">Kb</div><div class="q-body"><div class="q-t"><span class="who">Kofi Boateng</span> · 17 · direction: Food content &amp; media</div><div class="q-meta">4 hours ago · flag: no media mentor on roster yet</div></div><span class="badge b-red">Needs roster help</span></div>
+      </div>
+      <div class="acard">
+        <div class="acard-t">What intake data is for</div>
+        <div class="acard-s" style="margin-bottom:0">Mentor assignments first. Second: it tells the program what this cohort actually wants — 4 of 14 activated students picked something other than "working chef," which shapes which mentors to recruit next (media, agri-tourism). A post-cohort survey will close the loop on whether directions shifted.</div>
+      </div>
+    </section>
+
+    <!-- MENTOR VETTING -->
+    <section class="adm-screen" id="adm-mentors" data-screen-label="Admin mentor vetting">
+      <div class="pg-kick">Mentor vetting</div>
+      <h1 class="pg-h">Who gets to sit with our youth.</h1>
+      <p class="pg-sub">No mentor appears in the directory — or receives an invite code — until every column is green. Renewed annually.</p>
+      <div class="acard">
+        <table class="tbl">
+          <tr><th>Mentor</th><th>Background check</th><th>References</th><th>Interview</th><th>Code of Care</th><th>Status</th></tr>
+          <tr><td class="nm">Chef Lisa Owens</td><td><span class="badge b-sage">Cleared</span></td><td><span class="badge b-sage">2 of 2</span></td><td><span class="badge b-sage">Done</span></td><td><span class="badge b-sage">Signed</span></td><td><span class="badge b-sage">Active</span></td></tr>
+          <tr><td class="nm">David Washington</td><td><span class="badge b-sage">Cleared</span></td><td><span class="badge b-sage">2 of 2</span></td><td><span class="badge b-sage">Done</span></td><td><span class="badge b-sage">Signed</span></td><td><span class="badge b-sage">Active</span></td></tr>
+          <tr><td class="nm">Marcus Webb</td><td><span class="badge b-sage">Cleared</span></td><td><span class="badge b-clay">1 of 2</span></td><td><span class="badge b-clay">Scheduled</span></td><td><span class="badge b-soft">—</span></td><td><span class="badge b-clay">In vetting</span></td></tr>
+          <tr><td class="nm">Renee Carter</td><td><span class="badge b-sage">Cleared</span></td><td><span class="badge b-sage">2 of 2</span></td><td><span class="badge b-sage">Done</span></td><td><span class="badge b-clay">Sent</span></td><td><span class="badge b-clay">Awaiting signature</span></td></tr>
+        </table>
+      </div>
+      <div class="acard">
+        <div class="acard-t">If a mentorship goes wrong</div>
+        <div class="flow" style="margin-top:14px">
+          <div class="flow-step"><div class="flow-dot">1</div><div><div class="flow-t">Either side taps "pause mentorship"</div><div class="flow-s">Student, guardian, or mentor — one click, no explanation required. Sessions stop immediately.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Coordinator follows up within 24h<span class="cm-tag">CM intervenes</span></div><div class="flow-s">Separate conversations with each side; guardian looped in for minors. CM is the bridge — the two sides never have to negotiate directly.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Outcome logged<span class="cm-tag">CM intervenes</span></div><div class="flow-s">Reassignment, mediated restart, or removal from the roster. Patterns across mentees inform annual renewal.</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OPPORTUNITY VETTING -->
+    <section class="adm-screen" id="adm-opps" data-screen-label="Admin opportunity vetting">
+      <div class="pg-kick">Opportunity vetting</div>
+      <h1 class="pg-h">Every listing gets screened.</h1>
+      <p class="pg-sub">The board is members-only, and nothing posts until an employer is verified — including a youth-hiring policy for roles open to under-18s. External partners stay a low-volume, high-trust channel for now.</p>
+      <div class="acard">
+        <div class="acard-t">Pending listings</div>
+        <div class="q-item"><div class="q-av" style="background:#1E4D6B">CT</div><div class="q-body"><div class="q-t"><span class="who">Community Table</span> · Pop-up service volunteer (2 spots)</div><div class="q-s">Known partner · youth policy on file · staff supervision confirmed</div><div class="q-meta">Ready to publish</div></div><div class="q-acts"><button class="btn btn-ok" onclick="decide(this,'Published to the board')">Publish</button></div></div>
+        <div class="q-item"><div class="q-av" style="background:var(--bark)">GH</div><div class="q-body"><div class="q-t"><span class="who">Grill House 24</span> · Late-night line cook</div><div class="q-s">New employer · shifts end 2am · no youth policy submitted ⚠</div><div class="q-meta">Blocked until policy call happens</div></div><div class="q-acts"><button class="btn btn-no" onclick="decide(this,'Call scheduled with employer')">Schedule call</button></div></div>
+      </div>
+      <div class="acard">
+        <div class="acard-t">Employer onboarding checklist</div>
+        <div class="flow" style="margin-top:14px">
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Verify the business + references<span class="cm-tag">CM intervenes</span></div><div class="flow-s">Real business, real kitchen, references checked.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Youth-hiring policy on file<span class="cm-tag">CM intervenes</span></div><div class="flow-s">Hours, supervision, guardian consent — required for any role open to minors. CM provides a template policy for partners who don't have one.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Staff conversation + code of conduct</div><div class="flow-s">A human call before the first listing; signed partner code of conduct.</div></div></div>
+          <div class="flow-step"><div class="flow-dot">4</div><div><div class="flow-t">Seasonal re-review</div><div class="flow-s">Listings expire each season and are re-screened.</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVITES -->
+    <section class="adm-screen" id="adm-invites" data-screen-label="Admin invites">
+      <div class="pg-kick">Invites</div>
+      <h1 class="pg-h">Access starts here.</h1>
+      <p class="pg-sub">Invites are how anyone enters the portal — the code carries the role, so nobody self-selects into contact with youth. Student invites go out only after an accepted application.</p>
+      <div class="acard">
+        <div class="acard-t">Send an invite</div>
+        <div style="display:grid;grid-template-columns:2fr 1.2fr auto;gap:10px;align-items:end;margin-top:10px">
+          <div><label style="display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft);margin-bottom:6px">Email</label><input style="width:100%;box-sizing:border-box;padding:10px 12px;border:1.5px solid var(--warm-line-strong);border-radius:8px;background:var(--surface);font-family:inherit;font-size:13px" placeholder="them@email.com"></div>
+          <div><label style="display:block;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft);margin-bottom:6px">Role</label><select style="width:100%;padding:10px 12px;border:1.5px solid var(--warm-line-strong);border-radius:8px;background:var(--surface);font-family:inherit;font-size:13px"><option>Student (accepted applicant)</option><option>Mentor (vetting complete)</option><option>CM staff</option></select></div>
+          <button class="btn btn-primary" onclick="decide(this,'Invite sent ✓')">Send invite</button>
+        </div>
+        <div style="font-size:11.5px;color:var(--bark-soft);margin-top:10px">Mentor invites are blocked until vetting is green — the system won't generate a code early.</div>
+      </div>
+      <div class="acard">
+        <div class="acard-t">Cohort VI student invites · 14 of 20 activated</div>
+        <table class="tbl">
+          <tr><th>Name</th><th>Sent</th><th>Status</th><th>Guardian consent</th><th></th></tr>
+          <tr><td class="nm">Jordan Thomas</td><td>Jul 12</td><td><span class="badge b-sage">Activated</span></td><td><span class="badge b-sage">On file</span></td><td></td></tr>
+          <tr><td class="nm">Amara Wilson</td><td>Jul 12</td><td><span class="badge b-sage">Activated</span></td><td><span class="badge b-sage">On file</span></td><td></td></tr>
+          <tr><td class="nm">Kofi Boateng</td><td>Jul 12</td><td><span class="badge b-sage">Activated</span></td><td><span class="badge b-sage">On file</span></td><td></td></tr>
+          <tr><td class="nm">Deja Mills</td><td>Jul 12</td><td><span class="badge b-clay">Opened, not finished</span></td><td><span class="badge b-clay">Consent email sent</span></td><td><button class="btn btn-no" onclick="decide(this,'Reminder sent')">Nudge</button></td></tr>
+          <tr><td class="nm">Elias Romero</td><td>Jul 12</td><td><span class="badge b-soft">Not opened</span></td><td><span class="badge b-soft">—</span></td><td><button class="btn btn-no" onclick="decide(this,'Reminder sent')">Nudge</button></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- FLOWS -->
+    <section class="adm-screen" id="adm-flows" data-screen-label="Admin task flows">
+      <div class="pg-kick">How it flows</div>
+      <h1 class="pg-h">One journey, with CM at every gate.</h1>
+      <p class="pg-sub">The full path from application to opportunity — green dots mark where Cultured Mornings staff verify, approve, or bridge.</p>
+      <div class="acard">
+        <div class="flow" style="margin-top:6px">
+          <div class="flow-step"><div class="flow-dot">1</div><div><div class="flow-t">Student applies</div><div class="flow-s">Paper or web form, before the portal exists for them.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Application reviewed → invite sent<span class="cm-tag">CM gate</span></div><div class="flow-s">Acceptance decision, then an invite code carrying the student role.</div></div></div>
+          <div class="flow-step"><div class="flow-dot">2</div><div><div class="flow-t">Account activation</div><div class="flow-s">Identity confirmed → guardian consent (under 18) → password. Portal opens on day one: quiet, three steps.</div></div></div>
+          <div class="flow-step"><div class="flow-dot">3</div><div><div class="flow-t">Intake questions</div><div class="flow-s">Six questions, one per screen — direction, motivation, mentor wants, learning style, availability.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Staff-reviewed pairing<span class="cm-tag">CM gate</span></div><div class="flow-s">Team reads the intake, shortlists 2–3 vetted mentors by background; student + guardian choose.</div></div></div>
+          <div class="flow-step"><div class="flow-dot">4</div><div><div class="flow-t">Lessons &amp; sessions</div><div class="flow-s">Learning path in the portal; mentor sessions at the CM kitchen, staff present.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Profile grows — verified<span class="cm-tag">CM gate</span></div><div class="flow-s">Milestones from program records, skills verified from training, endorsements and photos approved in the review queue.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Opportunities — mediated<span class="cm-tag">CM gate</span></div><div class="flow-s">Vetted listings only; employer interest goes through staff; contact details shared only with consent.</div></div></div>
+          <div class="flow-step"><div class="flow-dot cm">CM</div><div><div class="flow-t">Post-cohort survey<span class="cm-tag">CM gate</span></div><div class="flow-s">Did the direction hold? What changed? Feeds mentor recruiting and the next cohort's design.</div></div></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+<script>
+function admGo(k){
+  document.querySelectorAll('.adm-ni[data-adm]').forEach(n=>n.classList.toggle('on',n.dataset.adm===k));
+  document.querySelectorAll('.adm-screen').forEach(s=>s.classList.toggle('on',s.id==='adm-'+k));
+  window.scrollTo(0,0);
+}
+document.querySelectorAll('.adm-ni[data-adm]').forEach(n=>n.addEventListener('click',()=>admGo(n.dataset.adm)));
+function decide(btn,msg){
+  const item=btn.closest('.q-item')||btn.closest('.acard');
+  const acts=btn.closest('.q-acts')||btn.parentNode;
+  const tag=document.createElement('span');tag.className='badge '+(/(Approved|Published|Verified|sent|Sent|scheduled|Scheduled)/.test(msg)?'b-sage':'b-soft');tag.textContent=msg;
+  acts.replaceWith(tag);
+}
+</script>
+</body>
+</html>

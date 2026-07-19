@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cultured Mornings — Member Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles-public.css">
+<link rel="stylesheet" href="styles-screens.css">
+<style id="tweak-vars">
+  :root{
+    --tk-hero-bg: var(--clay-pale);
+    --tk-hero-pad: var(--s8);
+    --tk-accent: var(--auburn);
+    --tk-accent-hover: #7d2510;
+    --tk-name-size: var(--t-display);
+    --tk-av-radius: 50%;
+  }
+  /* Tweak overrides */
+  .pub-hero{background:var(--tk-hero-bg);padding-top:var(--tk-hero-pad);padding-bottom:var(--tk-hero-pad)}
+  .pub-av{border-radius:var(--tk-av-radius)}
+  .pub-name{font-size:var(--tk-name-size)}
+  .btn-primary{background:var(--tk-accent)}
+  .btn-primary:hover{background:var(--tk-accent-hover)}
+  .cc-btn{background:var(--tk-accent)}
+  .cc-btn:hover{background:var(--tk-accent-hover)}
+  .btn-outline{color:var(--tk-accent);border-color:var(--tk-accent)}
+
+  /* Quote style variants */
+  .pub-quote.qs-bold{font-family:'Bricolage Grotesque',sans-serif;font-style:normal;font-weight:600;font-size:18px;color:var(--bark);padding:var(--s4) var(--s5);background:var(--surface);border-left:3px solid var(--clay);border-radius:0 var(--r-sm) var(--r-sm) 0}
+  .pub-quote.qs-bold::before{display:none}
+  .pub-quote.qs-minimal{font-style:normal;font-family:'Bricolage Grotesque',sans-serif;font-weight:500;font-size:15px;color:var(--bark-mid);border:none;padding:0;background:transparent}
+  .pub-quote.qs-minimal::before{display:none}
+
+  /* Moments layout variants */
+  .moments-grid.ml-uniform{grid-template-columns:repeat(3,1fr);grid-auto-rows:140px}
+  .moments-grid.ml-uniform .moment{grid-column:span 1 !important;grid-row:span 1 !important}
+  .moments-grid.ml-row{grid-template-columns:repeat(7,minmax(0,1fr));grid-auto-rows:120px}
+  .moments-grid.ml-row .moment{grid-column:span 1 !important;grid-row:span 1 !important}
+
+  /* Hide stats toggle */
+  .hide-stats .pub-qfacts{display:none}
+
+  /* Hero dark variant */
+  .pub-hero.hero-dark .pub-name{color:#fff}
+  .pub-hero.hero-dark .pub-role{color:var(--clay-light)}
+  .pub-hero.hero-dark .pub-loc{color:rgba(255,255,255,.7)}
+  .pub-hero.hero-dark .pub-quote{color:rgba(255,255,255,.85)}
+  .pub-hero.hero-dark .pub-quote-attr{color:rgba(255,255,255,.5)}
+  .pub-hero.hero-dark .qf-val{color:#fff}
+  .pub-hero.hero-dark .qf-lbl{color:rgba(255,255,255,.5)}
+  .pub-hero.hero-dark .pub-qfact{border-color:rgba(255,255,255,.15)}
+  .pub-hero.hero-dark .pub-qfacts{border-top-color:rgba(255,255,255,.15)}
+</style>
+<style id="day1-styles">
+body.day1 .est-only{display:none !important}
+body:not(.day1) .day1-only{display:none !important}
+body.day1 .str-fill{width:12%}
+body.day1 .rc-pf{width:0 !important}
+.status-empty{background:var(--soft);color:var(--bark-mid)}
+.empty-state{border:1.5px dashed var(--warm-line-strong);border-radius:10px;padding:20px 18px;text-align:center}
+.empty-title{font-size:13px;font-weight:800;color:var(--bark);letter-spacing:-.01em}
+.empty-sub{font-family:'Lora',Georgia,serif;font-style:italic;font-size:12.5px;color:var(--bark-mid);line-height:1.65;margin-top:4px;text-wrap:pretty}
+.empty-state .btn{margin-top:12px}
+.empty-state.on-dark{border-color:rgba(255,255,255,.16)}
+.empty-state.on-dark .empty-title{color:#fff}
+.empty-state.on-dark .empty-sub{color:rgba(255,255,255,.5)}
+.ac-step{font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.12em;color:var(--bark-soft);text-transform:uppercase;margin-bottom:3px}
+.iq-when-done{display:none !important}
+body.intake-done .iq-when-done{display:revert !important}
+body.intake-done .iq-when-todo{display:none !important}
+.intake-wrap{max-width:620px;margin:48px auto;padding:0 24px}
+.intake-kicker{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--clay)}
+.intake-progress{height:5px;background:var(--soft);border-radius:3px;overflow:hidden;margin:14px 0 8px}
+.intake-progress-fill{height:100%;background:var(--clay);border-radius:3px;transition:width .3s}
+.intake-step-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--bark-soft);margin-bottom:28px}
+.iq-q{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;font-weight:800;color:var(--bark);letter-spacing:-.02em;line-height:1.15;margin-bottom:8px;text-wrap:pretty}
+.iq-sub{font-family:'Lora',Georgia,serif;font-style:italic;font-size:14px;color:var(--bark-mid);line-height:1.6;margin-bottom:24px;text-wrap:pretty}
+.iq-chips{display:flex;flex-wrap:wrap;gap:10px}
+.iq-chip{padding:12px 18px;border:1.5px solid var(--warm-line-strong);border-radius:999px;background:var(--surface);font-family:inherit;font-size:14px;font-weight:600;color:var(--bark);cursor:pointer}
+.iq-chip:hover{border-color:var(--clay)}
+.iq-chip.sel{background:var(--bark);border-color:var(--bark);color:#fff}
+.iq-ta{width:100%;min-height:130px;padding:14px;border:1.5px solid var(--warm-line-strong);border-radius:10px;font-family:'Lora',Georgia,serif;font-size:14px;color:var(--bark);background:var(--surface);resize:vertical;box-sizing:border-box}
+.intake-nav{display:flex;justify-content:space-between;gap:10px;margin-top:30px}
+.intake-note{margin-top:24px;font-size:11.5px;color:var(--bark-soft);font-weight:500;text-align:center}
+.iq-sum-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:13px 0;border-bottom:1px solid var(--warm-line)}
+.iq-sum-q{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft);margin-bottom:3px}
+.iq-sum-a{font-size:14px;font-weight:600;color:var(--bark);line-height:1.5}
+.iq-sum-a.muted{color:var(--bark-soft);font-weight:500;font-style:italic}
+.iq-edit{font-size:11.5px;font-weight:700;color:var(--clay);cursor:pointer;white-space:nowrap;padding-top:2px}
+.iq-use{background:var(--sage-light);border-radius:10px;padding:16px 18px;margin-top:24px}
+.iq-use-t{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--sage);margin-bottom:8px}
+.iq-use li{font-size:12.5px;color:var(--bark);line-height:1.65;margin-bottom:4px}
+.iq-done{max-width:480px;margin:60px auto;text-align:center}
+.cm-modal-ov{position:fixed;inset:0;background:rgba(35,23,8,.45);display:flex;align-items:center;justify-content:center;z-index:200;padding:24px}
+.cm-modal-ov[hidden]{display:none}
+.cm-modal{background:var(--surface);border-radius:14px;max-width:460px;width:100%;padding:26px;position:relative;max-height:85vh;overflow:auto;box-shadow:0 24px 60px rgba(35,23,8,.25)}
+.cm-modal-x{position:absolute;top:12px;right:14px;border:none;background:none;font-size:20px;color:var(--bark-soft);cursor:pointer;line-height:1}
+.cm-modal h3{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;color:var(--bark);letter-spacing:-.015em;margin:0 0 8px}
+.cm-modal p{font-size:13px;color:var(--bark-mid);line-height:1.6;margin:0 0 12px}
+.vet-li{display:flex;gap:10px;font-size:13px;color:var(--bark);line-height:1.55;padding:8px 0;border-bottom:1px solid var(--warm-line)}
+.vet-li .tick{color:var(--sage);font-weight:800}
+.mp-vetting-link{cursor:pointer}
+.ms-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--warm-line)}
+.ms-name{font-size:13px;font-weight:700;color:var(--bark)}
+.ms-meta{font-size:11px;color:var(--bark-soft);margin-top:2px}
+.ms-tag{font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.ms-cm{background:var(--sage-light);color:var(--sage)}
+.ms-pending{background:var(--clay-pale);color:#7A4316}
+</style>
+</head>
+<body>
+<div class="shell" id="shell">
+
+  <!-- ── SIDEBAR ───────────────────────────── -->
+  <aside class="sidebar">
+    <div class="sb-top">
+      <div class="lw">
+        <div class="logo">Cultured<br>Mornings</div>
+        <div class="tagline">"Do everything in love." — 1 Cor 16:14</div>
+      </div>
+      <button class="tog" id="tog" aria-label="Toggle sidebar">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path id="ti" d="M9 2L4 7l5 5" stroke="rgba(255,255,255,0.6)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="nsl"><span class="nl">Your space</span></div>
+    <div class="ni active" data-screen="home">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M2 7l6-5 6 5v7H2V7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M6 14V9h4v5" stroke="currentColor" stroke-width="1.4"/></svg>
+      <span class="nl">Home</span>
+    </div>
+    <div class="ni" data-screen="public-profile" data-profile-tab="public">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.4"/><path d="M2 14c0-3 2.5-5 6-5s6 2 6 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span class="nl">My profile</span>
+    </div>
+
+    <div class="nsl"><span class="nl">Grow</span></div>
+    <div class="ni" data-screen="resources" data-comment-anchor="510722e778-div">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M3 3h7l3 3v7H3V3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M10 3v3h3" stroke="currentColor" stroke-width="1.4"/></svg>
+      <span class="nl">Resources</span>
+    </div>
+
+    <div class="nsl"><span class="nl">Our community</span></div>
+    <div class="ni" data-screen="mentors">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><circle cx="5" cy="6" r="2.5" stroke="currentColor" stroke-width="1.4"/><circle cx="11" cy="6" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M1 14c0-2 1.5-4 4-4M11 10c2.5 0 4 2 4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span class="nl">Mentors</span>
+    </div>
+    <div class="ni" data-screen="opportunities">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="5" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M6 5V3.5C6 2.7 6.7 2 7.5 2h1c.8 0 1.5.7 1.5 1.5V5" stroke="currentColor" stroke-width="1.4"/></svg>
+      <span class="nl">Opportunities</span>
+    </div>
+
+    <div class="nsl"><span class="nl">Account</span></div>
+    <div class="ni nav-link-js" data-screen="settings">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l1.4 1.6 2 .3.7 2 1.6 1.4-.6 2 .6 2-1.6 1.4-.7 2-2 .3L8 14.5l-1.4-1.6-2-.3-.7-2L2.3 9.2l.6-2-.6-2L3.9 3.8l.7-2 2-.3L8 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.4"/></svg>
+      <span class="nl">Settings</span>
+    </div>
+    <a class="ni" href="CM Sign In.html" style="text-decoration:none">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M6 3H3v10h3M10 11l3-3-3-3M13 8H6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nl">Sign out</span>
+    </a>
+    <a class="ni ni-ext" href="https://culturedmornings.org" target="_blank" rel="noopener">
+      <svg class="ni-icon" viewBox="0 0 16 16" fill="none"><path d="M9 2h5v5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2L7 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12 9v4a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nl">culturedmornings.org</span>
+    </a>
+
+    <div class="sbf">
+      <div class="uav">JT</div>
+      <div class="sbf-meta">
+        <div class="sbfn">Jordan Thomas</div>
+        <div class="sbfr"><span class="est-only">Cohort III · Alumni</span><span class="day1-only">Cohort VI · New member</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ──────────────────────────────── -->
+  <main class="main">
+
+    <!-- ══ HOME ══ -->
+    <section class="screen active" id="screen-home">
+      <div class="hero">
+        <div class="hero-top">
+          <div>
+            <div class="hero-kicker" data-comment-anchor="55570f09be-div">Good morning, Jordan</div>
+            <h1 class="hero-name"><span class="est-only">You're three sessions into <em>Knife skills mastery</em>. Keep going.</span><span class="day1-only">Your seat at the table is ready. Let's start with your story.</span></h1>
+            <div class="hero-verse">"Whatever you do, work at it with all your heart, as working for the Lord." — Colossians 3:23</div>
+          </div>
+          <div>
+            <div class="sk">This week</div>
+            <div class="srow est-only">
+              <div class="sd sd-on">M</div>
+              <div class="sd sd-on">T</div>
+              <div class="sd sd-on">W</div>
+              <div class="sd sd-on">T</div>
+              <div class="sd sd-today">F</div>
+              <div class="sd sd-off">S</div>
+              <div class="sd sd-off">S</div>
+            </div>
+            <div class="srow day1-only">
+              <div class="sd sd-off">M</div>
+              <div class="sd sd-off">T</div>
+              <div class="sd sd-off">W</div>
+              <div class="sd sd-off">T</div>
+              <div class="sd sd-today">F</div>
+              <div class="sd sd-off">S</div>
+              <div class="sd sd-off">S</div>
+            </div>
+            <div class="snote"><span class="est-only">5-day streak · keep it alive</span><span class="day1-only">Day one — every streak starts here</span></div>
+          </div>
+        </div>
+        <div class="stat-bar est-only">
+          <div class="st"><div class="stn">12</div><div class="stl">Lessons done</div></div>
+          <div class="st"><div class="stn">3</div><div class="stl">Credentials</div></div>
+          <div class="st"><div class="stn">2</div><div class="stl">Active mentors</div></div>
+          <div class="st"><div class="stn">74%</div><div class="stl" title="Five equal parts: basic info, story & quote, skills, photos, resume">Profile strength</div></div>
+        </div>
+        <div class="stat-bar day1-only">
+          <div class="st"><div class="stn">0</div><div class="stl">Lessons done</div></div>
+          <div class="st"><div class="stn">0</div><div class="stl">Credentials</div></div>
+          <div class="st"><div class="stn">0</div><div class="stl">Mentors</div></div>
+          <div class="st"><div class="stn">12%</div><div class="stl" title="Five equal parts: basic info, story & quote, skills, photos, resume">Profile strength</div></div>
+        </div>
+      </div>
+
+      <div class="body-grid">
+        <div class="mc">
+          <!-- Quick actions -->
+          <div class="action-grid">
+            <div class="ac ac-0 nav-link-js" data-screen="profile-editor">
+              <div class="ac-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><circle cx="9" cy="6.5" r="3" stroke="#231708" stroke-width="1.4"/><path d="M3 16c0-3 3-5 6-5s6 2 6 5" stroke="#231708" stroke-width="1.4"/></svg>
+              </div>
+              <div>
+                <div class="ac-step">Step 1</div>
+                <div class="ac-title"><span class="est-only">Polish your profile</span><span class="day1-only">Set up your profile</span></div>
+                <div class="ac-sub"><span class="est-only">74% complete — finish strong</span><span class="day1-only">Add your story, photo, and goals</span></div>
+              </div>
+              <div class="ac-arrow"><span class="est-only">Edit →</span><span class="day1-only">Start →</span></div>
+            </div>
+            <div class="ac ac-1 nav-link-js" data-screen="resources">
+              <div class="ac-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 4l3-1 3 1 3-1 3 1v10l-3-1-3 1-3-1-3 1V4z" stroke="#231708" stroke-width="1.4" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="ac-step">Step 2</div>
+                <div class="ac-title"><span class="est-only">Resume your lesson</span><span class="day1-only">Start your first lesson</span></div>
+                <div class="ac-sub"><span class="est-only">Knife skills · module 3 of 5</span><span class="day1-only">Kitchen safety &amp; sanitation · 45 min</span></div>
+              </div>
+              <div class="ac-arrow"><span class="est-only">Continue →</span><span class="day1-only">Begin →</span></div>
+            </div>
+            <div class="ac ac-2 nav-link-js" data-screen="opportunities">
+              <div class="ac-icon">
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="3" y="5" width="12" height="9" rx="1.5" stroke="#231708" stroke-width="1.4"/><path d="M7 5V4a1 1 0 011-1h2a1 1 0 011 1v1" stroke="#231708" stroke-width="1.4"/></svg>
+              </div>
+              <div>
+                <div class="ac-step">Step 3</div>
+                <div class="ac-title"><span class="est-only">3 new opportunities</span><span class="day1-only">Explore opportunities</span></div>
+                <div class="ac-sub"><span class="est-only">Catering, internships, and gigs</span><span class="day1-only">See what's waiting when you're ready</span></div>
+              </div>
+              <div class="ac-arrow">Browse →</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div><div class="card-title">Activity feed</div><div style="font-size:11px;color:var(--bark-soft);font-weight:600;margin-top:2px">The latest in your space, newest first</div></div>
+              <span class="card-link est-only">View all</span>
+            </div>
+            <div class="est-only">
+            <div class="af-item"><div class="af-dot" style="background:var(--sage)"></div><div><div class="af-text">Chef Lisa Owens left feedback on your plating exercise.</div><div class="af-time">2 hours ago</div></div></div>
+            <div class="af-item"><div class="af-dot" style="background:var(--clay)"></div><div><div class="af-text">Louisville Catering Co. posted 2 new roles relevant to your skills.</div><div class="af-time">Yesterday</div></div></div>
+            <div class="af-item"><div class="af-dot" style="background:var(--auburn)"></div><div><div class="af-text">You completed module 2 of <em>Knife skills mastery</em>. Module 3 is unlocked.</div><div class="af-time">2 days ago</div></div></div>
+            </div>
+            <div class="day1-only empty-state"><div class="empty-title">Quiet in here — for now</div><div class="empty-sub">Feedback from mentors, finished lessons, and messages will land here as you go.</div></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head">
+              <div class="card-title"><span class="est-only">Opportunities for you</span><span class="day1-only">Open right now</span></div>
+              <span class="card-link nav-link-js" data-screen="opportunities">See all</span>
+            </div>
+            <div class="item-row"><div><div class="opp-name">Catering assistant</div><div class="opp-org">Louisville Catering Co.</div></div><span class="badge badge-auburn">New</span></div>
+            <div class="item-row"><div><div class="opp-name">Summer kitchen intern</div><div class="opp-org">Chef Marcus Kitchen</div></div><span class="badge badge-sage">Open</span></div>
+            <div class="item-row"><div><div class="opp-name">Pop-up volunteer · May 18</div><div class="opp-org">Community Table</div></div><span class="badge badge-bark">Soon</span></div>
+          </div>
+        </div>
+
+        <div class="sc">
+          <div class="dark-card">
+            <div class="eyebrow eyebrow-light" style="color:var(--clay)">Upcoming</div>
+            <div style="font-size:14px;font-weight:800;color:#fff;letter-spacing:-.015em;margin-bottom:6px">Cohort III meet-up</div>
+            <div style="font-family:'Lora',Georgia,serif;font-size:12px;color:rgba(255,255,255,.55);font-style:italic;line-height:1.55;margin-bottom:14px">Friday, May 9 · 6pm at the kitchen.<br>Dinner together. Bring a story.</div>
+            <button class="btn btn-primary btn-sm">RSVP</button>
+            <div style="font-size:10.5px;color:rgba(255,255,255,.45);margin-top:10px;font-weight:600">Add to calendar → <span style="color:rgba(255,255,255,.3)">syncs with Google &amp; Apple</span></div>
+          </div>
+
+          <div class="dark-card">
+            <div class="eyebrow eyebrow-light" style="color:var(--clay)">Notifications</div>
+            <div class="est-only">
+            <div class="notif-item"><div class="ndot" style="background:var(--clay)"></div><div><div class="ntext">Chef Lisa replied to your message.</div><div class="ntime">10 min ago</div></div></div>
+            <div class="notif-item"><div class="ndot" style="background:var(--sage)"></div><div><div class="ntext">Your food safety certificate is now verified.</div><div class="ntime">3 hours ago</div></div></div>
+            <div class="notif-item"><div class="ndot" style="background:var(--auburn)"></div><div><div class="ntext">Reminder: complete your portfolio for full visibility.</div><div class="ntime">Yesterday</div></div></div>
+            </div>
+            <div class="day1-only">
+            <div class="notif-item"><div class="ndot" style="background:var(--clay)"></div><div><div class="ntext">Welcome to Cultured Mornings — your account is live.</div><div class="ntime">Just now</div></div></div>
+            </div>
+          </div>
+
+          <div class="clay-card day1-only">
+            <div class="iq-when-todo">
+            <div class="eyebrow">Before anything else</div>
+            <div style="font-size:13px;font-weight:800;color:var(--bark);letter-spacing:-.01em;margin-bottom:4px">Tell us where you want to go</div>
+            <div class="lora" style="font-size:12.5px;font-style:italic;color:var(--bark-mid);line-height:1.65;margin-bottom:10px;text-wrap:pretty">Chef? Food scientist? Your own thing entirely? Your intake answers are how the team pairs you with mentors and opportunities — no algorithms, just people who read them.</div>
+            <button class="btn btn-primary btn-sm" onclick="startIntake(false)">Start intake questions</button>
+            </div>
+            <div class="iq-when-done">
+            <div class="eyebrow" style="color:var(--sage)">Intake received ✓</div>
+            <div style="font-size:13px;font-weight:800;color:var(--bark);letter-spacing:-.01em;margin-bottom:4px">The team is reading your answers</div>
+            <div class="lora" style="font-size:12.5px;font-style:italic;color:var(--bark-mid);line-height:1.65;margin-bottom:10px;text-wrap:pretty">Expect 2–3 suggested mentors within a week — recommended by staff who read what you wrote, never on your public profile.</div>
+            <button class="btn btn-ghost btn-sm" onclick="startIntake(true)">Review your answers</button>
+            </div>
+          </div>
+
+          <div class="clay-card">
+            <div class="eyebrow">From the community</div>
+            <div class="lora" style="font-size:13.5px;font-style:italic;color:var(--bark);line-height:1.7;margin-bottom:8px;text-wrap:pretty">"I came in not knowing how to hold a knife. Now I walk into any kitchen and feel like I belong."</div>
+            <div style="font-size:10px;font-weight:800;color:var(--bark-soft);letter-spacing:.06em;text-transform:uppercase">— Alumni, Cohort III</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ PUBLIC PROFILE — refined + Moments from the Kitchen ══ -->
+    <section class="screen" id="screen-public-profile" data-screen-label="My profile · Public view">
+      <div class="pe-tabbar">
+        <div class="pe-tabbar-inner">
+          <div class="pe-tabs">
+            <button class="pe-tab active" data-pe-target="public-profile">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><circle cx="7" cy="7" r="2" fill="currentColor"/></svg>
+              Public view
+            </button>
+            <button class="pe-tab" data-pe-target="profile-editor">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+              Edit profile
+            </button>
+          </div>
+          <div class="pe-tab-meta">
+            <span class="pe-tab-eye">You're viewing</span>
+            <span class="pe-tab-val">What the world sees</span>
+          </div>
+        </div>
+      </div>
+      <header class="pub-hero">
+        <div class="pub-hero-inner">
+          <div class="pub-id">
+            <div class="pub-id-row">
+              <div class="pub-av">JT</div>
+              <div style="min-width:0">
+                <h1 class="pub-name">Jordan Thomas</h1>
+                <div class="pub-role">
+                  <span>Alumni</span><span class="pub-role-sep"></span>
+                  <span>Cohort III</span><span class="pub-role-sep"></span>
+                  <span>Emerging Culinary Talent</span>
+                </div>
+                <div class="pub-loc">
+                  <span class="pub-status-dot"></span>
+                  Louisville, KY · Open to opportunities
+                </div>
+              </div>
+            </div>
+
+            <blockquote class="pub-quote est-only">
+              Food taught me patience, precision, and how to show up for people — skills I carry everywhere I go now.
+              <span class="pub-quote-attr">— Jordan Thomas</span>
+            </blockquote>
+            <blockquote class="pub-quote day1-only">
+              A quote in your own voice will live here — one honest sentence about what food means to you.
+              <span class="pub-quote-attr">Add it in Edit profile</span>
+            </blockquote>
+
+            <div class="pub-qfacts est-only">
+              <div class="pub-qfact"><div class="qf-val">3</div><div class="qf-lbl">Credentials</div></div>
+              <div class="pub-qfact"><div class="qf-val">2+</div><div class="qf-lbl">Years training</div></div>
+              <div class="pub-qfact"><div class="qf-val">2</div><div class="qf-lbl">Events led</div></div>
+              <div class="pub-qfact"><div class="qf-val">18</div><div class="qf-lbl">Recipes plated</div></div>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      <div class="pub-body" data-comment-anchor="036a6631a1-div">
+        <div class="pub-main">
+
+          <!-- Story -->
+          <section>
+            <div class="pub-section-head">
+              <h2 class="pub-section-title">Jordan's story</h2>
+              <span class="pub-section-meta"><span class="est-only">Updated · Apr 2026</span><span class="day1-only">Not written yet</span></span>
+            </div>
+            <div class="est-only">
+            <p class="story-p">Jordan joined Cultured Mornings in fall 2022 — not knowing what to expect. What started as curiosity about food became a calling. In just two years, Jordan grew from a student who had never held a chef's knife to a <strong>certified food safety professional</strong> who has led catering events and mentored younger participants.</p>
+            <p class="story-p">Today, Jordan is working toward a career in hospitality and community catering — with a goal of one day opening a community kitchen right here in Louisville.</p>
+            </div>
+            <div class="day1-only empty-state"><div class="empty-title">Jordan's story starts here</div><div class="empty-sub">Visitors will read your journey in this space. A few honest sentences are enough — the team can help you shape them.</div><button class="btn btn-outline btn-sm nav-link-js" data-screen="profile-editor">Write your story</button></div>
+          </section>
+
+          <!-- ══ MOMENTS FROM THE KITCHEN ══ -->
+          <section>
+            <div class="pub-section-head">
+              <h2 class="pub-section-title">Moments from the kitchen</h2>
+              <span class="pub-section-meta"><span class="est-only">12 photos · 2022 — 2026</span><span class="day1-only">No photos yet</span></span>
+            </div>
+            <p class="moments-intro est-only">A few snapshots from the journey — long mornings on the line, plates that finally came together, and the people who showed up alongside me.</p>
+
+            <div class="moments-grid est-only">
+              <!-- Featured large -->
+              <figure class="moment feat">
+                <div class="moment-bg">
+                  <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="p1" patternUnits="userSpaceOnUse" width="14" height="14" patternTransform="rotate(35)">
+                        <rect width="14" height="14" fill="#7A4316"/>
+                        <rect width="7" height="14" fill="#5A2F0E"/>
+                      </pattern>
+                    </defs>
+                    <rect width="600" height="240" fill="url(#p1)"/>
+                    <rect width="600" height="240" fill="rgba(184,106,44,0.18)"/>
+                  </svg>
+                </div>
+                <span class="moment-tag">Featured</span>
+                <span class="moment-placeholder-mark">[ Photo · service line, Cohort III dinner ]</span>
+                <figcaption class="moment-caption">
+                  <div class="moment-caption-title">First catering night, leading the line</div>
+                  <div class="moment-caption-sub">60 guests, four courses, one shaky hand that found its rhythm.</div>
+                </figcaption>
+              </figure>
+
+              <!-- Tall sage -->
+              <figure class="moment tall">
+                <div class="moment-bg">
+                  <svg viewBox="0 0 200 240" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="p2" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(-25)">
+                        <rect width="10" height="10" fill="#3F6B49"/>
+                        <rect width="5" height="10" fill="#2F5C39"/>
+                      </pattern>
+                    </defs>
+                    <rect width="200" height="240" fill="url(#p2)"/>
+                  </svg>
+                </div>
+                <span class="moment-placeholder-mark">[ knife work · brunoise ]</span>
+                <figcaption class="moment-caption">
+                  <div class="moment-caption-title">Brunoise drill, week 14</div>
+                </figcaption>
+              </figure>
+
+              <!-- Wide cream -->
+              <figure class="moment wide">
+                <div class="moment-bg">
+                  <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="p3" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(0)">
+                        <rect width="12" height="12" fill="#E0CFAF"/>
+                        <rect width="6" height="12" fill="#D2BC92"/>
+                      </pattern>
+                    </defs>
+                    <rect width="400" height="120" fill="url(#p3)"/>
+                  </svg>
+                </div>
+                <span class="moment-placeholder-mark" style="color:rgba(60,40,15,.7);background:rgba(255,253,247,.7)">[ mise en place · prep table ]</span>
+                <figcaption class="moment-caption" style="background:linear-gradient(to top,rgba(60,40,15,.85),transparent)">
+                  <div class="moment-caption-title">Mise en place — Saturday morning prep</div>
+                </figcaption>
+              </figure>
+
+              <!-- Clay small -->
+              <figure class="moment">
+                <div class="moment-bg">
+                  <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="p4" patternUnits="userSpaceOnUse" width="10" height="10" patternTransform="rotate(45)">
+                        <rect width="10" height="10" fill="#B86A2C"/>
+                        <rect width="5" height="10" fill="#9A5320"/>
+                      </pattern>
+                    </defs>
+                    <rect width="200" height="120" fill="url(#p4)"/>
+                  </svg>
+                </div>
+                <span class="moment-placeholder-mark">[ plating ]</span>
+                <figcaption class="moment-caption">
+                  <div class="moment-caption-title">Plating practice</div>
+                </figcaption>
+              </figure>
+
+              <!-- Auburn small -->
+              <figure class="moment">
+                <div class="moment-bg">
+                  <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="p5" patternUnits="userSpaceOnUse" width="11" height="11" patternTransform="rotate(15)">
+                        <rect width="11" height="11" fill="#9A2F12"/>
+                        <rect width="5.5" height="11" fill="#7A1F08"/>
+                      </pattern>
+                    </defs>
+                    <rect width="200" height="120" fill="url(#p5)"/>
+                  </svg>
+                </div>
+                <span class="moment-placeholder-mark">[ certification day ]</span>
+                <figcaption class="moment-caption">
+                  <div class="moment-caption-title">Food safety, certified</div>
+                </figcaption>
+              </figure>
+
+              <!-- Bark medium -->
+              <figure class="moment med">
+                <div class="moment-bg">
+                  <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="p6" patternUnits="userSpaceOnUse" width="13" height="13" patternTransform="rotate(-10)">
+                        <rect width="13" height="13" fill="#3A2510"/>
+                        <rect width="6.5" height="13" fill="#231708"/>
+                      </pattern>
+                    </defs>
+                    <rect width="400" height="120" fill="url(#p6)"/>
+                  </svg>
+                </div>
+                <span class="moment-placeholder-mark">[ team · post-service photo ]</span>
+                <figcaption class="moment-caption">
+                  <div class="moment-caption-title">After service — Cohort III</div>
+                  <div class="moment-caption-sub">Tired, proud, fed.</div>
+                </figcaption>
+              </figure>
+
+              <!-- Sage small -->
+              <figure class="moment med">
+                <div class="moment-bg">
+                  <svg viewBox="0 0 400 120" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <pattern id="p7" patternUnits="userSpaceOnUse" width="9" height="9" patternTransform="rotate(60)">
+                        <rect width="9" height="9" fill="#5C8A66"/>
+                        <rect width="4.5" height="9" fill="#3F6B49"/>
+                      </pattern>
+                    </defs>
+                    <rect width="400" height="120" fill="url(#p7)"/>
+                  </svg>
+                </div>
+                <span class="moment-placeholder-mark">[ farmers market · sourcing ]</span>
+                <figcaption class="moment-caption">
+                  <div class="moment-caption-title">Sourcing at Bardstown Road market</div>
+                </figcaption>
+              </figure>
+            </div>
+
+            <div class="day1-only empty-state"><div class="empty-title">No moments yet</div><div class="empty-sub">Photos from classes, events, and services will collect here — added by you or the CM team, always with your approval.</div></div>
+            <div class="moments-foot est-only">
+              <span class="moments-foot-text">Curated and approved by Jordan. Photos by Cultured Mornings staff.</span>
+              <button class="btn btn-ghost btn-sm">View all 12 →</button>
+            </div>
+          </section>
+
+          <!-- Journey -->
+          <section>
+            <div class="pub-section-head">
+              <h2 class="pub-section-title">Journey & growth</h2>
+              <span class="pub-section-meta"><span class="est-only">4 milestones</span><span class="day1-only">1 milestone</span></span>
+            </div>
+            <div class="timeline est-only">
+              <div class="tl-item">
+                <div class="tl-dot">🌱</div>
+                <div class="tl-body">
+                  <div class="tl-title">Joined Cultured Mornings</div>
+                  <div class="tl-sub">Enrolled in Cohort III, began foundational culinary training.</div>
+                </div>
+                <div class="tl-date">Fall 2022</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot">🔪</div>
+                <div class="tl-body">
+                  <div class="tl-title">Earned knife skills certification</div>
+                  <div class="tl-sub">Advanced to lead station in kitchen rotations.</div>
+                </div>
+                <div class="tl-date">Spring 2024</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot sage">🍽️</div>
+                <div class="tl-body">
+                  <div class="tl-title">Led first catering event</div>
+                  <div class="tl-sub">Coordinated front-of-house for a 60-person community dinner.</div>
+                </div>
+                <div class="tl-date">Fall 2024</div>
+              </div>
+              <div class="tl-item">
+                <div class="tl-dot auburn">🏅</div>
+                <div class="tl-body">
+                  <div class="tl-title">Food safety certified</div>
+                  <div class="tl-sub">Earned professional credential — now workforce ready.</div>
+                </div>
+                <div class="tl-date">2024</div>
+              </div>
+            </div>
+            <div class="timeline day1-only">
+              <div class="tl-item">
+                <div class="tl-dot">🌱</div>
+                <div class="tl-body">
+                  <div class="tl-title">Joined Cultured Mornings</div>
+                  <div class="tl-sub">Signed up today. The first milestone of many.</div>
+                </div>
+                <div class="tl-date">Today</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;font-size:11.5px;color:var(--bark-mid);font-weight:500"><span style="color:var(--sage);font-weight:800">✓</span> Every milestone is confirmed by Cultured Mornings from program records — not self-reported.</div>
+          </section>
+
+          <!-- Skills -->
+          <section>
+            <div class="pub-section-head">
+              <h2 class="pub-section-title">Skills</h2>
+              <span class="pub-section-meta"><span class="est-only">7 skills · 3 verified</span><span class="day1-only">None added yet</span></span>
+            </div>
+            <div class="skill-wrap est-only">
+              <span class="skill">Knife technique</span>
+              <span class="skill">Food safety</span>
+              <span class="skill sage">✓ Event catering</span>
+              <span class="skill">Seasoning &amp; flavor</span>
+              <span class="skill sage">✓ Team leadership</span>
+              <span class="skill">Sanitation</span>
+              <span class="skill">Menu planning</span>
+            </div>
+            <div class="est-only" style="margin-top:12px;font-size:11.5px;color:var(--bark-mid);font-weight:500;line-height:1.5"><span style="color:var(--sage);font-weight:800">✓</span> Verified skills are confirmed by Cultured Mornings from training completed in the program — not self-reported.</div>
+            <div class="day1-only empty-state"><div class="empty-sub">Skills from your training will appear here as you add them in Edit profile.</div></div>
+          </section>
+
+          <!-- Endorsements -->
+          <section>
+            <div class="pub-section-head">
+              <h2 class="pub-section-title">Endorsements</h2>
+              <span class="pub-section-meta"><span class="est-only">2 endorsements</span><span class="day1-only">None yet</span></span>
+            </div>
+            <div class="mp-testimonials est-only">
+              <div class="mp-test">
+                <div class="mp-test-q">Jordan shows up early, asks the right questions, and treats the kitchen with respect. I'd put them on my line tomorrow.</div>
+                <div class="mp-test-attr">
+                  <div class="mp-test-av" style="background:#8B5E2A">LO</div>
+                  <div>
+                    <div class="mp-test-name">Chef Lisa Owens</div>
+                    <div class="mp-test-meta">Mentor · Pastry chef &amp; baker</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mp-test">
+                <div class="mp-test-q">Reliable, coachable, and calm under pressure — exactly what we saw from Jordan at our spring fundraiser dinner.</div>
+                <div class="mp-test-attr">
+                  <div class="mp-test-av" style="background:var(--bark)">DR</div>
+                  <div>
+                    <div class="mp-test-name">Danielle Reyes</div>
+                    <div class="mp-test-meta">Louisville Catering Co. · Partner</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="est-only" style="margin-top:12px;font-size:11.5px;color:var(--bark-mid);font-weight:500">Endorsements are submitted to and approved by the Cultured Mornings team before they appear.</div>
+            <div class="day1-only empty-state"><div class="empty-sub">Mentors, partners, and fellow students can vouch for Jordan here — collected and approved through Cultured Mornings.</div></div>
+          </section>
+        </div>
+
+        <aside class="pub-side">
+          <div class="card">
+            <div class="card-head"><div class="card-title">At a glance</div></div>
+            <div class="est-only" style="display:contents">
+            <div class="glance-row"><span class="glance-key">Cohort</span><span class="glance-val">III · 2022</span></div>
+            <div class="glance-row"><span class="glance-key">Credentials</span><span class="glance-val">3 verified</span></div>
+            <div class="glance-row"><span class="glance-key">Events led</span><span class="glance-val">2</span></div>
+            <div class="glance-row"><span class="glance-key">Open to</span><span class="glance-val sage">Work &amp; mentorship</span></div>
+            </div>
+            <div class="day1-only" style="display:contents">
+            <div class="glance-row"><span class="glance-key">Cohort</span><span class="glance-val">VI · 2026</span></div>
+            <div class="glance-row"><span class="glance-key">Credentials</span><span class="glance-val">None yet</span></div>
+            <div class="glance-row"><span class="glance-key">Events led</span><span class="glance-val">0</span></div>
+            <div class="glance-row"><span class="glance-key">Open to</span><span class="glance-val sage">Getting started</span></div>
+            </div>
+          </div>
+
+          <div class="verified-card">
+            <div class="verified-mark">CM</div>
+            <div>
+              <div class="verified-name">Cultured Mornings</div>
+              <div class="verified-sub"><span class="verified-tick">✓</span>Verified member · Louisville, KY</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><div class="card-title">Goals &amp; aspirations</div></div>
+            <div class="goal-list est-only">
+              <div class="goal"><div class="goal-pip"></div>Work in a professional catering kitchen</div>
+              <div class="goal"><div class="goal-pip"></div>Earn a hospitality certificate</div>
+              <div class="goal"><div class="goal-pip"></div>Open a community kitchen in Louisville</div>
+              <div class="goal"><div class="goal-pip"></div>Mentor the next cohort</div>
+            </div>
+            <div class="day1-only empty-state"><div class="empty-sub">Goals you set in your profile will show here — what you're working toward, in your own words.</div></div>
+          </div>
+        </aside>
+      </div>
+
+      <footer class="pub-footer">
+        <div class="ft-logo">Cultured Mornings</div>
+        <div class="ft-verse">"Do everything in love." — 1 Corinthians 16:14</div>
+      </footer>
+    </section>
+
+    <!-- ══ MENTORS ══ -->
+    <section class="screen" id="screen-mentors">
+      <div class="page-header">
+        <h1 class="page-title">Find your guide</h1>
+        <p class="page-sub">Every mentor here has been where you are and chosen to come back. Browse, connect, and find the person who speaks to where you want to go.</p>
+      </div>
+      <div class="filter-bar">
+        <button class="f-btn active" onclick="filterMentors('all',this)">All</button>
+        <button class="f-btn" onclick="filterMentors('pastry',this)">Pastry</button>
+        <button class="f-btn" onclick="filterMentors('culinary',this)">Culinary arts</button>
+        <button class="f-btn" onclick="filterMentors('business',this)">Business</button>
+        <button class="f-btn" onclick="filterMentors('community',this)">Community</button>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div class="feat-mentor">
+            <div class="fm-l">
+              <div>
+                <div class="fm-eye">Mentor of the month</div>
+              </div>
+              <div class="fm-av">MJ</div>
+              <div>
+                <div class="fm-name">Chef Marcus Johnson</div>
+                <div class="fm-role">Executive Chef · Culinary arts &amp; leadership</div>
+              </div>
+              <div class="fm-quote">"The kitchen taught me that discipline and love aren't opposites — they're the same thing dressed differently."</div>
+              <div class="fm-skills">
+                <span class="fm-skill">Knife mastery</span>
+                <span class="fm-skill">Menu development</span>
+                <span class="fm-skill">Kitchen leadership</span>
+                <span class="fm-skill">Youth mentorship</span>
+              </div>
+              <div class="fm-acts">
+                <button class="btn btn-primary btn-sm">Request mentorship</button>
+                <button class="btn btn-ghost btn-sm" style="background:rgba(255,255,255,.08);color:#fff;border-color:rgba(255,255,255,.15)">View profile</button>
+              </div>
+            </div>
+            <div class="fm-r">
+              <div class="fm-r-lbl">At a glance</div>
+              <div class="fm-stat"><div class="fm-n">40+</div><div class="fm-l-lbl">Alumni mentored since 2020</div></div>
+              <div class="fm-stat"><div class="fm-n">6 yrs</div><div class="fm-l-lbl">With Cultured Mornings</div></div>
+              <div class="fm-stat"><div class="fm-n">2</div><div class="fm-l-lbl">Current mentees</div></div>
+              <div class="fm-avail"><span class="badge-dot" style="background:var(--sage)"></span>Taking new mentees</div>
+            </div>
+          </div>
+          <div class="mentor-grid" id="mentor-grid">
+            <div class="mc-card nav-link-js" data-spec="pastry" data-screen="mentor-profile" data-mentor="lisa">
+              <div class="mc-top">
+                <div class="mc-av" style="background:#8B5E2A">LO</div>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                    <div>
+                      <div class="mc-name">Chef Lisa Owens</div>
+                      <div class="mc-role">Pastry chef &amp; baker</div>
+                      <div class="mc-loc">Louisville, KY</div>
+                    </div>
+                    <span class="badge badge-sage">Open</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mc-body">
+                <div class="mc-q">"Every dish is a love letter to someone. I teach my students to bake with intention."</div>
+                <div class="mc-skills"><span class="mc-skill">Pastry arts</span><span class="mc-skill">Bread &amp; lamination</span><span class="mc-skill sage">Flavor pairing</span><span class="mc-skill">Plating</span></div>
+                <div class="mc-foot"><span class="mc-count">18 alumni mentored</span><button class="btn btn-outline btn-sm">View profile</button></div>
+              </div>
+            </div>
+            <div class="mc-card nav-link-js" data-spec="culinary" data-screen="mentor-profile" data-mentor="david">
+              <div class="mc-top">
+                <div class="mc-av" style="background:var(--sage)">DW</div>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                    <div>
+                      <div class="mc-name">David Washington</div>
+                      <div class="mc-role">Culinary educator</div>
+                      <div class="mc-loc">Louisville, KY</div>
+                    </div>
+                    <span class="badge badge-sage">Open</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mc-body">
+                <div class="mc-q">"Food is how I learned to care for people. I want every student to feel that same shift."</div>
+                <div class="mc-skills"><span class="mc-skill">Kitchen safety</span><span class="mc-skill sage">Youth development</span><span class="mc-skill">Life skills</span><span class="mc-skill">Culinary basics</span></div>
+                <div class="mc-foot"><span class="mc-count">31 alumni mentored</span><button class="btn btn-outline btn-sm">View profile</button></div>
+              </div>
+            </div>
+            <div class="mc-card nav-link-js" data-spec="business" data-screen="mentor-profile" data-mentor="renee">
+              <div class="mc-top">
+                <div class="mc-av" style="background:var(--auburn)">RC</div>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                    <div>
+                      <div class="mc-name">Renee Carter</div>
+                      <div class="mc-role">Hospitality consultant</div>
+                      <div class="mc-loc">Louisville, KY</div>
+                    </div>
+                    <span class="badge badge-clay">1 spot left</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mc-body">
+                <div class="mc-q">"I built my business from a folding table at a pop-up. I mentor because someone believed in me first."</div>
+                <div class="mc-skills"><span class="mc-skill">Entrepreneurship</span><span class="mc-skill sage">Branding</span><span class="mc-skill">Financial literacy</span><span class="mc-skill">Networking</span></div>
+                <div class="mc-foot"><span class="mc-count">9 alumni mentored</span><button class="btn btn-outline btn-sm">View profile</button></div>
+              </div>
+            </div>
+            <div class="mc-card nav-link-js" data-spec="community" data-screen="mentor-profile" data-mentor="james">
+              <div class="mc-top">
+                <div class="mc-av" style="background:#2A4A70">PJ</div>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+                    <div>
+                      <div class="mc-name">Pastor James Hill</div>
+                      <div class="mc-role">Community &amp; life mentor</div>
+                      <div class="mc-loc">Louisville, KY</div>
+                    </div>
+                    <span class="badge badge-sage">Open</span>
+                  </div>
+                </div>
+              </div>
+              <div class="mc-body">
+                <div class="mc-q">"Your story isn't a setback. It's the testimony that someone else needs to hear."</div>
+                <div class="mc-skills"><span class="mc-skill">Faith &amp; identity</span><span class="mc-skill sage">Community organizing</span><span class="mc-skill">Personal growth</span><span class="mc-skill">Resilience</span></div>
+                <div class="mc-foot"><span class="mc-count">22 alumni mentored</span><button class="btn btn-outline btn-sm">View profile</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="dark-card">
+            <div class="eyebrow eyebrow-light" style="color:var(--clay)">Suggested for you</div>
+            <div class="lora" style="font-size:12px;font-style:italic;color:rgba(255,255,255,.5);margin-bottom:14px;line-height:1.6"><span class="est-only">Paired by the CM team from Jordan's intake answers — not an algorithm.</span><span class="day1-only">A few mentors new members often start with.<span class="iq-when-todo"> Matches sharpen once your intake answers are in.</span><span class="iq-when-done"> Your intake is in — the team is preparing your mentor recommendations.</span></span></div>
+            <div class="match-item nav-link-js" data-screen="mentor-profile" data-mentor="lisa"><div class="match-av" style="background:#8B5E2A">LO</div><div><div class="match-name">Chef Lisa Owens</div><div class="match-why">Matches your pastry &amp; plating interest</div></div></div>
+            <div class="match-item nav-link-js" data-screen="mentor-profile" data-mentor="renee"><div class="match-av" style="background:var(--auburn)">RC</div><div><div class="match-name">Renee Carter</div><div class="match-why">Aligns with your goal to open a kitchen</div></div></div>
+            <div class="match-item nav-link-js" data-screen="mentor-profile" data-mentor="james"><div class="match-av" style="background:#2A4A70">PJ</div><div><div class="match-name">Pastor James Hill</div><div class="match-why">Supports your community values</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Browse by specialty</div></div>
+            <div class="spec-item" onclick="filterMentors('culinary',null)"><div class="spec-name">Culinary arts</div><div class="spec-count">3 mentors available</div></div>
+            <div class="spec-item" onclick="filterMentors('pastry',null)"><div class="spec-name">Pastry &amp; baking</div><div class="spec-count">1 mentor available</div></div>
+            <div class="spec-item" onclick="filterMentors('business',null)"><div class="spec-name">Business &amp; entrepreneurship</div><div class="spec-count">2 mentors available</div></div>
+            <div class="spec-item" onclick="filterMentors('community',null)"><div class="spec-name">Community &amp; life skills</div><div class="spec-count">1 mentor available</div></div>
+          </div>
+          <div class="sage-card">
+            <div class="eyebrow" style="color:var(--sage)"><span class="est-only">Already connected</span><span class="day1-only">Your mentors</span></div>
+            <div class="est-only">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div style="width:30px;height:30px;border-radius:50%;background:#8B5E2A;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">LO</div><div><div style="font-size:13px;font-weight:700;color:var(--bark)">Chef Lisa Owens</div><div style="font-size:11px;color:var(--sage);font-weight:600">Active mentor</div></div></div>
+            <div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff">DW</div><div><div style="font-size:13px;font-weight:700;color:var(--bark)">David Washington</div><div style="font-size:11px;color:var(--sage);font-weight:600">Active mentor</div></div></div>
+            </div>
+            <div class="day1-only lora" style="font-size:12.5px;font-style:italic;color:var(--sage);line-height:1.65;text-wrap:pretty">No mentors yet. When the team pairs you with someone, they'll appear here — browse and request an intro any time.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ MENTOR PROFILE (read-only, student view) ══ -->
+    <section class="screen" id="screen-mentor-profile" data-screen-label="Mentor profile">
+      <div class="mp-back nav-link-js" data-screen="mentors">← Back to mentors</div>
+
+      <div class="mp-header">
+        <div class="mp-av" id="mp-av">LO</div>
+        <div class="mp-id">
+          <div class="mp-eye">Mentor profile · Cohort III alumna</div>
+          <h1 class="mp-name" id="mp-name">Chef <em>Lisa</em> Owens</h1>
+          <div class="mp-role" id="mp-role"><strong>Pastry chef &amp; baker</strong> · Owner, Owens Bread Co. · Louisville, KY</div>
+          <div class="mp-meta-row">
+            <div class="mp-meta-item"><span style="color:var(--clay)">●</span> <strong>Active mentor</strong> · 18 alumni mentored</div>
+            <div class="mp-meta-item">In the program <strong>since 2019</strong></div>
+            <div class="mp-meta-item">Typically responds <strong>within 3 days</strong></div>
+          </div>
+        </div>
+        <div class="mp-actions">
+          <button class="btn btn-primary btn-block">Request an intro</button>
+          <button class="btn btn-outline-light btn-block" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.2)">Save mentor</button>
+          <div style="font-size:10.5px;color:rgba(255,255,255,.4);font-weight:500;line-height:1.4;text-align:center;margin-top:4px">Intros are made by the Cultured Mornings team — never direct DMs.</div>
+        </div>
+      </div>
+
+      <!-- Vetting / trust band -->
+      <div class="mp-vetting">
+        <div class="mp-vetting-icon">✓</div>
+        <div>
+          <div class="mp-vetting-title">Vetted by the Cultured Mornings team</div>
+          <div class="mp-vetting-sub">Background-checked · References from past mentees · Reviewed annually · Has signed our Mentor Code of Care · No contact with mentees outside program settings</div>
+        </div>
+        <div class="mp-vetting-link" onclick="openModal('mentorVetting')">See what we check →</div>
+      </div>
+
+      <div class="mp-grid">
+        <!-- MAIN COLUMN -->
+        <div>
+          <!-- About / Story -->
+          <div class="mp-section">
+            <div class="mp-sec-eye">Why she mentors</div>
+            <h2 class="mp-sec-h">"Every dish is a love letter to someone."</h2>
+            <div class="mp-prose">
+              <p>I came through Cultured Mornings in 2019, after years of trying to make a kitchen feel like home and failing. What I learned here wasn't just technique — it was that the people who pour into you become the people you pour back into.</p>
+              <p>I mentor because I remember exactly what it felt like to need someone to believe in me before I could believe in myself. If you're a student wondering whether you have what it takes — you do. I'm not here to tell you that. I'm here to help you figure out for yourself what kind of cook, baker, or human you want to become.</p>
+            </div>
+          </div>
+
+          <!-- What mentorship looks like -->
+          <div class="mp-section">
+            <div class="mp-how">
+              <div class="mp-sec-eye">What mentorship with Lisa looks like</div>
+              <h2 class="mp-sec-h" style="margin-bottom:0">A clear, structured rhythm — never a guessing game.</h2>
+              <div class="mp-how-grid">
+                <div class="mp-how-item">
+                  <div class="mp-how-num">01 / FORMAT</div>
+                  <div class="mp-how-name">90-minute kitchen sessions</div>
+                  <div class="mp-how-desc">In person, at the Cultured Mornings kitchen. Hands-on, side-by-side. Every session has a purpose you set together at the top.</div>
+                </div>
+                <div class="mp-how-item">
+                  <div class="mp-how-num">02 / CADENCE</div>
+                  <div class="mp-how-name">Twice a month, for 3 months</div>
+                  <div class="mp-how-desc">Six sessions to start. After that you both decide if it's working and want to continue. No pressure either way.</div>
+                </div>
+                <div class="mp-how-item">
+                  <div class="mp-how-num">03 / WHERE</div>
+                  <div class="mp-how-name">Always on CM premises</div>
+                  <div class="mp-how-desc">Sessions happen at the kitchen during program hours. Staff are present. You're never asked to meet anywhere else.</div>
+                </div>
+                <div class="mp-how-item">
+                  <div class="mp-how-num">04 / MESSAGING</div>
+                  <div class="mp-how-name">Through the CM platform only</div>
+                  <div class="mp-how-desc">No personal phone numbers, social DMs, or off-platform contact. Your CM coordinator can see every conversation.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Specialties -->
+          <div class="mp-section">
+            <div class="mp-sec-eye">Things she'll help you with</div>
+            <h2 class="mp-sec-h">Specialties</h2>
+            <div class="mp-skills-grid">
+              <div class="mp-skill-row"><div class="mp-skill-dot"></div><div class="mp-skill-name">Pastry arts &amp; viennoiserie</div></div>
+              <div class="mp-skill-row"><div class="mp-skill-dot"></div><div class="mp-skill-name">Bread &amp; lamination</div></div>
+              <div class="mp-skill-row"><div class="mp-skill-dot" style="background:var(--sage)"></div><div class="mp-skill-name">Flavor pairing &amp; menu design</div></div>
+              <div class="mp-skill-row"><div class="mp-skill-dot"></div><div class="mp-skill-name">Plating &amp; food photography</div></div>
+              <div class="mp-skill-row"><div class="mp-skill-dot" style="background:var(--sage)"></div><div class="mp-skill-name">Starting a small kitchen business</div></div>
+              <div class="mp-skill-row"><div class="mp-skill-dot"></div><div class="mp-skill-name">Working through self-doubt as a cook</div></div>
+            </div>
+          </div>
+
+          <!-- Past mentees -->
+          <div class="mp-section">
+            <div class="mp-sec-eye">From past mentees</div>
+            <h2 class="mp-sec-h">What other students have said</h2>
+            <div class="mp-testimonials">
+              <div class="mp-test">
+                <div class="mp-test-q">She told me on day one that she wasn't here to fix me — she was here to walk with me. I cried in the parking lot after. I'd never had anyone say that about my career before.</div>
+                <div class="mp-test-attr">
+                  <div class="mp-test-av" style="background:var(--auburn)">MA</div>
+                  <div>
+                    <div class="mp-test-name">Maya Anderson</div>
+                    <div class="mp-test-meta">Cohort V · 2024 · Mentored 6 months</div>
+                  </div>
+                </div>
+              </div>
+              <div class="mp-test">
+                <div class="mp-test-q">Lisa is honest. She'll tell you when your croissants are dense. She'll also tell you when you've grown. Both of those things mattered to me.</div>
+                <div class="mp-test-attr">
+                  <div class="mp-test-av" style="background:#2A4A70">TJ</div>
+                  <div>
+                    <div class="mp-test-name">Terrence Jones</div>
+                    <div class="mp-test-meta">Cohort IV · 2023 · Mentored 9 months</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Safety footer -->
+          <div class="mp-safety">
+            <div class="mp-safety-icon">🛡</div>
+            <div>
+              <div class="mp-safety-title">Something feel off? You're in charge.</div>
+              <div class="mp-safety-text">You can pause, end, or switch mentors at any time — no explanation needed. Your CM coordinator is one click away.</div>
+            </div>
+            <div class="mp-safety-link">Talk to a coordinator →</div>
+          </div>
+        </div>
+
+        <!-- SIDE COLUMN -->
+        <aside>
+          <div class="mp-avail-card">
+            <div class="mp-avail-eye">Currently</div>
+            <div class="mp-avail-text"><strong>Open to 2 more mentees</strong> this season. New pairings start in June.</div>
+            <button class="btn btn-block" style="background:#fff;color:var(--sage);border:none;font-weight:800">Request an intro</button>
+          </div>
+
+          <div class="mp-side-card">
+            <div class="mp-side-h">By the numbers</div>
+            <div class="mp-stat-row"><span class="mp-stat-k">Alumni mentored</span><span class="mp-stat-v">18</span></div>
+            <div class="mp-stat-row"><span class="mp-stat-k">Active mentees</span><span class="mp-stat-v">3</span></div>
+            <div class="mp-stat-row"><span class="mp-stat-k">Years mentoring</span><span class="mp-stat-v">5</span></div>
+            <div class="mp-stat-row"><span class="mp-stat-k">Avg. relationship</span><span class="mp-stat-v">7 months</span></div>
+            <div class="mp-stat-row"><span class="mp-stat-k">Mentee rating</span><span class="mp-stat-v">★ 4.9 / 5</span></div>
+          </div>
+
+          <div class="mp-side-card">
+            <div class="mp-side-h">A good fit if you're…</div>
+            <div class="mp-expect-list">
+              <div class="mp-expect-item"><span class="mp-expect-bullet">·</span><span>Drawn to baking, pastry, or anything that takes patience to master</span></div>
+              <div class="mp-expect-item"><span class="mp-expect-bullet">·</span><span>Thinking about starting your own thing one day</span></div>
+              <div class="mp-expect-item"><span class="mp-expect-bullet">·</span><span>Ready to show up consistently — even when it's hard</span></div>
+              <div class="mp-expect-item"><span class="mp-expect-bullet">·</span><span>Open to honest feedback delivered with care</span></div>
+            </div>
+          </div>
+
+          <div class="mp-expect">
+            <div class="mp-side-h" style="margin-bottom:var(--s2);padding-bottom:0;border:none">What Lisa asks of you</div>
+            <div class="mp-expect-list">
+              <div class="mp-expect-item"><span class="mp-expect-bullet">→</span><span>Show up to scheduled sessions, or give 24h notice</span></div>
+              <div class="mp-expect-item"><span class="mp-expect-bullet">→</span><span>Come with one specific thing you want to work on</span></div>
+              <div class="mp-expect-item"><span class="mp-expect-bullet">→</span><span>Be honest with her — and with yourself</span></div>
+              <div class="mp-expect-item"><span class="mp-expect-bullet">→</span><span>Tell her or your coordinator if anything feels wrong</span></div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ══ PROFILE EDITOR ══ -->
+    <section class="screen" id="screen-profile-editor" data-screen-label="My profile · Edit">
+      <div class="pe-tabbar">
+        <div class="pe-tabbar-inner">
+          <div class="pe-tabs">
+            <button class="pe-tab" data-pe-target="public-profile">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.4"/><circle cx="7" cy="7" r="2" fill="currentColor"/></svg>
+              Public view
+            </button>
+            <button class="pe-tab active" data-pe-target="profile-editor">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2-7 7H2.5v-2l7-7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+              Edit profile
+            </button>
+          </div>
+          <div class="pe-tab-meta">
+            <span class="pe-tab-eye">You're viewing</span>
+            <span class="pe-tab-val">Behind-the-scenes editor</span>
+          </div>
+        </div>
+      </div>
+      <div class="editor-header">
+        <h1 class="page-title">My profile</h1>
+        <p class="page-sub">Your behind-the-scenes workspace. What you fill in here shapes how the world sees you.</p>
+        <div class="ed-acts">
+          <button class="btn btn-primary btn-sm" id="save-profile-btn">Save changes</button>
+          <div class="strength-pill"><span>Profile strength</span><div class="str-bar"><div class="str-fill"></div></div><span class="str-val"><span class="est-only">74%</span><span class="day1-only">12%</span></span></div>
+        </div>
+        <div style="font-size:11px;color:var(--bark-soft);font-weight:500;margin-top:8px">Strength is based on five things: basic info, story &amp; quote, skills, photos, and resume.</div>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Basic info</div><span class="sec-status status-done est-only">Complete</span><span class="sec-status status-part day1-only">Started</span></div>
+            <div class="sec-body">
+              <div class="two-field">
+                <div class="field-row"><label class="field-label">First name</label><input class="field-input" value="Jordan"/></div>
+                <div class="field-row"><label class="field-label">Last name</label><input class="field-input" value="Thomas"/></div>
+              </div>
+              <div class="field-row"><label class="field-label">Role / tagline</label><input class="field-input" id="ed-role" value="Emerging culinary talent · Cohort III Alumni"/><div class="field-hint">This shows under your name on your public profile.</div></div>
+              <div class="two-field">
+                <div class="field-row"><label class="field-label">City</label><input class="field-input" value="Louisville, KY"/></div>
+                <div class="field-row"><label class="field-label">Open to</label><input class="field-input" id="ed-open" value="Work & mentorship"/></div>
+              </div>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Your story &amp; quote</div><span class="sec-status status-done est-only">Complete</span><span class="sec-status status-empty day1-only">Not started</span></div>
+            <div class="sec-body">
+              <div class="field-row"><label class="field-label">Featured quote</label><input class="field-input" id="ed-quote" value="Food taught me patience, precision, and how to show up for people."/><div class="field-hint">One sentence in your own voice. Appears at the top of your profile.</div></div>
+              <div class="field-row"><label class="field-label">Your story</label><textarea class="field-ta" id="ed-story">Jordan joined Cultured Mornings in fall 2022, not knowing what to expect. What started as curiosity about food became a calling.</textarea><div class="field-hint">Written in third person so visitors and employers can read it naturally.</div></div>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Moments from the kitchen</div><span class="sec-status status-part est-only">In progress</span><span class="sec-status status-empty day1-only">Not started</span></div>
+            <div class="sec-body">
+              <div class="field-hint">A small gallery of photos from your journey — shown on your public profile. Add up to 12.</div>
+              <div class="est-only" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+                <div style="aspect-ratio:1;background:var(--clay-pale);border:1px solid var(--warm-line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--bark-soft)">photo 1</div>
+                <div style="aspect-ratio:1;background:var(--sage-light);border:1px solid var(--warm-line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--bark-soft)">photo 2</div>
+                <div style="aspect-ratio:1;background:var(--auburn-light);border:1px solid var(--warm-line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--bark-soft)">photo 3</div>
+                <div style="aspect-ratio:1;background:var(--cream);border:1px dashed var(--warm-line-strong);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--clay);font-weight:700;font-size:12px;cursor:pointer">+ Add</div>
+              </div>
+              <div class="day1-only empty-state" style="cursor:pointer"><div class="empty-title">+ Add your first photo</div><div class="empty-sub">Even one photo makes your profile feel like you.</div></div>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Skills</div><span class="sec-status status-done est-only">Complete</span><span class="sec-status status-empty day1-only">Not started</span></div>
+            <div class="sec-body">
+              <div class="field-hint">Click × to remove a skill, or add new ones below. Skills marked ✓ are verified by the CM team from your completed training.</div>
+              <div class="skill-wrap-edit est-only" id="skill-wrap">
+                <span class="skill-pill">Knife technique<button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill">Food safety<button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill sage">Event catering<button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill">Seasoning &amp; flavor<button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill sage">Team leadership<button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <span class="skill-pill">Sanitation<button class="skill-x" onclick="removeSkill(this)">×</button></span>
+                <button class="add-skill" onclick="addSkill()">+ Add skill</button>
+              </div>
+              <div class="skill-wrap-edit day1-only"><button class="add-skill" onclick="addSkill()">+ Add your first skill</button></div>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Goals &amp; aspirations</div><span class="sec-status status-part est-only">In progress</span><span class="sec-status status-empty day1-only">Not started</span></div>
+            <div class="sec-body">
+              <div class="field-hint">Share what you're working toward.</div>
+              <div id="goals-list">
+                <div class="est-only" style="display:contents">
+                <div class="goal-row"><div class="goal-dot-edit"></div><input class="goal-input" value="Work in a professional catering kitchen"/><button class="goal-del" onclick="this.closest('.goal-row').remove()">×</button></div>
+                <div class="goal-row"><div class="goal-dot-edit"></div><input class="goal-input" value="Earn a hospitality certificate"/><button class="goal-del" onclick="this.closest('.goal-row').remove()">×</button></div>
+                <div class="goal-row"><div class="goal-dot-edit"></div><input class="goal-input" value="Open a community kitchen in Louisville"/><button class="goal-del" onclick="this.closest('.goal-row').remove()">×</button></div>
+                </div>
+              </div>
+              <button onclick="addGoal()" class="add-skill" style="align-self:flex-start;margin-top:8px">+ Add a goal</button>
+            </div>
+          </div>
+          <div class="sec-card">
+            <div class="sec-head"><div class="sec-title">Journey &amp; milestones</div><span class="sec-status status-done">Verified by CM</span></div>
+            <div class="sec-body">
+              <div class="field-hint">Milestones come from program records — the CM team adds them when you complete modules, earn credentials, or lead events. That's what makes them trustworthy to employers. You can suggest one; it appears publicly once the team confirms it.</div>
+              <div id="ms-list">
+                <div class="est-only" style="display:contents">
+                <div class="ms-row"><div><div class="ms-name">Joined Cultured Mornings</div><div class="ms-meta">Fall 2022 · Added automatically at signup</div></div><span class="ms-tag ms-cm">CM verified</span></div>
+                <div class="ms-row"><div><div class="ms-name">Earned knife skills certification</div><div class="ms-meta">Spring 2024 · From program records</div></div><span class="ms-tag ms-cm">CM verified</span></div>
+                <div class="ms-row"><div><div class="ms-name">Led first catering event</div><div class="ms-meta">Fall 2024 · Logged by staff after the event</div></div><span class="ms-tag ms-cm">CM verified</span></div>
+                <div class="ms-row"><div><div class="ms-name">Food safety certified</div><div class="ms-meta">2024 · Credential upload, verified by the team</div></div><span class="ms-tag ms-cm">CM verified</span></div>
+                </div>
+                <div class="day1-only" style="display:contents">
+                <div class="ms-row"><div><div class="ms-name">Joined Cultured Mornings</div><div class="ms-meta">Today · Added automatically at signup</div></div><span class="ms-tag ms-cm">CM verified</span></div>
+                </div>
+              </div>
+              <button class="add-skill" style="align-self:flex-start" onclick="suggestMilestone()">+ Suggest a milestone</button>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Profile checklist</div></div>
+            <div class="est-only" style="display:contents">
+            <div class="check-item"><div class="check-circle check-done">✓</div><div><div class="check-lbl">Basic info</div><div class="check-sub">Name, role, location added</div></div></div>
+            <div class="check-item"><div class="check-circle check-done">✓</div><div><div class="check-lbl">Your story</div><div class="check-sub">Quote and bio written</div></div></div>
+            <div class="check-item"><div class="check-circle check-done">✓</div><div><div class="check-lbl">Skills</div><div class="check-sub">6 skills added</div></div></div>
+            <div class="check-item"><div class="check-circle check-part">~</div><div><div class="check-lbl">Moments from the kitchen</div><div class="check-sub">7 of 12 photos uploaded</div><span class="check-act">+ Add a photo</span></div></div>
+            <div class="check-item"><div class="check-circle check-empty"></div><div><div class="check-lbl">Resume</div><div class="check-sub">No resume uploaded yet</div><span class="check-act">Upload resume</span></div></div>
+            </div>
+            <div class="day1-only" style="display:contents">
+            <div class="check-item"><div class="check-circle check-part">~</div><div><div class="check-lbl">Basic info</div><div class="check-sub">Name added — add your tagline and photo</div></div></div>
+            <div class="check-item"><div class="check-circle check-empty"></div><div><div class="check-lbl">Your story</div><div class="check-sub">Not started yet</div><span class="check-act">Write it now</span></div></div>
+            <div class="check-item"><div class="check-circle check-empty"></div><div><div class="check-lbl">Skills</div><div class="check-sub">Add at least 3 to start</div></div></div>
+            <div class="check-item"><div class="check-circle check-empty"></div><div><div class="check-lbl">Moments from the kitchen</div><div class="check-sub">0 of 12 photos</div><span class="check-act">+ Add a photo</span></div></div>
+            <div class="check-item"><div class="check-circle check-empty"></div><div><div class="check-lbl">Resume</div><div class="check-sub">No resume uploaded yet</div><span class="check-act">Upload resume</span></div></div>
+            </div>
+          </div>
+          <div class="dark-card">
+            <div class="cc-title" style="margin-bottom:6px">Visibility settings</div>
+            <div class="cc-sub">Control who can see each part of your profile.</div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Public profile</div><div class="toggle-sub">Visible to everyone</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Workforce visibility</div><div class="toggle-sub">Employers can find you</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Mentor pairing</div><div class="toggle-sub">Open to being paired with a mentor</div></div><div class="toggle"><div class="toggle-knob"></div></div></div>
+            <div class="toggle-row"><div><div class="toggle-lbl">Contact form</div><div class="toggle-sub">Allow direct messages</div></div><div class="toggle off"><div class="toggle-knob"></div></div></div>
+          </div>
+          <div class="sage-card">
+            <div class="eyebrow" style="color:var(--sage)">A note from the team</div>
+            <div class="lora" style="font-size:13px;font-style:italic;color:var(--sage);line-height:1.7;text-wrap:pretty">"Your story matters. The more honestly you fill this in, the better chance you have of connecting with the right people."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ OPPORTUNITIES ══ -->
+    <section class="screen" id="screen-opportunities">
+      <div class="page-header">
+        <h1 class="page-title">Opportunities at the table</h1>
+        <p class="page-sub">Jobs, gigs, internships, and catering roles posted by our partners — all here for you. Every listing is a door worth trying.</p>
+      </div>
+      <div class="mp-vetting" style="margin-bottom:24px">
+        <div class="mp-vetting-icon">✓</div>
+        <div>
+          <div class="mp-vetting-title">Members only — and every listing is vetted</div>
+          <div class="mp-vetting-sub">This board isn't public. The CM team screens every employer and opportunity before it appears — including youth-hiring policies for anyone under 18.</div>
+        </div>
+        <div class="mp-vetting-link" onclick="openModal('vetting')">How we vet →</div>
+      </div>
+      <div class="stat-row-bar">
+        <div class="stat-cell"><div class="stat-cell-val">14</div><div class="stat-cell-lbl">Open listings</div></div>
+        <div class="stat-cell"><div class="stat-cell-val">3</div><div class="stat-cell-lbl">New this week</div></div>
+        <div class="stat-cell"><div class="stat-cell-val">6</div><div class="stat-cell-lbl">Partner orgs</div></div>
+        <div class="stat-cell"><div class="stat-cell-val"><span class="est-only">2</span><span class="day1-only">0</span></div><div class="stat-cell-lbl">Saved by you</div></div>
+      </div>
+      <div class="filter-bar" id="opp-filters">
+        <button class="f-btn active" onclick="filterOpps('all',this)">All</button>
+        <button class="f-btn" onclick="filterOpps('catering',this)">Catering</button>
+        <button class="f-btn" onclick="filterOpps('internship',this)">Internships</button>
+        <button class="f-btn" onclick="filterOpps('volunteer',this)">Volunteer</button>
+        <button class="f-btn" onclick="filterOpps('gig',this)">Gigs</button>
+        <button class="f-btn" onclick="filterOpps('job',this)">Jobs</button>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div class="feat-partner" id="feat-partner">
+            <div class="fp-banner">
+              <div>
+                <div class="fp-lbl">Partner spotlight</div>
+                <div class="fp-logo-row">
+                  <div class="fp-logo-av">LC</div>
+                  <div><div class="fp-name">Louisville Catering Co.</div><div class="fp-tag">Community-first catering · Est. 2011</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="fp-body">
+              <div class="fp-about">Louisville Catering Co. has been a Cultured Mornings partner since 2022. They believe in hiring for character first — and they've brought on three of our alumni in the past year.</div>
+              <div class="fp-roles-lbl">Open roles — 3 listings</div>
+              <div class="fp-role" data-cat="catering"><div style="flex:1"><div class="fp-role-title">Catering assistant — events team</div><div class="fp-role-meta"><span>Part-time</span><span>·</span><span>$15–18/hr</span><span>·</span><span>Weekends</span></div><div class="fp-role-tags"><span class="tag tag-type">Catering</span><span class="tag tag-new">New</span><span class="tag tag-gray">Closes May 20</span></div></div><div class="fp-role-acts"><button class="btn btn-ghost btn-sm save-opp">Save</button><button class="btn btn-primary btn-sm">Apply</button></div></div>
+              <div class="fp-role" data-cat="catering"><div style="flex:1"><div class="fp-role-title">Kitchen prep lead — morning shift</div><div class="fp-role-meta"><span>Full-time</span><span>·</span><span>$17–20/hr</span><span>·</span><span>Mon–Fri</span></div><div class="fp-role-tags"><span class="tag tag-type">Catering</span><span class="tag tag-sage">Full-time</span><span class="tag tag-gray">Closes June 1</span></div></div><div class="fp-role-acts"><button class="btn btn-ghost btn-sm save-opp">Save</button><button class="btn btn-primary btn-sm">Apply</button></div></div>
+              <div class="fp-role" data-cat="volunteer"><div style="flex:1"><div class="fp-role-title">Community pop-up volunteer — May 25</div><div class="fp-role-meta"><span>One-time</span><span>·</span><span>Volunteer</span><span>·</span><span>2–8pm</span></div><div class="fp-role-tags"><span class="tag tag-type">Volunteer</span><span class="tag tag-gray">May 25</span></div></div><div class="fp-role-acts"><button class="btn btn-ghost btn-sm save-opp">Save</button><button class="btn btn-primary btn-sm">Join</button></div></div>
+            </div>
+          </div>
+          <div class="div-lbl"><div class="div-line"></div><div class="div-txt">More opportunities</div><div class="div-line"></div></div>
+          <div class="opp-card" data-cat="internship"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:var(--sage-light);color:var(--sage)">CMK</div><span class="org-name">Chef Marcus Kitchen</span></div><div class="opp-title">Summer kitchen intern</div></div><span class="tag tag-new">New</span></div><div class="opp-desc">A 10-week paid internship rotating through prep, line, and service alongside Chef Marcus. Rare hands-on experience for emerging talent.</div><div class="opp-tags"><span class="tag tag-type">Internship</span><span class="tag tag-sage">Paid · $13/hr</span><span class="tag tag-gray">June–Aug 2025</span></div><div class="opp-footer"><span class="opp-meta">Posted 4 days ago · Closes May 30</span><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm save-opp">Save</button><button class="btn btn-primary btn-sm">Apply</button></div></div></div>
+          <div class="opp-card" data-cat="volunteer"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:#EAF0F5;color:#2A4A70">CT</div><span class="org-name">Community Table Louisville</span></div><div class="opp-title">Pop-up dinner volunteer — May 18</div></div></div><div class="opp-desc">Kitchen prep 2–5pm and front-of-house 5–8pm. Serve a free community meal to 80+ neighbors.</div><div class="opp-tags"><span class="tag tag-type">Volunteer</span><span class="tag tag-gray">One-time · May 18</span></div><div class="opp-footer"><span class="opp-meta">Posted 1 week ago · Closes May 17</span><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm save-opp">Save</button><button class="btn btn-primary btn-sm">Join us</button></div></div></div>
+          <div class="opp-card" data-cat="gig"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:#F0EAF5;color:#5A2880">SK</div><span class="org-name">Spice &amp; Kitchen Collective</span></div><div class="opp-title">Weekend prep cook — recurring gig</div></div></div><div class="opp-desc">Saturday morning prep at a collaborative food hall. Work with rotating vendors across multiple cuisines.</div><div class="opp-tags"><span class="tag tag-type">Gig</span><span class="tag tag-sage">Recurring</span><span class="tag tag-gray">$14/hr · Sat mornings</span></div><div class="opp-footer"><span class="opp-meta">Posted 2 weeks ago · Open rolling</span><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm save-opp">Save</button><button class="btn btn-primary btn-sm">Express interest</button></div></div></div>
+          <div class="opp-card" data-cat="job"><div class="opp-top"><div><div class="opp-org-row"><div class="org-dot" style="background:var(--clay-pale);color:var(--bark-mid)">HH</div><span class="org-name">Harvest House Restaurant</span></div><div class="opp-title">Line cook — entry level</div></div></div><div class="opp-desc">Entry-level line cook at a farm-to-table restaurant in NuLu. Character and hunger to learn valued over experience.</div><div class="opp-tags"><span class="tag tag-type">Job</span><span class="tag tag-sage">Full-time</span><span class="tag tag-gray">$16–20/hr · NuLu</span></div><div class="opp-footer"><span class="opp-meta">Posted 3 weeks ago · Open until filled</span><div style="display:flex;gap:6px"><button class="btn btn-ghost btn-sm save-opp">Save</button><button class="btn btn-primary btn-sm">Apply</button></div></div></div>
+
+          <div class="div-lbl est-only"><div class="div-line"></div><div class="div-txt">Where you've been</div><div class="div-line"></div></div>
+
+          <div class="past-events est-only">
+            <div class="past-head">
+              <div>
+                <div class="past-title">Past events &amp; opportunities</div>
+                <div class="past-sub">Things you've showed up for. Reference them in applications, share them on your profile, or tell the team how it went.</div>
+              </div>
+              <a class="set-link" style="font-size:12px;font-weight:700;color:var(--clay)">View all 14 →</a>
+            </div>
+            <div class="past-grid">
+              <div class="past-card">
+                <div class="past-date"><div class="pd-mo">APR</div><div class="pd-d">12</div><div class="pd-y">2026</div></div>
+                <div class="past-body">
+                  <div class="past-org-row"><div class="org-dot" style="background:var(--bark);color:#fff;width:18px;height:18px;font-size:9px">LC</div><span class="past-org">Louisville Catering Co.</span><span class="past-pill past-pill-attended">Attended</span></div>
+                  <div class="past-name">Spring fundraiser dinner</div>
+                  <div class="past-meta">Volunteered · Front of house · 6 hours</div>
+                  <div class="past-foot">
+                    <a class="past-link">Add reflection</a>
+                    <a class="past-link">Add to profile</a>
+                  </div>
+                </div>
+              </div>
+              <div class="past-card">
+                <div class="past-date"><div class="pd-mo">MAR</div><div class="pd-d">28</div><div class="pd-y">2026</div></div>
+                <div class="past-body">
+                  <div class="past-org-row"><div class="org-dot" style="background:var(--sage-light);color:var(--sage);width:18px;height:18px;font-size:9px">CMK</div><span class="past-org">Chef Marcus Kitchen</span><span class="past-pill past-pill-completed">Completed</span></div>
+                  <div class="past-name">Saturday prep shift — March</div>
+                  <div class="past-meta">Paid gig · 4 weeks · $260 earned</div>
+                  <div class="past-foot">
+                    <a class="past-link">View summary</a>
+                    <a class="past-link">Request reference</a>
+                  </div>
+                </div>
+              </div>
+              <div class="past-card">
+                <div class="past-date"><div class="pd-mo">FEB</div><div class="pd-d">22</div><div class="pd-y">2026</div></div>
+                <div class="past-body">
+                  <div class="past-org-row"><div class="org-dot" style="background:#EAF0F5;color:#2A4A70;width:18px;height:18px;font-size:9px">CT</div><span class="past-org">Community Table</span><span class="past-pill past-pill-attended">Attended</span></div>
+                  <div class="past-name">Pop-up dinner — Smoketown</div>
+                  <div class="past-meta">Volunteered · Kitchen prep · 5 hours</div>
+                  <div class="past-foot">
+                    <a class="past-link">View photos</a>
+                    <a class="past-link">Add reflection</a>
+                  </div>
+                </div>
+              </div>
+              <div class="past-card past-card-applied">
+                <div class="past-date"><div class="pd-mo">JAN</div><div class="pd-d">15</div><div class="pd-y">2026</div></div>
+                <div class="past-body">
+                  <div class="past-org-row"><div class="org-dot" style="background:var(--clay-pale);color:var(--bark-mid);width:18px;height:18px;font-size:9px">HH</div><span class="past-org">Harvest House</span><span class="past-pill past-pill-applied">Applied · not selected</span></div>
+                  <div class="past-name">Winter line cook trial</div>
+                  <div class="past-meta">Application · Reviewed · Closed Feb 2</div>
+                  <div class="past-foot">
+                    <a class="past-link">View feedback from team</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Saved opportunities</div></div>
+            <div class="est-only">
+            <div class="item-row"><div style="flex:1"><div class="opp-name">Kitchen intern</div><div class="opp-org">Chef Marcus Kitchen</div></div><div style="width:8px;height:8px;border-radius:50%;background:var(--clay);flex-shrink:0"></div></div>
+            <div class="item-row"><div style="flex:1"><div class="opp-name">Pop-up volunteer</div><div class="opp-org">Community Table</div></div><div style="width:8px;height:8px;border-radius:50%;background:var(--clay);flex-shrink:0"></div></div>
+            </div>
+            <div class="day1-only empty-state"><div class="empty-sub">Nothing saved yet. Tap Save on any listing to keep it here.</div></div>
+          </div>
+          <div class="dark-card">
+            <div class="lora" style="font-size:13px;color:#fff;margin-bottom:6px">A word of encouragement</div>
+            <div class="lora" style="font-size:12.5px;font-style:italic;color:rgba(255,255,255,.6);line-height:1.7;text-wrap:pretty">"Every opportunity you apply to is an act of belief in yourself. The table is already set — you just have to pull up a chair."</div>
+            <div style="font-size:10px;color:rgba(255,255,255,.32);margin-top:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em">— Cultured Mornings team</div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Partner organizations</div></div>
+            <div class="partner-row"><div class="partner-dot" style="background:var(--bark);color:#fff">LC</div><div><div class="partner-name">Louisville Catering Co.</div><div class="partner-count" style="color:var(--clay);font-weight:700">Spotlight · 3 open</div></div></div>
+            <div class="partner-row"><div class="partner-dot" style="background:var(--sage-light);color:var(--sage)">CMK</div><div><div class="partner-name">Chef Marcus Kitchen</div><div class="partner-count">2 open listings</div></div></div>
+            <div class="partner-row"><div class="partner-dot" style="background:#EAF0F5;color:#2A4A70">CT</div><div><div class="partner-name">Community Table</div><div class="partner-count">1 open listing</div></div></div>
+            <div class="partner-row"><div class="partner-dot" style="background:#F0EAF5;color:#5A2880">SK</div><div><div class="partner-name">Spice &amp; Kitchen</div><div class="partner-count">1 open listing</div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Calendar sync</div></div>
+            <div style="font-size:12.5px;color:var(--bark-mid);line-height:1.6;margin-bottom:10px">Events you join and application deadlines can sync to your own calendar.</div>
+            <a class="set-link" style="font-size:12px;font-weight:700;color:var(--clay)">Connect Google or Apple Calendar →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ RESOURCES ══ -->
+    <section class="screen" id="screen-resources">
+      <div class="page-header">
+        <h1 class="page-title">Resource hub</h1>
+        <p class="page-sub">Everything you need to keep growing — culinary skills, career tools, and life wisdom — all in one place, all yours.</p>
+      </div>
+      <div class="filter-bar" id="res-filters">
+        <button class="f-btn active" onclick="filterRes('all',this)">All</button>
+        <button class="f-btn" onclick="filterRes('culinary',this)">Culinary</button>
+        <button class="f-btn" onclick="filterRes('career',this)">Career</button>
+        <button class="f-btn" onclick="filterRes('life',this)">Life skills</button>
+        <button class="f-btn" onclick="filterRes('video',this)">Videos</button>
+      </div>
+      <div class="body-grid">
+        <div class="mc">
+          <div class="feat-resource est-only">
+            <div>
+              <div class="fr-eye">Continue where you left off</div>
+              <div class="fr-title">Knife skills mastery — module 3 of 5</div>
+              <div class="fr-sub">Julienne, chiffonade, and brunoise cuts. Chef Marcus walks you through each technique step by step.</div>
+              <div class="fr-tags"><span class="fr-tag">Culinary</span><span class="fr-tag">Video series</span><span class="fr-tag">Intermediate</span><span class="fr-tag">25 min</span></div>
+              <button class="btn btn-primary">Resume lesson →</button>
+            </div>
+            <div style="text-align:center">
+              <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/><circle cx="40" cy="40" r="32" fill="none" stroke="#B86A2C" stroke-width="6" stroke-dasharray="201" stroke-dashoffset="70" stroke-linecap="round" transform="rotate(-90 40 40)"/><text x="40" y="46" text-anchor="middle" font-family="Bricolage Grotesque,sans-serif" font-size="16" font-weight="800" fill="white">65%</text></svg>
+              <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:6px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">complete</div>
+            </div>
+          </div>
+          <div class="feat-resource day1-only">
+            <div>
+              <div class="fr-eye">Start here</div>
+              <div class="fr-title">Kitchen safety &amp; sanitation — module 1 of 5</div>
+              <div class="fr-sub">Every kitchen career starts the same place: safe hands, clean stations. Chef Marcus walks you through it, step by step.</div>
+              <div class="fr-tags"><span class="fr-tag">Culinary</span><span class="fr-tag">Video series</span><span class="fr-tag">Beginner</span><span class="fr-tag">45 min</span></div>
+              <button class="btn btn-primary">Start your first lesson →</button>
+            </div>
+            <div style="text-align:center">
+              <svg width="80" height="80" viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/><text x="40" y="46" text-anchor="middle" font-family="Bricolage Grotesque,sans-serif" font-size="16" font-weight="800" fill="white">0%</text></svg>
+              <div style="font-size:10px;color:rgba(255,255,255,.45);margin-top:6px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">just beginning</div>
+            </div>
+          </div>
+          <div>
+            <div class="eyebrow eyebrow-bark" style="margin-bottom:14px">Your learning path — culinary foundations</div>
+            <div class="path-card est-only">
+              <div class="path-step"><div class="ps-circle ps-done">✓</div><div><div class="ps-title">Kitchen safety &amp; sanitation</div><div class="ps-sub">Completed · 45 min</div><span class="ps-badge" style="background:var(--sage-light);color:var(--sage)">Done</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-done">✓</div><div><div class="ps-title">Knife skills — foundations</div><div class="ps-sub">Completed · 30 min</div><span class="ps-badge" style="background:var(--sage-light);color:var(--sage)">Done</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-active">3</div><div><div class="ps-title">Knife skills — advanced cuts</div><div class="ps-sub">In progress · 25 min remaining</div><span class="ps-badge" style="background:var(--clay-pale);color:#7A4316">65% done</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-next">4</div><div><div class="ps-title">Stocks, sauces &amp; flavor building</div><div class="ps-sub">Up next · 40 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-next">5</div><div><div class="ps-title">Your first complete meal</div><div class="ps-sub">Final module · 60 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+            </div>
+            <div class="path-card day1-only">
+              <div class="path-step"><div class="ps-circle ps-active">1</div><div><div class="ps-title">Kitchen safety &amp; sanitation</div><div class="ps-sub">Start here · 45 min</div><span class="ps-badge" style="background:var(--clay-pale);color:#7A4316">Up first</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-next">2</div><div><div class="ps-title">Knife skills — foundations</div><div class="ps-sub">30 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-next">3</div><div><div class="ps-title">Knife skills — advanced cuts</div><div class="ps-sub">40 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-next">4</div><div><div class="ps-title">Stocks, sauces &amp; flavor building</div><div class="ps-sub">40 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+              <div class="path-step"><div class="ps-circle ps-next">5</div><div><div class="ps-title">Your first complete meal</div><div class="ps-sub">Final module · 60 min</div><span class="ps-badge" style="background:var(--soft);color:var(--bark-mid)">Locked</span></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="eyebrow eyebrow-bark" style="margin-bottom:14px">Explore all resources</div>
+            <div class="res-grid" id="res-grid">
+              <div class="rc" data-rcat="culinary"><div class="rc-thumb" style="background:#D4C5B0"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M10 8h12M8 13h16M10 18h12M12 23h8" stroke="#4A2E0A" stroke-width="1.6" stroke-linecap="round" opacity=".7"/></svg><span class="rc-type" style="background:var(--clay-pale);color:#7A4316">Guide</span></div><div class="rc-body"><div class="rc-title">Seasoning &amp; spice guide</div><div class="rc-desc">Layer flavor at every stage — not just at the end.</div><div class="rc-pb"><div class="rc-pf" style="width:35%"></div></div><div class="rc-foot"><span class="rc-meta">15 min · 35%</span><button class="btn btn-primary btn-sm">Continue</button></div></div></div>
+              <div class="rc" data-rcat="video"><div class="rc-thumb" style="background:#B8CEBC"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="#1A3D24" stroke-width="1.4" opacity=".5"/><path d="M13 11l9 5-9 5V11z" fill="#1A3D24" opacity=".7"/></svg><span class="rc-type" style="background:var(--sage-light);color:var(--sage)">Video</span></div><div class="rc-body"><div class="rc-title">Plating like a pro</div><div class="rc-desc">Make every dish look as good as it tastes.</div><div class="rc-pb"><div class="rc-pf" style="width:0"></div></div><div class="rc-foot"><span class="rc-meta">18 min · New</span><button class="btn btn-primary btn-sm">Watch</button></div></div></div>
+              <div class="rc" data-rcat="career"><div class="rc-thumb" style="background:#E0D5BE"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="8" y="6" width="16" height="20" rx="2" stroke="#4A2E0A" stroke-width="1.4" opacity=".55"/><path d="M12 12h8M12 16h8M12 20h5" stroke="#4A2E0A" stroke-width="1.4" stroke-linecap="round" opacity=".7"/></svg><span class="rc-type" style="background:var(--clay-pale);color:#7A4316">Guide</span></div><div class="rc-body"><div class="rc-title">Writing your first resume</div><div class="rc-desc">Turn your program experience into professional assets.</div><div class="rc-pb"><div class="rc-pf" style="width:100%;background:var(--sage)"></div></div><div class="rc-foot"><span class="rc-meta">20 min · Done</span><button class="btn btn-sm" style="background:var(--sage);color:#fff">Review</button></div></div></div>
+              <div class="rc" data-rcat="career"><div class="rc-thumb" style="background:#CCB99E"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="11" r="5" stroke="#4A2E0A" stroke-width="1.4" opacity=".55"/><path d="M7 26c0-5 4-8 9-8s9 3 9 8" stroke="#4A2E0A" stroke-width="1.4" stroke-linecap="round" opacity=".55"/></svg><span class="rc-type" style="background:var(--auburn-light);color:var(--auburn)">New</span></div><div class="rc-body"><div class="rc-title">How to ace a kitchen interview</div><div class="rc-desc">Walk in prepared, confident, and ready to shine.</div><div class="rc-pb"><div class="rc-pf" style="width:0"></div></div><div class="rc-foot"><span class="rc-meta">12 min · Not started</span><button class="btn btn-primary btn-sm">Start</button></div></div></div>
+              <div class="rc" data-rcat="life"><div class="rc-thumb" style="background:#BDD0C4"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="6" y="10" width="20" height="14" rx="2" stroke="#1A3D24" stroke-width="1.4" opacity=".55"/><circle cx="16" cy="17" r="3" stroke="#1A3D24" stroke-width="1.4" opacity=".7"/></svg><span class="rc-type" style="background:var(--sage-light);color:var(--sage)">Life skills</span></div><div class="rc-body"><div class="rc-title">Managing your first paycheck</div><div class="rc-desc">Build stability from day one with simple habits.</div><div class="rc-pb"><div class="rc-pf" style="width:60%"></div></div><div class="rc-foot"><span class="rc-meta">18 min · 60%</span><button class="btn btn-primary btn-sm">Continue</button></div></div></div>
+              <div class="rc" data-rcat="video"><div class="rc-thumb" style="background:#E8DDD0"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="11" stroke="#4A2E0A" stroke-width="1.4" opacity=".55"/><path d="M13 11l9 5-9 5V11z" fill="#4A2E0A" opacity=".6"/></svg><span class="rc-type" style="background:var(--auburn-light);color:var(--auburn)">New</span></div><div class="rc-body"><div class="rc-title">A day in the life — catering chef</div><div class="rc-desc">A real look at what a catering career feels like.</div><div class="rc-pb"><div class="rc-pf" style="width:0"></div></div><div class="rc-foot"><span class="rc-meta">22 min · New</span><button class="btn btn-primary btn-sm">Watch</button></div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="sc">
+          <div class="card">
+            <div class="card-head"><div class="card-title">Learning streak</div></div>
+            <div style="font-size:11px;color:var(--bark-mid);margin-bottom:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em">This week</div>
+            <div class="est-only" style="display:flex;gap:5px;margin-bottom:14px">
+              <div class="streak-day" style="background:var(--clay);color:#fff">M</div><div class="streak-day" style="background:var(--clay);color:#fff">T</div><div class="streak-day" style="background:var(--clay);color:#fff">W</div><div class="streak-day" style="background:var(--clay);color:#fff">T</div><div class="streak-day" style="background:var(--auburn);color:#fff">F</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">S</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">S</div>
+            </div>
+            <div class="day1-only" style="display:flex;gap:5px;margin-bottom:14px">
+              <div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">M</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">T</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">W</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">T</div><div class="streak-day" style="background:var(--auburn);color:#fff">F</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">S</div><div class="streak-day" style="background:var(--soft);color:var(--bark-mid)">S</div>
+            </div>
+            <div style="font-size:26px;font-weight:800;color:var(--clay);letter-spacing:-.03em;line-height:1"><span class="est-only">5 days</span><span class="day1-only">Day 1</span></div>
+            <div class="lora" style="font-size:12px;color:var(--bark-mid);font-style:italic;margin-top:4px"><span class="est-only">Keep it going, Jordan.</span><span class="day1-only">Every streak starts with one.</span></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div class="card-title">Your progress</div></div>
+            <div class="est-only" style="display:contents">
+            <div class="glance-row"><span class="glance-key">Resources started</span><span class="glance-val">8</span></div>
+            <div class="glance-row"><span class="glance-key">Completed</span><span class="glance-val sage">3</span></div>
+            <div class="glance-row"><span class="glance-key">In progress</span><span class="glance-val" style="color:var(--clay)">4</span></div>
+            <div class="glance-row"><span class="glance-key">Time this week</span><span class="glance-val">1h 42m</span></div>
+            </div>
+            <div class="day1-only" style="display:contents">
+            <div class="glance-row"><span class="glance-key">Resources started</span><span class="glance-val">0</span></div>
+            <div class="glance-row"><span class="glance-key">Completed</span><span class="glance-val">0</span></div>
+            <div class="glance-row"><span class="glance-key">In progress</span><span class="glance-val">0</span></div>
+            <div class="glance-row"><span class="glance-key">Time this week</span><span class="glance-val">0m</span></div>
+            </div>
+          </div>
+          <div class="dark-card">
+            <div class="eyebrow eyebrow-light" style="color:var(--clay)">A note for the journey</div>
+            <div class="lora" style="font-size:13px;color:rgba(255,255,255,.65);line-height:1.75;font-style:italic;text-wrap:pretty">"Growth is not a straight line. Every lesson you open, every skill you practice — it compounds. Stay with it."</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ INTAKE QUESTIONNAIRE ══ -->
+    <section class="screen" id="screen-intake" data-screen-label="Intake questionnaire">
+      <div class="intake-wrap">
+        <div class="intake-kicker">Intake questionnaire</div>
+        <div class="intake-progress"><div class="intake-progress-fill" id="iq-fill"></div></div>
+        <div class="intake-step-lbl" id="iq-lbl">Question 1 of 6</div>
+        <div id="iq-body"></div>
+        <div class="intake-nav">
+          <button class="btn btn-ghost btn-sm" id="iq-back">← Back</button>
+          <button class="btn btn-primary" id="iq-next">Next →</button>
+        </div>
+        <div class="intake-note">Your answers go to the Cultured Mornings team only — never your public profile.<br><button class="btn btn-ghost btn-sm" id="iq-clear" style="margin-top:10px" onclick="iqClear()">Clear all answers</button></div>
+      </div>
+    </section>
+
+    <!-- ══ SETTINGS ══ -->
+    <section class="screen" id="screen-settings">
+      <div class="page-header">
+        <h1 class="page-title">Settings</h1>
+        <p class="page-sub">Manage your account, notifications, and privacy. The team is always available if you need help — just reach out.</p>
+      </div>
+
+      <div class="set-tabs" id="set-tabs">
+        <button class="set-tab active" data-set-tab="account">Account</button>
+        <button class="set-tab" data-set-tab="notifications">Notifications</button>
+        <button class="set-tab" data-set-tab="privacy">Privacy &amp; visibility</button>
+        <button class="set-tab" data-set-tab="connected">Connected accounts</button>
+        <button class="set-tab" data-set-tab="preferences">Preferences</button>
+        <button class="set-tab" data-set-tab="danger">Account actions</button>
+      </div>
+
+      <div class="body-grid">
+        <div class="mc">
+
+          <!-- ACCOUNT -->
+          <div class="set-pane" data-set-pane="account">
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Login &amp; security</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Email address</div>
+                    <div class="set-row-sub">Used for sign-in and important account notices.</div>
+                  </div>
+                  <div class="set-row-ctrl"><span class="set-val">jordan.thomas@gmail.com</span><a class="set-link">Change</a></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Phone number</div>
+                    <div class="set-row-sub">For text reminders about events and check-ins. Optional.</div>
+                  </div>
+                  <div class="set-row-ctrl"><span class="set-val">(502) 555 · 0184</span><a class="set-link">Change</a></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Password</div>
+                    <div class="set-row-sub"><span class="est-only">Last changed 3 months ago.</span><span class="day1-only">Set today, when you created your account.</span></div>
+                  </div>
+                  <div class="set-row-ctrl"><a class="set-link">Update password</a></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Two-factor authentication</div>
+                    <div class="set-row-sub">Add a one-time code at sign-in for an extra layer of safety.</div>
+                  </div>
+                  <div class="set-row-ctrl"><div class="toggle-light off set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Active sessions</div>
+                    <div class="set-row-sub"><span class="est-only">2 devices signed in · iPhone (Louisville) and MacBook (Louisville).</span><span class="day1-only">1 device signed in · this one.</span></div>
+                  </div>
+                  <div class="set-row-ctrl"><a class="set-link">Manage</a></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Account info</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Username</div>
+                    <div class="set-row-sub">Your unique handle on Cultured Mornings.</div>
+                  </div>
+                  <div class="set-row-ctrl"><span class="set-val">@jordanthomas</span><a class="set-link">Change</a></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Cohort</div>
+                    <div class="set-row-sub">Your alumni cohort designation. Set by the team.</div>
+                  </div>
+                  <div class="set-row-ctrl"><span class="set-val"><span class="est-only">Cohort III · Fall 2022</span><span class="day1-only">Cohort VI · Summer 2026</span></span></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Member since</div>
+                    <div class="set-row-sub">The day you joined the Cultured Mornings family.</div>
+                  </div>
+                  <div class="set-row-ctrl"><span class="set-val"><span class="est-only">September 14, 2022</span><span class="day1-only">July 13, 2026 — today</span></span></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl">Intake questionnaire</div>
+                    <div class="set-row-sub">Seen by the CM team and your assigned mentor only — never on your public profile.</div>
+                  </div>
+                  <div class="set-row-ctrl"><span class="set-val"><span class="iq-when-done">Submitted</span><span class="iq-when-todo">Not started</span></span><a class="set-link" onclick="startIntake(true)">Review &amp; update</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- NOTIFICATIONS -->
+          <div class="set-pane" data-set-pane="notifications" style="display:none">
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Email notifications</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">New opportunities</div><div class="set-row-sub">Jobs, internships, and gigs relevant to your interests.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Mentor messages</div><div class="set-row-sub">When a mentor responds or sends an update.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Cohort events &amp; meet-ups</div><div class="set-row-sub">Reminders for gatherings, alumni dinners, and pop-ups.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">New resources</div><div class="set-row-sub">When new lessons, recipes, or guides are added.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light off set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Weekly digest</div><div class="set-row-sub">A friendly Sunday-morning summary of activity in your network.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Newsletter from the team</div><div class="set-row-sub">Stories, updates, and a verse from the kitchen each month.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Text &amp; push</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Event reminders by text</div><div class="set-row-sub">A quick text the morning of any event you've RSVP'd to.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Direct messages</div><div class="set-row-sub">Push notification when someone messages you directly.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light off set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Quiet hours</div><div class="set-row-sub">No texts or pushes during these times.</div></div>
+                  <div class="set-row-ctrl"><span class="set-val">9pm – 7am</span><a class="set-link">Edit</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PRIVACY -->
+          <div class="set-pane" data-set-pane="privacy" style="display:none">
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Profile visibility</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Public profile</div><div class="set-row-sub">Allow your alumni profile page to be discovered by anyone with the link.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Show in alumni directory</div><div class="set-row-sub">Other alumni can find you when browsing the network.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Show in workforce search</div><div class="set-row-sub">Verified employer partners can discover you for open roles.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Show contact form</div><div class="set-row-sub">Visitors can send you a note through your public profile.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light off set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Show graduation year</div><div class="set-row-sub">Display your cohort year on your public profile.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Data &amp; tracking</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Activity tracking</div><div class="set-row-sub">Help us improve by sharing anonymous usage data.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Personalized recommendations</div><div class="set-row-sub">Use your activity to surface relevant opportunities and resources.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Download your data</div><div class="set-row-sub">Get a copy of everything you've shared on Cultured Mornings.</div></div>
+                  <div class="set-row-ctrl"><a class="set-link">Request export</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONNECTED -->
+          <div class="set-pane" data-set-pane="connected" style="display:none">
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Connected accounts</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="connected-row">
+                  <div class="conn-logo" style="background:#1A2A3F;color:#fff">in</div>
+                  <div class="conn-info"><div class="conn-name">LinkedIn</div><div class="conn-meta"><span class="est-only">Connected · jordan-thomas-louisville · Syncs work history</span><span class="day1-only">Not connected · Sync your work history</span></div></div>
+                  <div class="set-row-ctrl"><a class="set-link"><span class="est-only">Disconnect</span><span class="day1-only">Connect</span></a></div>
+                </div>
+                <div class="connected-row">
+                  <div class="conn-logo" style="background:#E1306C;color:#fff">ig</div>
+                  <div class="conn-info"><div class="conn-name">Instagram</div><div class="conn-meta"><span class="est-only">Connected · @jordan.cooks · Pulls photos for Moments gallery</span><span class="day1-only">Not connected · Pull photos into your Moments gallery</span></div></div>
+                  <div class="set-row-ctrl"><a class="set-link"><span class="est-only">Disconnect</span><span class="day1-only">Connect</span></a></div>
+                </div>
+                <div class="connected-row">
+                  <div class="conn-logo" style="background:var(--clay-pale);color:var(--bark-mid);border:1px solid var(--warm-line-strong)">G</div>
+                  <div class="conn-info"><div class="conn-name">Google Calendar</div><div class="conn-meta">Not connected · Auto-add Cultured Mornings events to your calendar</div></div>
+                  <div class="set-row-ctrl"><a class="set-link">Connect</a></div>
+                </div>
+                <div class="connected-row">
+                  <div class="conn-logo" style="background:var(--clay-pale);color:var(--bark-mid);border:1px solid var(--warm-line-strong)">📷</div>
+                  <div class="conn-info"><div class="conn-name">Apple Photos</div><div class="conn-meta">Not connected · Import photos directly to your Moments gallery</div></div>
+                  <div class="set-row-ctrl"><a class="set-link">Connect</a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PREFERENCES -->
+          <div class="set-pane" data-set-pane="preferences" style="display:none">
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Display</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Language</div><div class="set-row-sub">The language used across the site.</div></div>
+                  <div class="set-row-ctrl">
+                    <select class="set-select"><option>English (US)</option><option>Español</option><option>Français</option></select>
+                  </div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Time zone</div><div class="set-row-sub">Used for event times and reminders.</div></div>
+                  <div class="set-row-ctrl">
+                    <select class="set-select"><option>Eastern Time (US &amp; Canada)</option><option>Central Time</option><option>Mountain Time</option><option>Pacific Time</option></select>
+                  </div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Date format</div><div class="set-row-sub">How dates appear throughout the site.</div></div>
+                  <div class="set-row-ctrl">
+                    <select class="set-select"><option>May 9, 2025</option><option>05/09/2025</option><option>9 May 2025</option></select>
+                  </div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Reduce motion</div><div class="set-row-sub">Minimize animations and transitions across the site.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light off set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Communication style</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Preferred contact method</div><div class="set-row-sub">How the Cultured Mornings team and mentors should reach you first.</div></div>
+                  <div class="set-row-ctrl">
+                    <select class="set-select"><option>Email</option><option>Text message</option><option>Phone call</option></select>
+                  </div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Open to mentor pairing</div><div class="set-row-sub">Let the team pair you with new mentors as opportunities arise.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Open to peer connections</div><div class="set-row-sub">Other alumni can introduce themselves directly.</div></div>
+                  <div class="set-row-ctrl"><div class="toggle-light set-toggle"><div class="toggle-knob"></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DANGER -->
+          <div class="set-pane" data-set-pane="danger" style="display:none">
+            <div class="sec-card">
+              <div class="sec-head"><div class="sec-title">Take a break</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Pause notifications</div><div class="set-row-sub">Mute everything for a set period. We'll keep your account active.</div></div>
+                  <div class="set-row-ctrl">
+                    <select class="set-select"><option>Not paused</option><option>For 1 day</option><option>For 1 week</option><option>For 1 month</option></select>
+                  </div>
+                </div>
+                <div class="set-row">
+                  <div class="set-row-info"><div class="set-row-lbl">Deactivate account</div><div class="set-row-sub">Hide your profile and pause your account. You can come back any time.</div></div>
+                  <div class="set-row-ctrl"><button class="btn-danger">Deactivate</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="danger-card">
+              <div class="sec-head"><div class="sec-title">Delete account</div></div>
+              <div class="sec-body" style="gap:0">
+                <div class="set-row" style="border-bottom:none">
+                  <div class="set-row-info">
+                    <div class="set-row-lbl" style="color:#7d2510">Permanently delete your account</div>
+                    <div class="set-row-sub">Removes your profile, photos, messages, and all activity. This cannot be undone. Before you do this — please reach out to the team. We'd love to talk first.</div>
+                  </div>
+                  <div class="set-row-ctrl"><button class="btn-danger">Delete account</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sc">
+          <div class="set-side-card">
+            <div class="set-side-title">Need help?</div>
+            <div class="set-side-text">Any of these settings feeling confusing? <strong>Aaliyah on the alumni team</strong> is happy to walk through them with you over a quick call.</div>
+            <div style="margin-top:14px"><a class="set-link">Schedule a 15-min check-in →</a></div>
+          </div>
+
+          <div class="set-side-card" style="margin-top:16px">
+            <div class="set-side-title">Account at a glance</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:12.5px">
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--bark-mid);font-weight:500">Plan</span><span style="color:var(--bark);font-weight:700">Alumni · free for life</span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--bark-mid);font-weight:500">Joined</span><span style="color:var(--bark);font-weight:700"><span class="est-only">Sep 2022</span><span class="day1-only">Today</span></span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--bark-mid);font-weight:500">Sessions this month</span><span style="color:var(--bark);font-weight:700"><span class="est-only">14</span><span class="day1-only">1</span></span></div>
+              <div style="display:flex;justify-content:space-between"><span style="color:var(--bark-mid);font-weight:500">Profile views</span><span style="color:var(--bark);font-weight:700"><span class="est-only">38</span><span class="day1-only">0</span></span></div>
+            </div>
+          </div>
+
+          <div class="set-side-card" style="margin-top:16px;background:var(--cream);border-color:var(--warm-line)">
+            <div class="set-side-title">A note from the team</div>
+            <div style="font-family:'Lora',Georgia,serif;font-size:13px;font-style:italic;color:var(--bark);line-height:1.7;text-wrap:pretty">"Your settings are about <em>you</em> — not us. Set them however helps you feel comfortable showing up in this space."</div>
+            <div style="font-size:11px;color:var(--bark-mid);margin-top:10px;font-weight:600;letter-spacing:.04em">— Aaliyah, Alumni Care</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="cm-modal-ov" id="cm-modal" hidden onclick="if(event.target===this)closeModal()">
+  <div class="cm-modal">
+    <button class="cm-modal-x" onclick="closeModal()" aria-label="Close">×</button>
+    <div id="cm-modal-body"></div>
+  </div>
+</div>
+
+<script>
+const shell=document.getElementById('shell');
+const tog=document.getElementById('tog');
+const ti=document.getElementById('ti');
+let collapsed=false;
+tog.addEventListener('click',()=>{
+  collapsed=!collapsed;
+  shell.classList.toggle('col',collapsed);
+  ti.setAttribute('d',collapsed?'M5 2l5 5-5 5':'M9 2L4 7l5 5');
+});
+
+function navigate(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const screen=document.getElementById('screen-'+id);
+  if(screen){screen.classList.add('active');window.scrollTo({top:0,behavior:'instant'});}
+  const navItem=document.querySelector('.ni[data-screen="'+id+'"]');
+  if(navItem){navItem.classList.add('active');}
+  // Both public-profile and profile-editor share the My profile sidebar item
+  if(id==='profile-editor'){
+    const myProfileItem=document.querySelector('.ni[data-profile-tab="public"]');
+    if(myProfileItem)myProfileItem.classList.add('active');
+  }
+}
+
+// Profile tab strip — switches between public-profile and profile-editor screens
+document.querySelectorAll('.pe-tab[data-pe-target]').forEach(t=>{
+  t.addEventListener('click',()=>navigate(t.dataset.peTarget));
+});
+
+document.querySelectorAll('.ni[data-screen]').forEach(ni=>{
+  ni.addEventListener('click',()=>navigate(ni.dataset.screen));
+});
+document.querySelectorAll('.nav-link-js[data-screen]').forEach(el=>{
+  el.addEventListener('click',()=>{
+    if(el.dataset.mentor){loadMentor(el.dataset.mentor);}
+    navigate(el.dataset.screen);
+  });
+});
+
+const MENTORS={
+  lisa:{
+    av:'LO',avBg:'#8B5E2A',
+    eye:'Mentor profile · Cohort III alumna',
+    name:'Chef <em>Lisa</em> Owens',
+    role:'<strong>Pastry chef &amp; baker</strong> · Owner, Owens Bread Co. · Louisville, KY'
+  },
+  david:{
+    av:'DW',avBg:'var(--sage)',
+    eye:'Mentor profile · Cohort II alumnus',
+    name:'David <em>Washington</em>',
+    role:'<strong>Culinary educator</strong> · Lead instructor, Smoketown Youth Kitchen · Louisville, KY'
+  },
+  renee:{
+    av:'RC',avBg:'var(--auburn)',
+    eye:'Mentor profile · Cohort IV alumna',
+    name:'Renee <em>Carter</em>',
+    role:'<strong>Hospitality consultant</strong> · Founder, Folding Table Co. · Louisville, KY'
+  },
+  james:{
+    av:'PJ',avBg:'#2A4A70',
+    eye:'Mentor profile · Community partner',
+    name:'Pastor <em>James</em> Hill',
+    role:'<strong>Community &amp; life mentor</strong> · West End Fellowship · Louisville, KY'
+  }
+};
+function loadMentor(key){
+  const m=MENTORS[key];if(!m)return;
+  const av=document.getElementById('mp-av');
+  if(av){av.textContent=m.av;av.style.background=m.avBg;}
+  const eye=document.querySelector('#screen-mentor-profile .mp-eye');
+  if(eye)eye.textContent=m.eye;
+  const name=document.getElementById('mp-name');
+  if(name)name.innerHTML=m.name;
+  const role=document.getElementById('mp-role');
+  if(role)role.innerHTML=m.role;
+}
+// Deep link: CM Alumni Profile.html#mentor=lisa opens that mentor's profile as students see it
+(function(){
+  const h=location.hash.match(/^#mentor=(\w+)$/);
+  if(h&&MENTORS[h[1]]){loadMentor(h[1]);navigate('mentor-profile');}
+})();
+
+// Settings tabs
+document.querySelectorAll('#set-tabs .set-tab').forEach(tab=>{
+  tab.addEventListener('click',()=>{
+    const id=tab.dataset.setTab;
+    document.querySelectorAll('#set-tabs .set-tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('#screen-settings .set-pane').forEach(p=>{
+      p.style.display=(p.dataset.setPane===id)?'':'none';
+    });
+    window.scrollTo({top:0,behavior:'instant'});
+  });
+});
+// Settings toggles (light variant)
+document.querySelectorAll('#screen-settings .set-toggle').forEach(t=>{
+  t.addEventListener('click',()=>t.classList.toggle('off'));
+});
+
+function filterMentors(spec,btn){
+  if(btn){document.querySelectorAll('#screen-mentors .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  document.querySelectorAll('.mc-card').forEach(c=>{c.style.display=(spec==='all'||c.dataset.spec===spec)?'':'none';});
+}
+function filterOpps(cat,btn){
+  if(btn){document.querySelectorAll('#opp-filters .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  const fp=document.getElementById('feat-partner');
+  if(cat==='all'||cat==='catering'||cat==='volunteer'){
+    fp.style.display='';
+    document.querySelectorAll('.fp-role').forEach(r=>{r.style.display=(cat==='all'||r.dataset.cat===cat)?'':'none';});
+    const vis=[...document.querySelectorAll('.fp-role')].some(r=>r.style.display!=='none');
+    if(!vis)fp.style.display='none';
+  } else {fp.style.display='none';}
+  document.querySelectorAll('.opp-card').forEach(c=>{c.style.display=(cat==='all'||c.dataset.cat===cat)?'':'none';});
+}
+function filterRes(cat,btn){
+  if(btn){document.querySelectorAll('#res-filters .f-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  document.querySelectorAll('.rc').forEach(c=>{c.style.display=(cat==='all'||c.dataset.rcat===cat)?'':'none';});
+}
+
+document.querySelectorAll('.save-opp').forEach(btn=>{
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    const saved=this.textContent.includes('Saved');
+    this.textContent=saved?'Save':'Saved ✓';
+    if(saved){
+      this.classList.remove('btn-primary');this.classList.add('btn-ghost');
+      this.style.background='';this.style.color='';this.style.borderColor='';
+    } else {
+      this.style.background='var(--sage)';this.style.color='#fff';this.style.borderColor='var(--sage)';
+    }
+  });
+});
+
+function removeSkill(btn){btn.closest('.skill-pill').remove();}
+function addSkill(){
+  const s=prompt('Add a skill:');if(!s)return;
+  const wrap=document.getElementById('skill-wrap');
+  const addBtn=wrap.querySelector('.add-skill');
+  const pill=document.createElement('span');
+  pill.className='skill-pill';
+  pill.innerHTML=s+'<button class="skill-x" onclick="removeSkill(this)">×</button>';
+  wrap.insertBefore(pill,addBtn);
+}
+function addGoal(){
+  const list=document.getElementById('goals-list');
+  const row=document.createElement('div');
+  row.className='goal-row';
+  row.innerHTML='<div class="goal-dot-edit"></div><input class="goal-input" placeholder="Add a goal..."/><button class="goal-del" onclick="this.closest(\'.goal-row\').remove()">×</button>';
+  list.appendChild(row);
+  row.querySelector('input').focus();
+}
+
+document.getElementById('save-profile-btn').addEventListener('click',function(){
+  const orig=this.textContent;
+  this.textContent='Saved ✓';
+  this.style.background='var(--sage)';
+  setTimeout(()=>{this.textContent=orig;this.style.background='';},2000);
+});
+
+document.querySelectorAll('.toggle').forEach(t=>{
+  t.addEventListener('click',function(){this.classList.toggle('off');});
+});
+
+// ── Day-one stage ──
+const DAY1_FIELDS=[['ed-role','e.g. Emerging culinary talent'],['ed-open','e.g. Work & mentorship'],['ed-quote','One sentence in your own voice.'],['ed-story','Where you started, what brought you here, where you\u2019re headed.']];
+window.applyStage=function(stage){
+  const d1=stage==='day1';
+  document.body.classList.toggle('day1',d1);
+  DAY1_FIELDS.forEach(([id,ph])=>{
+    const el=document.getElementById(id);if(!el)return;
+    if(el.dataset.orig===undefined)el.dataset.orig=el.value;
+    if(d1){el.value='';el.placeholder=ph;}else{el.value=el.dataset.orig;}
+  });
+  document.querySelectorAll('#res-grid .rc').forEach(rc=>{
+    const meta=rc.querySelector('.rc-meta'),btn=rc.querySelector('.rc-foot .btn');
+    if(!meta||!btn)return;
+    if(meta.dataset.orig===undefined){meta.dataset.orig=meta.textContent;btn.dataset.orig=btn.textContent;btn.dataset.cls=btn.className;btn.dataset.sty=btn.getAttribute('style')||'';}
+    if(d1){meta.textContent=meta.dataset.orig.split('\u00b7')[0].trim()+' \u00b7 Not started';btn.textContent=(rc.dataset.rcat==='video')?'Watch':'Start';btn.className='btn btn-primary btn-sm';btn.removeAttribute('style');}
+    else{meta.textContent=meta.dataset.orig;btn.textContent=btn.dataset.orig;btn.className=btn.dataset.cls;if(btn.dataset.sty)btn.setAttribute('style',btn.dataset.sty);else btn.removeAttribute('style');}
+  });
+};
+
+// ── Modals (CM-mediated flows) ──
+const CM_MODALS={
+  express:`<h3>Express interest in Jordan</h3><p>Your note goes to the <strong>Cultured Mornings team</strong> first — never directly to Jordan. The team reviews every request and follows up within 3 business days.</p><div class="field-row"><label class="field-label">Your name</label><input class="field-input" placeholder="Full name"/></div><div class="field-row" style="margin-top:10px"><label class="field-label">Organization &amp; email</label><input class="field-input" placeholder="Company · you@email.com"/></div><div class="field-row" style="margin-top:10px"><label class="field-label">What's the opportunity?</label><textarea class="field-ta" placeholder="Role, event, or reason you're reaching out…"></textarea></div><button class="btn btn-primary btn-block" style="margin-top:14px" onclick="modalSent(this)">Send to the CM team</button><p style="margin-top:10px;font-size:11px;color:var(--bark-soft)">Jordan's contact details are never shared without their consent.</p>`,
+  vetting:`<h3>How we vet opportunities</h3><p>Nothing appears on this board until the Cultured Mornings team has screened it. For every employer and listing:</p><div class="vet-li"><span class="tick">✓</span><span>Business is verified and references are checked</span></div><div class="vet-li"><span class="tick">✓</span><span>Roles open to members under 18 must show a youth-hiring policy — hours, supervision, guardian consent</span></div><div class="vet-li"><span class="tick">✓</span><span>A CM staff member speaks with the employer before their first listing</span></div><div class="vet-li"><span class="tick">✓</span><span>Employers agree to our partner code of conduct</span></div><div class="vet-li" style="border:none"><span class="tick">✓</span><span>Listings are reviewed again each season</span></div><p style="margin-top:12px">Something feel off about a listing? <strong>Tell a coordinator</strong> — one click, no explanation needed.</p>`,
+  mentorVetting:`<h3>What we check before someone mentors</h3><p>Mentors work with young people — nobody appears in the directory until the CM team has completed:</p><div class="vet-li"><span class="tick">✓</span><span>National background check, renewed annually</span></div><div class="vet-li"><span class="tick">✓</span><span>References from at least two past mentees or colleagues</span></div><div class="vet-li"><span class="tick">✓</span><span>An in-person interview with CM leadership</span></div><div class="vet-li"><span class="tick">✓</span><span>Signed Mentor Code of Care</span></div><div class="vet-li" style="border:none"><span class="tick">✓</span><span>No off-platform contact — sessions happen at the CM kitchen, with staff present</span></div><p style="margin-top:12px">Mentees can pause or end a mentorship at any time — no explanation needed.</p>`
+};
+function openModal(k){document.getElementById('cm-modal-body').innerHTML=CM_MODALS[k];document.getElementById('cm-modal').hidden=false;}
+function closeModal(){document.getElementById('cm-modal').hidden=true;}
+function modalSent(btn){btn.textContent='Sent ✓ — the team will follow up';btn.disabled=true;btn.style.background='var(--sage)';}
+
+// ── Intake questionnaire ──
+const INTAKE_QS=[
+  {id:'direction',q:'Where do you want food to take you?',sub:'There\u2019s no wrong answer — and \u201cchef\u201d is only one of many.',type:'chips',opts:['Working chef','Baking & pastry','Food science','My own food business','Food content & media','Farming & agri-tourism','Not sure yet']},
+  {id:'draw',q:'What draws you to food?',sub:'A sentence or two, in your own words.',type:'text',ph:'Cooking with my grandmother got me started…'},
+  {id:'mentor',q:'What do you want most from a mentor?',type:'chips',opts:['Hands-on technique','Career advice','Business guidance','Help finding my direction','Someone consistent to talk to']},
+  {id:'learn',q:'How do you learn best?',type:'chips',opts:['Watching, then trying','Jumping in hands-first','Reading & taking notes','Talking it through']},
+  {id:'avail',q:'When are you usually free?',type:'chips',opts:['Weekday afternoons','Weekday evenings','Saturdays','Sundays']},
+  {id:'notes',q:'Anything else the team should know?',sub:'Optional — allergies, transportation, things you\u2019re nervous about.',type:'text',ph:'Whatever helps us set you up well…'}
+];
+const IQ_ANS=JSON.parse(localStorage.getItem('cm-intake')||'{}');
+let iqStep=0;
+if(localStorage.getItem('cm-intake-done'))document.body.classList.add('intake-done');
+function startIntake(summary){iqStep=summary?INTAKE_QS.length:0;renderIntake();navigate('intake');}
+function iqPick(id,btn){IQ_ANS[id]=btn.textContent;localStorage.setItem('cm-intake',JSON.stringify(IQ_ANS));btn.parentNode.querySelectorAll('.iq-chip').forEach(c=>c.classList.remove('sel'));btn.classList.add('sel');setTimeout(()=>{iqStep++;renderIntake();},280);}
+function iqGo(i){iqStep=i;renderIntake();}
+function iqClear(){
+  if(!confirm('Clear all your intake answers and start over?'))return;
+  Object.keys(IQ_ANS).forEach(k=>delete IQ_ANS[k]);
+  localStorage.removeItem('cm-intake');localStorage.removeItem('cm-intake-done');
+  document.body.classList.remove('intake-done');
+  iqStep=0;renderIntake();
+}
+function renderIntake(){
+  const N=INTAKE_QS.length;
+  const body=document.getElementById('iq-body'),lbl=document.getElementById('iq-lbl'),fill=document.getElementById('iq-fill'),back=document.getElementById('iq-back'),nav=document.querySelector('#screen-intake .intake-nav'),note=document.querySelector('#screen-intake .intake-note'),prog=document.querySelector('#screen-intake .intake-progress'),next=document.getElementById('iq-next');
+  back.style.visibility=iqStep>0&&iqStep<=N?'visible':'hidden';
+  if(iqStep<N){
+    const q=INTAKE_QS[iqStep];
+    lbl.style.display='';prog.style.display='';nav.style.display='flex';note.style.display='';
+    lbl.textContent='Question '+(iqStep+1)+' of '+N;
+    fill.style.width=(iqStep/(N+1)*100)+'%';
+    let h='<div class="iq-q">'+q.q+'</div>'+(q.sub?'<div class="iq-sub">'+q.sub+'</div>':'');
+    if(q.type==='chips'){h+='<div class="iq-chips">'+q.opts.map(o=>'<button class="iq-chip'+(IQ_ANS[q.id]===o?' sel':'')+'" onclick="iqPick(\''+q.id+'\',this)">'+o+'</button>').join('')+'</div>';}
+    else{h+='<textarea class="iq-ta" id="iq-ta" placeholder="'+(q.ph||'')+'">'+(IQ_ANS[q.id]||'')+'</textarea>';}
+    body.innerHTML=h;
+    next.textContent=iqStep===N-1?'Review answers →':'Next →';
+  } else if(iqStep===N){
+    lbl.style.display='';prog.style.display='';nav.style.display='flex';note.style.display='';
+    lbl.textContent='Review & submit';
+    fill.style.width=(N/(N+1)*100)+'%';
+    next.textContent='Submit to the CM team';
+    body.innerHTML='<div class="iq-q">Here\u2019s what the team will see.</div><div class="iq-sub">Check it over — you can change anything before you send it.</div>'
+      +INTAKE_QS.map((q,i)=>'<div class="iq-sum-row"><div><div class="iq-sum-q">'+q.q+'</div><div class="iq-sum-a'+(IQ_ANS[q.id]?'':' muted')+'">'+(IQ_ANS[q.id]||'Skipped')+'</div></div><span class="iq-edit" onclick="iqGo('+i+')">Edit</span></div>').join('')
+      +'<div class="iq-use"><div class="iq-use-t">How your answers are used</div><ul style="margin:0;padding-left:16px"><li><strong>Your direction</strong> — the team recommends 2–3 mentors whose professional background fits it: chef, food science, business, media, agriculture.</li><li><strong>Mentor wants &amp; learning style</strong> — shared with your assigned mentor before your first session.</li><li><strong>Availability</strong> — used to schedule sessions at the kitchen.</li><li>Seen by the CM team and your assigned mentor only — <strong>never on your public profile</strong>.</li></ul></div>';
+  } else {
+    lbl.style.display='none';prog.style.display='none';nav.style.display='none';note.style.display='none';
+    body.innerHTML='<div class="iq-done"><div style="width:52px;height:52px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;margin:0 auto 18px">✓</div><div class="iq-q" style="font-size:26px">Sent to the team.</div><div class="iq-sub">Aaliyah and the alumni team read every intake by hand. Expect 2–3 suggested mentors within a week — recommended by staff, not algorithms.</div><button class="btn btn-primary" onclick="navigate(\'home\')">Back to home</button></div>';
+  }
+}
+document.getElementById('iq-next').addEventListener('click',()=>{
+  const N=INTAKE_QS.length;
+  if(iqStep<N){
+    const q=INTAKE_QS[iqStep];
+    if(q.type==='text'){const ta=document.getElementById('iq-ta');if(ta&&ta.value.trim())IQ_ANS[q.id]=ta.value.trim();localStorage.setItem('cm-intake',JSON.stringify(IQ_ANS));}
+    iqStep++;renderIntake();
+  } else if(iqStep===N){
+    localStorage.setItem('cm-intake-done','1');document.body.classList.add('intake-done');
+    iqStep++;renderIntake();
+  }
+  window.scrollTo({top:0,behavior:'instant'});
+});
+document.getElementById('iq-back').addEventListener('click',()=>{if(iqStep>0){iqStep--;renderIntake();window.scrollTo({top:0,behavior:'instant'});}});
+function suggestMilestone(){
+  const s=prompt('What happened? (e.g. "Catered a 40-person wedding — June 2026")');if(!s)return;
+  const row=document.createElement('div');row.className='ms-row';
+  row.innerHTML='<div><div class="ms-name"></div><div class="ms-meta">Suggested by you · The team will confirm before it appears publicly</div></div><span class="ms-tag ms-pending">Pending review</span>';
+  row.querySelector('.ms-name').textContent=s;
+  document.getElementById('ms-list').appendChild(row);
+}
+renderIntake();
+</script>
+
+<!-- ── Tweaks panel ────────────────────────────── -->
+<div id="tweaks-root"></div>
+<script type="text/babel" src="tweaks-panel.jsx"></script>
+<script type="text/babel">
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "stage": "day1",
+  "heroBg": "sage",
+  "heroPad": 64,
+  "accent": "clay",
+  "avShape": "square",
+  "quoteStyle": "italic",
+  "momentsLayout": "mosaic",
+  "nameSize": 38,
+  "showStats": true,
+  "quoteText": "Food taught me patience, precision, and how to show up for people — skills I carry everywhere I go now.",
+  "name": "Jordan Thomas",
+  "role": "Emerging Culinary Talent"
+}/*EDITMODE-END*/;
+
+const HERO_BGS = {
+  clay: 'var(--clay-pale)',
+  sage: 'var(--sage-light)',
+  cream: 'var(--cream)',
+  bark: 'linear-gradient(160deg,var(--bark) 0%,#3A2510 100%)'
+};
+const ACCENTS = {
+  auburn: { c: 'var(--auburn)', h: '#7d2510' },
+  clay:   { c: 'var(--clay)',   h: '#9C5723' },
+  sage:   { c: 'var(--sage)',   h: '#264a2f' },
+  bark:   { c: 'var(--bark)',   h: '#0f0a04' }
+};
+
+function TweaksApp(){
+  const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+
+  React.useEffect(() => {
+    window.applyStage && window.applyStage(t.stage);
+    const root = document.documentElement;
+    root.style.setProperty('--tk-hero-bg', HERO_BGS[t.heroBg] || HERO_BGS.clay);
+    root.style.setProperty('--tk-hero-pad', t.heroPad + 'px');
+    const a = ACCENTS[t.accent] || ACCENTS.auburn;
+    root.style.setProperty('--tk-accent', a.c);
+    root.style.setProperty('--tk-accent-hover', a.h);
+    root.style.setProperty('--tk-name-size', t.nameSize + 'px');
+    root.style.setProperty('--tk-av-radius', t.avShape === 'square' ? '12px' : '50%');
+
+    // Hero text color flips when bark bg is on
+    const hero = document.querySelector('.pub-hero');
+    if(hero){
+      hero.classList.toggle('hero-dark', t.heroBg === 'bark');
+    }
+
+    // Quote style
+    const q = document.querySelector('.pub-quote');
+    if(q){
+      q.classList.remove('qs-bold','qs-minimal');
+      if(t.quoteStyle === 'bold') q.classList.add('qs-bold');
+      if(t.quoteStyle === 'minimal') q.classList.add('qs-minimal');
+    }
+
+    // Moments layout
+    const grid = document.querySelector('.moments-grid');
+    if(grid){
+      grid.classList.remove('ml-uniform','ml-row');
+      if(t.momentsLayout === 'uniform') grid.classList.add('ml-uniform');
+      if(t.momentsLayout === 'row') grid.classList.add('ml-row');
+    }
+
+    // Stats visibility
+    document.body.classList.toggle('hide-stats', !t.showStats);
+
+    // Quote text
+    const qNode = document.querySelector('.pub-quote');
+    if(qNode){
+      const attr = qNode.querySelector('.pub-quote-attr');
+      qNode.childNodes.forEach(n => { if(n.nodeType === 3) n.remove(); });
+      qNode.insertBefore(document.createTextNode(t.quoteText + ' '), qNode.firstChild);
+      // re-append attribution if it got displaced
+      if(attr && attr.parentNode !== qNode) qNode.appendChild(attr);
+    }
+
+    // Name + role
+    const nameEl = document.querySelector('.pub-name');
+    if(nameEl) nameEl.textContent = t.name;
+    const heroKicker = document.querySelector('.hero-kicker');
+    if(heroKicker && t.name) heroKicker.textContent = (t.stage === 'day1' ? 'Welcome to the table, ' : 'Good morning, ') + t.name.split(' ')[0];
+    const sbfn = document.querySelector('.sbfn');
+    if(sbfn) sbfn.textContent = t.name;
+    const uav = document.querySelector('.uav');
+    if(uav) uav.textContent = t.name.split(' ').map(s=>s[0]).slice(0,2).join('');
+    const pubAv = document.querySelector('.pub-av');
+    if(pubAv) pubAv.textContent = t.name.split(' ').map(s=>s[0]).slice(0,2).join('');
+    const roleSpans = document.querySelectorAll('.pub-role > span');
+    if(roleSpans && roleSpans.length >= 5){
+      roleSpans[4].textContent = t.role;
+    }
+  }, [t]);
+
+  return (
+    <TweaksPanel title="Tweaks">
+      <TweakSection label="Prototype">
+        <TweakRadio label="Member stage" value={t.stage} options={[
+          {value:'day1',label:'Day one'},
+          {value:'est',label:'Active alumni'}
+        ]} onChange={v => setTweak('stage', v)} />
+      </TweakSection>
+      <TweakSection label="Identity">
+        <TweakText label="Name" value={t.name} onChange={v => setTweak('name', v)} />
+        <TweakText label="Role" value={t.role} onChange={v => setTweak('role', v)} />
+      </TweakSection>
+      <TweakSection label="Hero">
+        <TweakRadio label="Background" value={t.heroBg} options={[
+          {value:'clay',label:'Clay'},
+          {value:'sage',label:'Sage'},
+          {value:'cream',label:'Cream'},
+          {value:'bark',label:'Bark'}
+        ]} onChange={v => setTweak('heroBg', v)} />
+        <TweakSlider label="Padding" value={t.heroPad} min={32} max={120} step={4} unit="px" onChange={v => setTweak('heroPad', v)} />
+        <TweakSlider label="Name size" value={t.nameSize} min={28} max={56} step={1} unit="px" onChange={v => setTweak('nameSize', v)} />
+        <TweakRadio label="Avatar" value={t.avShape} options={[
+          {value:'circle',label:'Circle'},
+          {value:'square',label:'Square'}
+        ]} onChange={v => setTweak('avShape', v)} />
+        <TweakToggle label="Show quick stats" value={t.showStats} onChange={v => setTweak('showStats', v)} />
+      </TweakSection>
+      <TweakSection label="Quote">
+        <TweakRadio label="Style" value={t.quoteStyle} options={[
+          {value:'italic',label:'Italic'},
+          {value:'bold',label:'Bold'},
+          {value:'minimal',label:'Minimal'}
+        ]} onChange={v => setTweak('quoteStyle', v)} />
+        <TweakText label="Text" value={t.quoteText} onChange={v => setTweak('quoteText', v)} />
+      </TweakSection>
+      <TweakSection label="Moments from the kitchen">
+        <TweakRadio label="Layout" value={t.momentsLayout} options={[
+          {value:'mosaic',label:'Mosaic'},
+          {value:'uniform',label:'Grid'},
+          {value:'row',label:'Row'}
+        ]} onChange={v => setTweak('momentsLayout', v)} />
+      </TweakSection>
+      <TweakSection label="Brand">
+        <TweakSelect label="Accent" value={t.accent} options={[
+          {value:'auburn',label:'Auburn (default)'},
+          {value:'clay',label:'Clay'},
+          {value:'sage',label:'Sage'},
+          {value:'bark',label:'Bark'}
+        ]} onChange={v => setTweak('accent', v)} />
+      </TweakSection>
+    </TweaksPanel>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('tweaks-root')).render(<TweaksApp />);
+</script>
+<template id="__bundler_thumbnail" data-bg-color="#FBF7EF">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#FBF7EF"/>
+    <circle cx="600" cy="380" r="120" fill="#C77245"/>
+    <g stroke="#C77245" stroke-width="6" stroke-linecap="round">
+      <line x1="600" y1="180" x2="600" y2="220"/>
+      <line x1="430" y1="380" x2="470" y2="380"/>
+      <line x1="730" y1="380" x2="770" y2="380"/>
+      <line x1="478" y1="258" x2="506" y2="286"/>
+      <line x1="694" y1="286" x2="722" y2="258"/>
+    </g>
+    <path d="M420 480 Q600 600 780 480 L780 510 Q600 640 420 510 Z" fill="#231708"/>
+    <text x="600" y="700" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="42" fill="#231708">Cultured Mornings</text>
+  </svg>
+</template>
+</body>
+</html>

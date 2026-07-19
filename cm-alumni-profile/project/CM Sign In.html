@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Cultured Mornings — Sign in</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+body{margin:0;background:var(--cream);font-family:'Bricolage Grotesque',sans-serif;color:var(--bark)}
+a{color:var(--clay)}a:hover{color:var(--auburn)}
+.auth-shell{display:grid;grid-template-columns:minmax(340px,460px) 1fr;min-height:100vh}
+.auth-brand{background:var(--bark);color:#fff;padding:48px 44px;display:flex;flex-direction:column;justify-content:space-between}
+.auth-logo{display:flex;align-items:center;gap:10px}
+.auth-logo-mark{width:34px;height:34px;border-radius:50%;background:var(--clay);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff}
+.auth-logo-name{font-weight:800;font-size:15px;letter-spacing:-.01em}
+.auth-logo-sub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45)}
+.auth-quote{font-family:'Lora',Georgia,serif;font-style:italic;font-size:21px;line-height:1.55;color:rgba(255,255,255,.85);text-wrap:pretty}
+.auth-quote-attr{display:block;margin-top:14px;font-family:'JetBrains Mono',monospace;font-style:normal;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.auth-safety{border-top:1px solid rgba(255,255,255,.14);padding-top:20px;display:grid;gap:10px}
+.auth-safety-row{display:flex;gap:10px;font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.65)}
+.auth-safety-row .tick{color:#9DBEA4;font-weight:800}
+.auth-main{display:flex;align-items:center;justify-content:center;padding:48px 32px}
+.auth-card{width:100%;max-width:440px}
+.auth-view{display:none}
+.auth-view.on{display:block}
+.auth-kicker{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-bottom:10px}
+.auth-h{font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.12;margin:0 0 8px;text-wrap:pretty}
+.auth-sub{font-family:'Lora',Georgia,serif;font-style:italic;font-size:14px;color:var(--bark-mid);line-height:1.6;margin:0 0 24px;text-wrap:pretty}
+.auth-tabs{display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:10px;margin-bottom:26px}
+.auth-tab{flex:1;padding:9px 12px;border:none;border-radius:7px;background:transparent;font-family:inherit;font-size:12.5px;font-weight:700;color:var(--bark-mid);cursor:pointer}
+.auth-tab.on{background:var(--surface);color:var(--bark);box-shadow:0 1px 4px rgba(35,23,8,.08)}
+.f-row{margin-bottom:14px}
+.f-lbl{display:block;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--bark-soft);margin-bottom:6px}
+.f-in{width:100%;box-sizing:border-box;padding:11px 13px;border:1.5px solid var(--warm-line-strong);border-radius:8px;background:var(--surface);font-family:inherit;font-size:14px;color:var(--bark)}
+.f-in:focus{outline:none;border-color:var(--clay)}
+.f-hint{font-size:11.5px;color:var(--bark-soft);margin-top:5px;line-height:1.5}
+.auth-row-split{display:flex;justify-content:space-between;align-items:center;margin:4px 0 18px;font-size:12px}
+.auth-progress{display:flex;gap:5px;margin-bottom:22px}
+.auth-progress .pp{height:4px;flex:1;border-radius:2px;background:var(--soft)}
+.auth-progress .pp.on{background:var(--clay)}
+.role-note{display:flex;gap:10px;background:var(--sage-light);border-radius:10px;padding:13px 15px;margin-bottom:20px;font-size:12.5px;line-height:1.55;color:var(--bark)}
+.role-note .tick{color:var(--sage);font-weight:800}
+.demo-strip{margin-top:26px;border-top:1px dashed var(--warm-line-strong);padding-top:16px}
+.demo-strip-t{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--bark-soft);margin-bottom:10px}
+.demo-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.demo-chip{padding:7px 6px;border:1px solid var(--warm-line-strong);border-radius:999px;background:var(--surface);font-family:inherit;font-size:11.5px;font-weight:600;color:var(--bark-mid);cursor:pointer;text-align:center;white-space:nowrap}
+.demo-chip:hover{border-color:var(--clay);color:var(--bark)}
+.who-grid{display:grid;gap:10px;margin-bottom:6px}
+.who-card{display:flex;gap:14px;align-items:center;padding:15px 16px;border:1.5px solid var(--warm-line-strong);border-radius:12px;background:var(--surface);cursor:pointer;text-align:left;font-family:inherit}
+.who-card:hover{border-color:var(--clay)}
+.who-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;flex-shrink:0}
+.who-name{font-size:14px;font-weight:800;color:var(--bark)}
+.who-role{font-size:11.5px;color:var(--bark-soft);font-weight:600;margin-top:2px}
+.who-arrow{margin-left:auto;color:var(--bark-soft);font-weight:700}
+.vet-check{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--warm-line)}
+.vet-check:last-child{border-bottom:none}
+.vc-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.vc-done{background:var(--sage);color:#fff}
+.vc-wait{background:var(--clay-pale);color:#7A4316;border:1.5px dashed var(--clay)}
+.vc-t{font-size:13px;font-weight:700;color:var(--bark)}
+.vc-s{font-size:11.5px;color:var(--bark-mid);line-height:1.5;margin-top:2px}
+.cm-badge{display:inline-flex;align-items:center;gap:5px;font-size:9.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;background:var(--sage-light);color:var(--sage);border-radius:999px;padding:3px 9px;margin-left:8px;vertical-align:middle}
+.done-wrap{text-align:center;padding:14px 0}
+.done-orb{width:54px;height:54px;border-radius:50%;background:var(--sage);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;margin:0 auto 18px}
+.next-card{background:var(--surface);border:1px solid var(--warm-line);border-radius:12px;padding:16px 18px;margin-top:20px;text-align:left}
+.next-t{font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--bark-soft);margin-bottom:10px}
+.next-li{display:flex;gap:10px;font-size:13px;color:var(--bark);line-height:1.55;padding:5px 0}
+.next-li .n{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;color:var(--clay);padding-top:3px}
+.consent-box{background:var(--clay-pale);border:1px solid var(--warm-line-strong);border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:12.5px;line-height:1.6;color:var(--bark)}
+.auth-back{background:none;border:none;font-family:inherit;font-size:12px;font-weight:700;color:var(--bark-soft);cursor:pointer;padding:0;margin-bottom:18px}
+.auth-back:hover{color:var(--bark)}
+.btn{font-size:13px;font-weight:700;padding:11px 18px;border-radius:8px;border:none;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.btn-primary{background:var(--auburn);color:#fff}.btn-primary:hover{background:#7d2510}
+.btn-ghost{background:var(--surface);color:var(--bark-mid);border:1px solid var(--warm-line-strong)}.btn-ghost:hover{background:var(--clay-pale)}
+.btn-block{width:100%}
+@media(max-width:860px){.auth-shell{grid-template-columns:1fr}.auth-brand{display:none}}
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#231708">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#231708"></rect>
+    <circle cx="600" cy="360" r="120" fill="#B86A2C"></circle>
+    <text x="600" y="392" text-anchor="middle" font-family="sans-serif" font-size="86" font-weight="800" fill="#fff">CM</text>
+    <text x="600" y="560" text-anchor="middle" font-family="sans-serif" font-size="40" font-weight="700" fill="#F8F2E7">Sign in</text>
+  </svg>
+</template>
+</head>
+<body>
+<div class="auth-shell">
+  <aside class="auth-brand">
+    <div>
+      <div class="auth-logo">
+        <div class="auth-logo-mark">CM</div>
+        <div><div class="auth-logo-name">Cultured Mornings</div><div class="auth-logo-sub">Member portal</div></div>
+      </div>
+    </div>
+    <blockquote class="auth-quote">Every seat at this table was set on purpose — for you.<span class="auth-quote-attr">— The Cultured Mornings team</span></blockquote>
+    <div class="auth-safety">
+      <div class="auth-safety-row"><span class="tick">✓</span><span>Invite-only. Every member, mentor, and partner is vetted by our team before they get access.</span></div>
+      <div class="auth-safety-row"><span class="tick">✓</span><span>Guardians are part of the process for members under 18.</span></div>
+      <div class="auth-safety-row"><span class="tick">✓</span><span>Real people review everything — mentor pairings, milestones, and messages are never left to an algorithm.</span></div>
+    </div>
+  </aside>
+  <main class="auth-main">
+    <div class="auth-card">
+
+      <!-- LANDING -->
+      <div class="auth-view on" id="v-landing" data-screen-label="Sign in landing">
+        <div class="auth-kicker">Welcome</div>
+        <h1 class="auth-h">Good morning.</h1>
+        <p class="auth-sub">Sign in to your portal — or activate your account if an invite from the team landed in your inbox.</p>
+        <div class="auth-tabs">
+          <button class="auth-tab on" id="tab-signin" onclick="authTab('signin')">Sign in</button>
+          <button class="auth-tab" id="tab-invite" onclick="authTab('invite')">I have an invite</button>
+        </div>
+        <div id="pane-signin">
+          <div class="f-row"><label class="f-lbl">Email</label><input class="f-in" id="si-email" type="email" placeholder="you@email.com"></div>
+          <div class="f-row"><label class="f-lbl">Password</label><input class="f-in" type="password" placeholder="••••••••"></div>
+          <div class="auth-row-split">
+            <label style="display:flex;gap:6px;align-items:center;color:var(--bark-mid);font-weight:600"><input type="checkbox" checked> Keep me signed in</label>
+            <a href="#" onclick="goView('v-forgot');return false" style="font-weight:700;text-decoration:none">Forgot password?</a>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="goView('v-who')">Sign in →</button>
+          <div class="f-hint" style="text-align:center;margin-top:12px">One sign-in for everyone — the portal knows whether you're a member, mentor, or staff.</div>
+          <div class="demo-strip">
+            <div class="demo-strip-t">Prototype — jump in as</div>
+            <div class="demo-chips">
+              <button class="demo-chip" onclick="signInAs('alumni')">Jordan · Alumni</button>
+              <button class="demo-chip" onclick="signInAs('mentor')">Chef Lisa · Mentor</button>
+              <button class="demo-chip" onclick="signInAs('staff')">Aaliyah · CM Staff</button>
+            </div>
+          </div>
+        </div>
+        <div id="pane-invite" style="display:none">
+          <div class="role-note"><span class="tick">✓</span><span><strong>Cultured Mornings is invite-only.</strong> Your invite code came in an email from the team after your application (or vetting, for mentors) was approved. The code carries your role — nobody chooses their own.</span></div>
+          <div class="f-row"><label class="f-lbl">Invite code</label><input class="f-in" id="inv-code" placeholder="CM-XXXX-XXXX" style="font-family:'JetBrains Mono',monospace;letter-spacing:.06em"></div>
+          <button class="btn btn-primary btn-block" onclick="checkInvite()">Verify invite →</button>
+          <div class="f-hint" id="inv-err" style="color:var(--auburn);display:none;font-weight:600">That code doesn't match our records. Check the email from the team, or contact a coordinator.</div>
+          <div class="demo-strip">
+            <div class="demo-strip-t">Prototype — sample codes</div>
+            <div class="demo-chips">
+              <button class="demo-chip" onclick="useCode('CM-STU-4471')">CM-STU-4471 · Student</button>
+              <button class="demo-chip" onclick="useCode('CM-MEN-8215')">CM-MEN-8215 · Mentor</button>
+              <button class="demo-chip" onclick="useCode('CM-STA-1093')">CM-STA-1093 · Staff</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORGOT -->
+      <div class="auth-view" id="v-forgot" data-screen-label="Forgot password">
+        <button class="auth-back" onclick="goView('v-landing')">← Back to sign in</button>
+        <div class="auth-kicker">Reset password</div>
+        <h1 class="auth-h">We'll email you a reset link.</h1>
+        <p class="auth-sub">For members under 18, the reset link also goes to the guardian on file — part of how we keep accounts safe.</p>
+        <div class="f-row"><label class="f-lbl">Email</label><input class="f-in" type="email" placeholder="you@email.com"></div>
+        <button class="btn btn-primary btn-block" onclick="this.textContent='Sent ✓ — check your inbox';this.disabled=true;this.style.background='var(--sage)'">Send reset link</button>
+      </div>
+
+      <!-- WHO (demo router after generic sign-in) -->
+      <div class="auth-view" id="v-who" data-screen-label="Returning sign-in router">
+        <button class="auth-back" onclick="goView('v-landing')">← Back</button>
+        <div class="auth-kicker">Prototype router</div>
+        <h1 class="auth-h">Who's signing in?</h1>
+        <p class="auth-sub">In the real portal, your email decides this — each role lands in its own home.</p>
+        <div class="who-grid">
+          <button class="who-card" onclick="signInAs('alumni')"><div class="who-av" style="background:var(--clay)">JT</div><div><div class="who-name">Jordan Thomas</div><div class="who-role">Alumni · Cohort III → lands on the member dashboard</div></div><span class="who-arrow">→</span></button>
+          <button class="who-card" onclick="signInAs('mentor')"><div class="who-av" style="background:#8B5E2A">LO</div><div><div class="who-name">Chef Lisa Owens</div><div class="who-role">Mentor · lands on mentees &amp; session schedule</div></div><span class="who-arrow">→</span></button>
+          <button class="who-card" onclick="signInAs('staff')"><div class="who-av" style="background:var(--sage)">AB</div><div><div class="who-name">Aaliyah Brooks</div><div class="who-role">CM Staff · lands on the admin console</div></div><span class="who-arrow">→</span></button>
+        </div>
+      </div>
+
+      <!-- ═ STUDENT ACTIVATION ═ -->
+      <div class="auth-view" id="v-stu-1" data-screen-label="Student activation — identity">
+        <button class="auth-back" onclick="goView('v-landing')">← Start over</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div></div>
+        <div class="auth-kicker">Student · Step 1 of 5</div>
+        <h1 class="auth-h">Let's make sure this is you.</h1>
+        <p class="auth-sub">We pre-filled this from your application<span class="cm-badge">✓ CM verified</span></p>
+        <div class="f-row"><label class="f-lbl">Full name</label><input class="f-in" value="Jordan Thomas"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="f-row"><label class="f-lbl">Date of birth</label><input class="f-in" value="03 / 14 / 2009"><div class="f-hint">You're 17 — a guardian step comes next.</div></div>
+          <div class="f-row"><label class="f-lbl">Cohort</label><input class="f-in" value="Cohort VI · Nov 2026" disabled style="background:var(--soft)"></div>
+        </div>
+        <div class="f-row"><label class="f-lbl">Email</label><input class="f-in" value="jordan.t@email.com"></div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-stu-2')">That's me →</button>
+      </div>
+      <div class="auth-view" id="v-stu-2" data-screen-label="Student activation — guardian consent">
+        <button class="auth-back" onclick="goView('v-stu-1')">← Back</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div></div>
+        <div class="auth-kicker">Student · Step 2 of 5</div>
+        <h1 class="auth-h">A guardian signs off first.</h1>
+        <p class="auth-sub">Because you're under 18, a parent or guardian approves your account and stays in the loop — they're part of the program, not outside it.</p>
+        <div class="f-row"><label class="f-lbl">Guardian name</label><input class="f-in" value="Denise Thomas"></div>
+        <div class="f-row"><label class="f-lbl">Guardian email or phone</label><input class="f-in" value="denise.t@email.com"></div>
+        <div class="consent-box">Your guardian gets an email describing the program, our safety practices, and what we collect about you — and confirms with one click. Your account activates once they do. They can also attend orientation with you in September.</div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-stu-3')">Send consent request →</button>
+        <div class="f-hint" style="text-align:center;margin-top:10px">Prototype: consent is treated as approved so you can continue.</div>
+      </div>
+      <div class="auth-view" id="v-stu-3" data-screen-label="Student activation — password">
+        <button class="auth-back" onclick="goView('v-stu-2')">← Back</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp on"></div><div class="pp"></div><div class="pp"></div></div>
+        <div class="auth-kicker">Student · Step 3 of 5</div>
+        <h1 class="auth-h">Create your password.</h1>
+        <p class="auth-sub">This plus your email is how you'll sign in from now on.</p>
+        <div class="f-row"><label class="f-lbl">Password</label><input class="f-in" type="password" placeholder="At least 8 characters"></div>
+        <div class="f-row"><label class="f-lbl">Confirm password</label><input class="f-in" type="password" placeholder="Same again"></div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-stu-3b')">Continue →</button>
+      </div>
+      <div class="auth-view" id="v-stu-3b" data-screen-label="Student activation — make it yours">
+        <button class="auth-back" onclick="goView('v-stu-3')">← Back</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp on"></div><div class="pp on"></div><div class="pp"></div></div>
+        <div class="auth-kicker">Student · Step 4 of 5</div>
+        <h1 class="auth-h">Make it yours.</h1>
+        <p class="auth-sub">Optional — both of these live on your profile and you can change them anytime. Everything else on your profile gets built as you go through the program.</p>
+        <div style="display:flex;gap:14px;align-items:center;margin-bottom:16px">
+          <div style="width:64px;height:64px;border-radius:50%;background:var(--soft);border:1.5px dashed var(--warm-line-strong);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--bark-soft);cursor:pointer;flex-shrink:0">+ Photo</div>
+          <div style="font-size:12px;color:var(--bark-mid);line-height:1.55">A face helps mentors and the team put a name to you. Skip it if you'd rather wait.</div>
+        </div>
+        <div class="f-row"><label class="f-lbl">A line about you (optional)</label><input class="f-in" placeholder="e.g. Baker-in-training · future business owner"><div class="f-hint">Shows under your name on your profile.</div></div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-stu-4')">Finish setup →</button>
+        <button class="btn btn-ghost btn-block" style="margin-top:8px" onclick="goView('v-stu-4')">Skip for now</button>
+      </div>
+      <div class="auth-view" id="v-stu-4" data-screen-label="Student activation — done">
+        <div class="done-wrap">
+          <div class="done-orb">✓</div>
+          <h1 class="auth-h">Welcome to the table, Jordan.</h1>
+          <p class="auth-sub">Your account is live. Your portal opens on day one — quiet on purpose, with three clear first steps.</p>
+          <div class="next-card">
+            <div class="next-t">What happens next</div>
+            <div class="next-li"><span class="n">01</span><span><strong>Intake questions</strong> — tell the team where you want food to take you. This is how mentor pairing starts.</span></div>
+            <div class="next-li"><span class="n">02</span><span><strong>Orientation · September</strong> — you (and your guardian) meet the team and the kitchen.</span></div>
+            <div class="next-li"><span class="n">03</span><span><strong>Cohort begins · November</strong> — lessons, mentors, and the rest unlock as you go.</span></div>
+          </div>
+          <a class="btn btn-primary btn-block" style="margin-top:18px;text-decoration:none" href="CM Alumni Profile.html">Go to your portal →</a>
+        </div>
+      </div>
+
+      <!-- ═ MENTOR ACTIVATION ═ -->
+      <div class="auth-view" id="v-men-1" data-screen-label="Mentor activation — vetting status">
+        <button class="auth-back" onclick="goView('v-landing')">← Start over</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div></div>
+        <div class="auth-kicker">Mentor · Step 1 of 4</div>
+        <h1 class="auth-h">Your vetting, at a glance.</h1>
+        <p class="auth-sub">You only received this invite because most of this is already done — here's where things stand.</p>
+        <div style="background:var(--surface);border:1px solid var(--warm-line);border-radius:12px;padding:6px 18px;margin-bottom:18px">
+          <div class="vet-check"><div class="vc-dot vc-done">✓</div><div><div class="vc-t">Background check</div><div class="vc-s">Cleared June 2026 · renews annually</div></div></div>
+          <div class="vet-check"><div class="vc-dot vc-done">✓</div><div><div class="vc-t">References</div><div class="vc-s">Two references confirmed by the CM team</div></div></div>
+          <div class="vet-check"><div class="vc-dot vc-done">✓</div><div><div class="vc-t">Interview with CM leadership</div><div class="vc-s">Completed in person at the kitchen</div></div></div>
+          <div class="vet-check"><div class="vc-dot vc-wait">…</div><div><div class="vc-t">Mentor Code of Care</div><div class="vc-s">Sign on the next step — sessions at the CM kitchen only, staff present, no off-platform contact with mentees.</div></div></div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-men-2')">Review &amp; sign the Code of Care →</button>
+      </div>
+      <div class="auth-view" id="v-men-2" data-screen-label="Mentor activation — code of care">
+        <button class="auth-back" onclick="goView('v-men-1')">← Back</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp"></div><div class="pp"></div></div>
+        <div class="auth-kicker">Mentor · Step 2 of 4</div>
+        <h1 class="auth-h">The Mentor Code of Care.</h1>
+        <p class="auth-sub">The short version — the full document is in your invite email.</p>
+        <div class="consent-box" style="background:var(--surface)">
+          Sessions happen at the Cultured Mornings kitchen with staff present. No contact with mentees outside program settings — no personal numbers, socials, or rides. Guardians are informed and involved. Concerns go to a coordinator, and either side can pause a mentorship at any time, no explanation needed.
+        </div>
+        <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.55;color:var(--bark);margin-bottom:18px"><input type="checkbox" style="margin-top:2px"> I've read the full Code of Care and agree to work within it.</label>
+        <button class="btn btn-primary btn-block" onclick="goView('v-men-2b')">Sign &amp; continue →</button>
+      </div>
+      <div class="auth-view" id="v-men-2b" data-screen-label="Mentor activation — directory starter">
+        <button class="auth-back" onclick="goView('v-men-2')">← Back</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp on"></div><div class="pp"></div></div>
+        <div class="auth-kicker">Mentor · Step 3 of 4</div>
+        <h1 class="auth-h">Start your directory profile.</h1>
+        <p class="auth-sub">Students choose who to learn from by reading this. Three fields to start — you can write the rest from your mentor portal, and the CM team reviews everything before it goes live.</p>
+        <div class="f-row"><label class="f-lbl">Specialty line</label><input class="f-in" value="Pastry chef &amp; baker · ran her own bakery for 9 years"></div>
+        <div class="f-row"><label class="f-lbl">Why you mentor — one honest sentence</label><input class="f-in" placeholder="e.g. Every dish is a love letter to someone."></div>
+        <div class="f-row"><label class="f-lbl">Availability for sessions (team-only, never public)</label><input class="f-in" placeholder="e.g. Tuesday &amp; Thursday afternoons"></div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-men-3')">Continue →</button>
+      </div>
+      <div class="auth-view" id="v-men-3" data-screen-label="Mentor activation — done">
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp on"></div><div class="pp on"></div></div>
+        <div class="auth-kicker">Mentor · Step 4 of 4</div>
+        <div class="done-wrap">
+          <div class="done-orb">✓</div>
+          <h1 class="auth-h">Thank you, Chef Lisa.</h1>
+          <p class="auth-sub">Set a password below, and you're in. One last thing happens on our side first.</p>
+          <div class="f-row" style="text-align:left"><label class="f-lbl">Create password</label><input class="f-in" type="password" placeholder="At least 8 characters"></div>
+          <div class="next-card">
+            <div class="next-t">What happens next</div>
+            <div class="next-li"><span class="n">01</span><span><strong>Final review</strong> — the team confirms your file and your directory profile draft, then publishes it — usually within 3 days.</span></div>
+            <div class="next-li"><span class="n">02</span><span><strong>Your first mentees</strong> — you'll see each student's intake answers (direction, learning style, what they want from you) before your first session.</span></div>
+            <div class="next-li"><span class="n">03</span><span><strong>Sessions begin</strong> — scheduled by the team at the CM kitchen once the cohort starts in November.</span></div>
+          </div>
+          <a class="btn btn-primary btn-block" style="margin-top:18px;text-decoration:none" href="CM Mentor.html">Finish — open your mentor portal →</a>
+        </div>
+      </div>
+
+      <!-- ═ STAFF ACTIVATION ═ -->
+      <div class="auth-view" id="v-sta-1" data-screen-label="Staff activation">
+        <button class="auth-back" onclick="goView('v-landing')">← Start over</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp"></div><div class="pp"></div></div>
+        <div class="auth-kicker">CM Staff · Step 1 of 3</div>
+        <h1 class="auth-h">Staff account setup.</h1>
+        <p class="auth-sub">Staff accounts are created by an existing admin — your invite ties this account to your staff email and role.</p>
+        <div class="f-row"><label class="f-lbl">Staff email</label><input class="f-in" value="aaliyah@culturedmornings.org" disabled style="background:var(--soft)"><div class="f-hint">Locked to your invite — staff accounts require a culturedmornings.org address.</div></div>
+        <div class="f-row"><label class="f-lbl">Role</label><input class="f-in" value="Program coordinator · full admin access" disabled style="background:var(--soft)"></div>
+        <div class="f-row"><label class="f-lbl">Create password</label><input class="f-in" type="password" placeholder="At least 12 characters"></div>
+        <div class="role-note"><span class="tick">✓</span><span>Staff accounts use two-step verification — you'll confirm a code from your phone each time you sign in. Staff see intake answers, guardian contacts, and review queues, so this is non-negotiable.</span></div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-sta-1b')">Set up two-step verification →</button>
+      </div>
+      <div class="auth-view" id="v-sta-1b" data-screen-label="Staff activation — 2FA">
+        <button class="auth-back" onclick="goView('v-sta-1')">← Back</button>
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp"></div></div>
+        <div class="auth-kicker">CM Staff · Step 2 of 3</div>
+        <h1 class="auth-h">Confirm your phone.</h1>
+        <p class="auth-sub">We sent a 6-digit code to the number on your staff record (•••) •••-4418.</p>
+        <div class="f-row"><label class="f-lbl">Verification code</label><input class="f-in" placeholder="000000" style="font-family:'JetBrains Mono',monospace;letter-spacing:.35em;text-align:center;font-size:18px" maxlength="6"></div>
+        <div style="display:grid;gap:8px 0;background:var(--surface);border:1px solid var(--warm-line);border-radius:10px;padding:14px 16px;margin-bottom:16px">
+          <div style="font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--bark-soft)">What your access includes</div>
+          <div style="font-size:12.5px;color:var(--bark);line-height:1.6">Review queue · intake answers &amp; mentor pairing · mentor vetting records · opportunity screening · invites &amp; guardian consent tracking. Every action is logged with your name.</div>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="goView('v-sta-2')">Verify →</button>
+        <div class="f-hint" style="text-align:center;margin-top:10px">Prototype: any code works.</div>
+      </div>
+      <div class="auth-view" id="v-sta-2" data-screen-label="Staff activation — done">
+        <div class="auth-progress"><div class="pp on"></div><div class="pp on"></div><div class="pp on"></div></div>
+        <div class="auth-kicker">CM Staff · Step 3 of 3</div>
+        <div class="done-wrap">
+          <div class="done-orb">✓</div>
+          <h1 class="auth-h">You're set, Aaliyah.</h1>
+          <p class="auth-sub">Your console is where everything the community submits comes to be reviewed — intakes, mentor pairings, milestones, endorsements, and partner requests.</p>
+          <a class="btn btn-primary btn-block" style="margin-top:6px;text-decoration:none" href="CM Admin.html">Open the admin console →</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+<script>
+function goView(id){document.querySelectorAll('.auth-view').forEach(v=>v.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+function authTab(t){
+  document.getElementById('tab-signin').classList.toggle('on',t==='signin');
+  document.getElementById('tab-invite').classList.toggle('on',t==='invite');
+  document.getElementById('pane-signin').style.display=t==='signin'?'':'none';
+  document.getElementById('pane-invite').style.display=t==='invite'?'':'none';
+}
+function signInAs(role){
+  if(role==='staff'){location.href='CM Admin.html';return;}
+  if(role==='mentor'){location.href='CM Mentor.html';return;}
+  location.href='CM Alumni Profile.html';
+}
+const INVITES={'CM-STU-4471':'v-stu-1','CM-MEN-8215':'v-men-1','CM-STA-1093':'v-sta-1'};
+function useCode(c){document.getElementById('inv-code').value=c;checkInvite();}
+function checkInvite(){
+  const c=document.getElementById('inv-code').value.trim().toUpperCase();
+  if(INVITES[c]){document.getElementById('inv-err').style.display='none';goView(INVITES[c]);}
+  else document.getElementById('inv-err').style.display='block';
+}
+</script>
+</body>
+</html>
